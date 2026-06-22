@@ -1,0 +1,124 @@
+from __future__ import annotations
+
+import json
+import time
+from pathlib import Path
+from typing import Any
+
+from core import RIN_SYSTEM_PROMPT, STAGE0_LOG_PATH
+
+
+Message = dict[str, str]
+
+
+def read_jsonl(path: Path = STAGE0_LOG_PATH) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+
+    records: list[dict[str, Any]] = []
+
+    with path.open("r", encoding="utf-8") as file:
+        for line in file:
+            line = line.strip()
+
+            if not line:
+                continue
+
+            try:
+                records.append(json.loads(line))
+            except json.JSONDecodeError:
+                # Be robust to manual edits or broken log lines.
+                continue
+
+    return records
+
+
+def load_recent_chat_events(
+    limit: int,
+    path: Path = STAGE0_LOG_PATH,
+) -> list[dict[str, Any]]:
+    if limit <= 0:
+        return []
+
+    records = read_jsonl(path)
+
+    chat_events = [
+        record
+        for record in records
+        if record.get("event_type") == "chat"
+        and isinstance(record.get("user"), str)
+        and isinstance(record.get("answer"), str)
+    ]
+
+    return chat_events[-limit:]
+
+
+def build_bootstrap_context(events: list[dict[str, Any]]) -> str:
+    if not events:
+        return ""
+
+    lines = [
+        "Runtime bootstrap context:",
+        "The current session was started with a raw excerpt from previous local chat logs.",
+        "This is NOT real long-term memory.",
+        "However, you ARE allowed to use these log excerpts as contextual notes.",
+        "If the user asks whether you see previous logs or bootstrap memory, answer honestly:",
+        '"I do not have real long-term memory, but I can see a raw bootstrap excerpt from previous logs in this session."',
+        "",
+        "Previous chat log excerpt:",
+        "",
+    ]
+
+    for index, event in enumerate(events, start=1):
+        user_text = event["user"].strip().replace("\n", " ")
+        answer_text = event["answer"].strip().replace("\n", " ")
+
+        lines.append(f"[{index}] User: {user_text}")
+        lines.append(f"[{index}] Rin: {answer_text}")
+        lines.append("")
+
+    return "\n".join(lines).strip()
+
+
+def build_system_prompt(bootstrap_context: str = "") -> str:
+    if not bootstrap_context:
+        return RIN_SYSTEM_PROMPT
+
+    return f"{RIN_SYSTEM_PROMPT}\n\n{bootstrap_context}"
+
+
+def make_messages(system_prompt: str, user_prompt: str) -> list[Message]:
+    return [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt},
+    ]
+
+
+def ask_model(
+    messages: list[Message],
+    model: str,
+    *,
+    think: bool = False,
+    num_predict: int | None = None,
+) -> tuple[str, float]:
+    import ollama
+
+    start = time.perf_counter()
+
+    options = {}
+
+    if num_predict is not None:
+        options["num_predict"] = num_predict
+
+    response = ollama.chat(
+        model=model,
+        messages=messages,
+        stream=False,
+        think=think,
+        options=options or None,
+    )
+
+    elapsed = time.perf_counter() - start
+    answer = response["message"]["content"].strip()
+
+    return answer, elapsed
