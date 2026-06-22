@@ -1,0 +1,2 @@
+# RIN
+Home AI campanion
