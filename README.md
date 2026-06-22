@@ -1,5 +1,13 @@
 # RIN
 
+RIN — Relational Interactive Neural-companion
+RIN — Responsive Intelligent Neural entity
+RIN — Relational Intelligence Node
+RIN — Reflexive Interaction Network
+RIN — Resonant Interface Nexus
+RIN — Recursive Intimacy Network
+RIN — Relationally Integrated Neural persona
+
 RIN is an experimental local-first AI companion project.
 
 The current version is an early Stage 0 prototype. It runs a local language model through Ollama, uses a character/persona prompt for Rin, supports interactive chat, logs conversations and test runs to JSONL, and includes a small persona/behavior test framework.
