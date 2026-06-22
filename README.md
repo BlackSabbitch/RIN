@@ -82,6 +82,67 @@ qwen3:8b
 
 This can be changed in `src/core.py` or overridden from command line with `--model`.
 
+## Python virtual environment
+
+The project should be run from a local Python virtual environment.
+
+Create the environment once from the project root:
+
+```powershell
+py -3.11 -m venv .venv
+```
+
+Activate it in PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+After activation, the prompt should start with:
+
+```text
+(.venv)
+```
+
+Install dependencies:
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+Check that the Ollama Python package is available:
+
+```powershell
+python -c "import ollama; print('ollama python package ok')"
+```
+
+Deactivate the environment:
+
+```powershell
+deactivate
+```
+
+If PowerShell refuses to run the activation script because script execution is disabled, run this once:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+Then activate the environment again:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Typical workflow:
+
+```powershell
+cd C:\Users\yaros\BlackSabbitch_repo\RIN
+.\.venv\Scripts\Activate.ps1
+python src\test.py --list
+python src\chat.py --bootstrap-last 20
+```
+
 ## Interactive chat
 
 Run:
