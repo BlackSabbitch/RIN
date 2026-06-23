@@ -35,7 +35,11 @@ Commands:
   /test --category family                    run one category
   /test --category family --question 2       run one question in a category
   /test --category family --mode both        run one category in both modes
-   /test --category voice --mode both --num-predict 256 run tests with generation length limit
+  /test --category voice --mode both --num-predict 256 run tests with generation length limit
+  /test --category voice --mode both --num-predict 256 run tests with explicit generation limit
+  /tests 2                                  list questions in category 2
+  /test --category 2 --question 4           run question 2.4
+  /test 2 --question 4                      same shorthand
 
 Normal text is sent to Rin.
 
@@ -70,7 +74,7 @@ def parse_option_command(command: str) -> dict[str, Any]:
         "question": None,
         "mode": "raw",
         "show_final_prompt": False,
-        "num_predict": 384,
+        "num_predict": None,
     }
 
     index = 1
@@ -153,10 +157,17 @@ def handle_test_command(command: str, *, model: str, session_id: str) -> None:
         if options["question"] is not None and options["category"] is None:
             raise ValueError("--question requires --category")
 
-        num_predict = options["num_predict"]
+        raw_num_predict = options["num_predict"]
 
-        if num_predict <= 0:
+        if raw_num_predict is None:
             num_predict = None
+            adaptive = True
+        elif raw_num_predict <= 0:
+            num_predict = None
+            adaptive = False
+        else:
+            num_predict = raw_num_predict
+            adaptive = False
 
         run_tests(
             model=model,
@@ -165,7 +176,8 @@ def handle_test_command(command: str, *, model: str, session_id: str) -> None:
             question_number=options["question"],
             mode=options["mode"],
             show_final_prompt=options["show_final_prompt"],
-            num_predict=num_predict
+            num_predict=num_predict,
+            adaptive=adaptive,
         )
 
     except ValueError as error:

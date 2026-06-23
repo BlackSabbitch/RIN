@@ -12,7 +12,7 @@ from core import (
     append_event,
     new_session_id,
 )
-from runtime import ask_model, make_messages
+from runtime import ask_model, ask_model_adaptive, make_messages
 
 
 TestRunMode = Literal["raw", "guided", "both"]
@@ -38,21 +38,50 @@ def build_test_prompt(case: TestCase, mode: ConcreteTestMode) -> str:
     )
 
 
-def get_category(category_key: str) -> TestCategory:
+def format_available_categories() -> str:
+    return ", ".join(
+        f"{category.number}:{key}"
+        for key, category in TEST_CATEGORIES.items()
+    )
+
+
+def resolve_category_key(category_key_or_number: str) -> str:
+    if category_key_or_number in TEST_CATEGORIES:
+        return category_key_or_number
+
     try:
-        return TEST_CATEGORIES[category_key]
-    except KeyError as error:
-        available = ", ".join(TEST_CATEGORIES)
-        raise ValueError(
-            f"Unknown category: {category_key}. Available categories: {available}"
-        ) from error
+        category_number = int(category_key_or_number)
+    except ValueError:
+        category_number = None
+
+    if category_number is not None:
+        matches = [
+            key
+            for key, category in TEST_CATEGORIES.items()
+            if category.number == category_number
+        ]
+
+        if matches:
+            return matches[0]
+
+    available = format_available_categories()
+    raise ValueError(
+        f"Unknown category: {category_key_or_number}. "
+        f"Available categories: {available}"
+    )
 
 
-def resolve_categories(category_key: str | None) -> list[tuple[str, TestCategory]]:
-    if category_key is None:
+def get_category(category_key_or_number: str) -> TestCategory:
+    category_key = resolve_category_key(category_key_or_number)
+    return TEST_CATEGORIES[category_key]
+
+
+def resolve_categories(category_key_or_number: str | None) -> list[tuple[str, TestCategory]]:
+    if category_key_or_number is None:
         return list(TEST_CATEGORIES.items())
 
-    return [(category_key, get_category(category_key))]
+    category_key = resolve_category_key(category_key_or_number)
+    return [(category_key, TEST_CATEGORIES[category_key])]
 
 
 def list_categories() -> None:
@@ -137,6 +166,7 @@ def run_single_test(
     mode: ConcreteTestMode,
     show_final_prompt: bool = False,
     num_predict: int | None = None,
+    adaptive: bool = True
 ) -> None:
     final_prompt = build_test_prompt(case, mode)
     messages = make_messages(RIN_SYSTEM_PROMPT, final_prompt)
@@ -149,11 +179,21 @@ def run_single_test(
         show_final_prompt=show_final_prompt,
     )
 
-    answer, elapsed = ask_model(
-        messages,
-        model=model,
-        num_predict=num_predict,
-    )
+    if adaptive:
+        answer, elapsed, model_meta = ask_model_adaptive(
+            messages,
+            model=model,
+        )
+    else:
+        answer, elapsed = ask_model(
+            messages,
+            model=model,
+            num_predict=num_predict,
+        )
+        model_meta = {
+            "adaptive": False,
+            "num_predict": num_predict,
+        }
 
     print("Rin:")
     print(answer)
@@ -176,6 +216,7 @@ def run_single_test(
         answer=answer,
         elapsed_seconds=round(elapsed, 3),
         num_predict=num_predict,
+        model_meta=model_meta,
     )
 
 
@@ -188,6 +229,7 @@ def run_tests(
     mode: TestRunMode = "raw",
     show_final_prompt: bool = False,
     num_predict: int | None = None,
+    adaptive=True,
 ) -> str:
     if session_id is None:
         session_id = new_session_id()
@@ -203,6 +245,7 @@ def run_tests(
         question_number=question_number,
         mode=mode,
         num_predict=num_predict,
+        adaptive=adaptive,
     )
 
     try:
@@ -225,6 +268,7 @@ def run_tests(
                         mode=current_mode,
                         show_final_prompt=show_final_prompt,
                         num_predict=num_predict,
+                        adaptive=adaptive,
                     )
 
     finally:
@@ -236,6 +280,7 @@ def run_tests(
             question_number=question_number,
             mode=mode,
             num_predict=num_predict,
+            adaptive=adaptive,
         )
 
     return session_id
@@ -266,7 +311,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--category",
         default=None,
-        help="Run only one category by key, e.g. family, voice, failure_modes.",
+        help="Run only one category by key or number, e.g. family, voice, 2, 7.",
     )
 
     parser.add_argument(
@@ -291,8 +336,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--num-predict",
         type=int,
-        default=384,
-        help="Maximum number of tokens to generate per test answer. Use 0 to disable the limit. Default: 384.",
+        default=None,
+        help="Maximum number of tokens to generate per test answer. If omitted, adaptive mode is used. Use 0 to disable the limit.",
     )
 
     return parser.parse_args()
@@ -322,7 +367,15 @@ def main() -> None:
     if args.question is not None:
         print(f"Question: {args.question}")
 
-    num_predict = args.num_predict if args.num_predict > 0 else None
+    if args.num_predict is None:
+        num_predict = None
+        adaptive = True
+    elif args.num_predict <= 0:
+        num_predict = None
+        adaptive = False
+    else:
+        num_predict = args.num_predict
+        adaptive = False
 
     print()
 
@@ -334,6 +387,7 @@ def main() -> None:
         mode=args.mode,
         show_final_prompt=args.show_final_prompt,
         num_predict=num_predict,
+        adaptive=adaptive,
     )
 
 

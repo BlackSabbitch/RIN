@@ -122,3 +122,102 @@ def ask_model(
     answer = response["message"]["content"].strip()
 
     return answer, elapsed
+
+
+def ask_model_adaptive(
+    messages: list[Message],
+    model: str,
+    *,
+    think: bool = False,
+    attempts: list[int] | None = None,
+    timeout_seconds: float = 6.0,
+) -> tuple[str, float, dict[str, object]]:
+    if attempts is None:
+        attempts = [384, 256, 128]
+
+    total_elapsed = 0.0
+    attempt_logs = []
+
+    last_answer = ""
+
+    for num_predict in attempts:
+        answer, elapsed, timed_out = ask_model_stream_with_timeout(
+            messages,
+            model=model,
+            think=think,
+            num_predict=num_predict,
+            timeout_seconds=timeout_seconds,
+        )
+
+        total_elapsed += elapsed
+        last_answer = answer
+
+        attempt_logs.append(
+            {
+                "num_predict": num_predict,
+                "elapsed_seconds": round(elapsed, 3),
+                "timed_out": timed_out,
+                "answer_chars": len(answer),
+            }
+        )
+
+        if not timed_out:
+            return answer, total_elapsed, {
+                "adaptive": True,
+                "completed": True,
+                "attempts": attempt_logs,
+                "final_num_predict": num_predict,
+            }
+
+    return last_answer, total_elapsed, {
+        "adaptive": True,
+        "completed": False,
+        "attempts": attempt_logs,
+        "final_num_predict": attempts[-1],
+    }
+
+
+def ask_model_stream_with_timeout(
+    messages: list[Message],
+    model: str,
+    *,
+    think: bool = False,
+    num_predict: int | None = None,
+    timeout_seconds: float = 6.0,
+) -> tuple[str, float, bool]:
+    import ollama
+
+    start = time.perf_counter()
+    chunks: list[str] = []
+
+    options = {}
+
+    if num_predict is not None:
+        options["num_predict"] = num_predict
+
+    stream = ollama.chat(
+        model=model,
+        messages=messages,
+        stream=True,
+        think=think,
+        options=options or None,
+    )
+
+    timed_out = False
+
+    for chunk in stream:
+        elapsed = time.perf_counter() - start
+
+        if elapsed > timeout_seconds:
+            timed_out = True
+            break
+
+        content = chunk.get("message", {}).get("content", "")
+
+        if content:
+            chunks.append(content)
+
+    elapsed = time.perf_counter() - start
+    answer = "".join(chunks).strip()
+
+    return answer, elapsed, timed_out
