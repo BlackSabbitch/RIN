@@ -19,6 +19,26 @@ TestRunMode = Literal["raw", "guided", "both"]
 ConcreteTestMode = Literal["raw", "guided"]
 
 
+TestSelector = tuple[str, int]
+
+
+TEST_SUBSETS: dict[str, list[TestSelector]] = {
+    "stage0_part1_v05": [
+        ("identity", 1),
+        ("identity", 3),
+        ("voice", 2),
+        ("initiative", 2),
+        ("serious_mode", 3),
+        ("serious_mode", 4),
+        ("electronic_persona", 2),
+        ("family", 2),
+        ("family", 4),
+        ("creative", 4),
+        ("failure_modes", 3),
+    ],
+}
+
+
 def expand_modes(mode: TestRunMode) -> list[ConcreteTestMode]:
     if mode == "both":
         return ["raw", "guided"]
@@ -43,6 +63,10 @@ def format_available_categories() -> str:
         f"{category.number}:{key}"
         for key, category in TEST_CATEGORIES.items()
     )
+
+
+def format_available_subsets() -> str:
+    return ", ".join(sorted(TEST_SUBSETS))
 
 
 def resolve_category_key(category_key_or_number: str) -> str:
@@ -89,6 +113,18 @@ def list_categories() -> None:
 
     for key, category in TEST_CATEGORIES.items():
         print(f"  {category.number}. {category.name}  [{key}]")
+
+
+def list_subsets() -> None:
+    print()
+    print("Available subsets:")
+
+    for subset_key, selectors in TEST_SUBSETS.items():
+        encoded_selectors = ", ".join(
+            f"{category_key}.{question_number}"
+            for category_key, question_number in selectors
+        )
+        print(f"  {subset_key}: {encoded_selectors}")
 
 
 def list_tests(category_key: str | None = None) -> None:
@@ -154,6 +190,29 @@ def select_cases(
         )
 
     return selected
+
+
+def resolve_subset_cases(
+    subset_key: str,
+) -> list[tuple[str, TestCategory, TestCase]]:
+    if subset_key not in TEST_SUBSETS:
+        available = format_available_subsets()
+        raise ValueError(
+            f"Unknown subset: {subset_key}. "
+            f"Available subsets: {available}"
+        )
+
+    selected_cases: list[tuple[str, TestCategory, TestCase]] = []
+
+    for category_key_or_number, question_number in TEST_SUBSETS[subset_key]:
+        category_key = resolve_category_key(category_key_or_number)
+        category = TEST_CATEGORIES[category_key]
+        cases = select_cases(category, question_number)
+
+        for case in cases:
+            selected_cases.append((category_key, category, case))
+
+    return selected_cases
 
 
 def run_single_test(
@@ -230,11 +289,18 @@ def run_tests(
     show_final_prompt: bool = False,
     num_predict: int | None = None,
     adaptive=True,
+    subset_key: str | None = None,
 ) -> str:
     if session_id is None:
         session_id = new_session_id()
 
     categories = resolve_categories(category_key)
+
+    if subset_key is not None and (
+        category_key is not None or question_number is not None
+    ):
+        raise ValueError("--subset cannot be combined with --category or --question")
+
     modes = expand_modes(mode)
 
     append_event(
@@ -249,15 +315,13 @@ def run_tests(
     )
 
     try:
-        for current_category_key, category in categories:
+        if subset_key is not None:
             print()
             print("#" * 80)
-            print(f"Category: {category.number}. {category.name} [{current_category_key}]")
+            print(f"Subset: {subset_key}")
             print("#" * 80)
 
-            selected_cases = select_cases(category, question_number)
-
-            for case in selected_cases:
+            for current_category_key, category, case in resolve_subset_cases(subset_key):
                 for current_mode in modes:
                     run_single_test(
                         model=model,
@@ -270,6 +334,28 @@ def run_tests(
                         num_predict=num_predict,
                         adaptive=adaptive,
                     )
+        else:
+            for current_category_key, category in categories:
+                print()
+                print("#" * 80)
+                print(f"Category: {category.number}. {category.name} [{current_category_key}]")
+                print("#" * 80)
+
+                selected_cases = select_cases(category, question_number)
+
+                for case in selected_cases:
+                    for current_mode in modes:
+                        run_single_test(
+                            model=model,
+                            session_id=session_id,
+                            category_key=current_category_key,
+                            category=category,
+                            case=case,
+                            mode=current_mode,
+                            show_final_prompt=show_final_prompt,
+                            num_predict=num_predict,
+                            adaptive=adaptive,
+                        )
 
     finally:
         append_event(
@@ -281,6 +367,7 @@ def run_tests(
             mode=mode,
             num_predict=num_predict,
             adaptive=adaptive,
+            subset_key=subset_key,
         )
 
     return session_id
@@ -340,6 +427,12 @@ def parse_args() -> argparse.Namespace:
         help="Maximum number of tokens to generate per test answer. If omitted, adaptive mode is used. Use 0 to disable the limit.",
     )
 
+    parser.add_argument(
+        "--subset",
+        default=None,
+        help="Run a named calibration subset, e.g. stage0_part1_v05.",
+    )
+
     return parser.parse_args()
 
 
@@ -349,7 +442,13 @@ def main() -> None:
     if args.list:
         list_categories()
         list_tests(args.category)
+        list_subsets()
         return
+
+    if args.subset is not None and (
+        args.category is not None or args.question is not None
+    ):
+        raise ValueError("--subset cannot be combined with --category or --question")
 
     if args.question is not None and args.category is None:
         raise ValueError("--question requires --category")
@@ -363,6 +462,9 @@ def main() -> None:
 
     if args.category:
         print(f"Category: {args.category}")
+
+    if args.subset:
+        print(f"Subset: {args.subset}")
 
     if args.question is not None:
         print(f"Question: {args.question}")
@@ -388,6 +490,7 @@ def main() -> None:
         show_final_prompt=args.show_final_prompt,
         num_predict=num_predict,
         adaptive=adaptive,
+        subset_key=args.subset,
     )
 
 

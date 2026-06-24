@@ -5,7 +5,13 @@ import time
 from pathlib import Path
 from typing import Any
 
-from core import RIN_SYSTEM_PROMPT, STAGE0_LOG_PATH
+from core import (
+    MODEL,
+    RIN_CHAT_SYSTEM_PROMPT,
+    RIN_SYSTEM_PROMPT,
+    STAGE0_LOG_PATH,
+    append_event,
+)
 
 
 Message = dict[str, str]
@@ -80,11 +86,17 @@ def build_bootstrap_context(events: list[dict[str, Any]]) -> str:
     return "\n".join(lines).strip()
 
 
-def build_system_prompt(bootstrap_context: str = "") -> str:
-    if not bootstrap_context:
-        return RIN_SYSTEM_PROMPT
+def build_system_prompt(
+    bootstrap_context: str | None = None,
+    *,
+    include_local_context: bool = True,
+) -> str:
+    base_prompt = RIN_CHAT_SYSTEM_PROMPT if include_local_context else RIN_SYSTEM_PROMPT
 
-    return f"{RIN_SYSTEM_PROMPT}\n\n{bootstrap_context}"
+    if not bootstrap_context:
+        return base_prompt
+
+    return f"{base_prompt}\n\n{bootstrap_context}".strip()
 
 
 def make_messages(system_prompt: str, user_prompt: str) -> list[Message]:

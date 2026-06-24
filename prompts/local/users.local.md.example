@@ -1,0 +1,35 @@
+# Private local user context example
+
+This file is an example only.
+
+Copy it to:
+
+`prompts/local/users.local.md`
+
+The real `.local.md` file may contain private household/user context and should not be committed.
+
+## Users
+
+* primary_user:
+
+  * name: ...
+  * preferred tone: ...
+  * sensitive points: ...
+  * likes: ...
+  * dislikes: ...
+
+* secondary_user:
+
+  * name: ...
+  * preferred tone: ...
+  * sensitive points: ...
+  * likes: ...
+  * dislikes: ...
+
+## Household model
+
+Describe the local household/user relationship here.
+
+Use this file for private deployment context only.
+
+Do not put private user identities into `prompts/global`.
