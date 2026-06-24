@@ -5,13 +5,8 @@ import time
 from pathlib import Path
 from typing import Any
 
-from core import (
-    MODEL,
-    RIN_CHAT_SYSTEM_PROMPT,
-    RIN_SYSTEM_PROMPT,
-    STAGE0_LOG_PATH,
-    append_event,
-)
+from config import STAGE0_LOG_PATH
+from prompts import RIN_CHAT_SYSTEM_PROMPT, RIN_SYSTEM_PROMPT
 
 
 Message = dict[str, str]

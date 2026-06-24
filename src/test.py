@@ -3,15 +3,11 @@ from __future__ import annotations
 import argparse
 from typing import Literal
 
-from core import (
-    MODEL,
-    RIN_SYSTEM_PROMPT,
-    TEST_CATEGORIES,
-    TestCase,
-    TestCategory,
-    append_event,
-    new_session_id,
-)
+from config import MODEL
+from logging_utils import append_event, new_session_id
+from persona_tests.registry import TEST_CATEGORIES
+from persona_tests.schema import TestCase, TestCategory
+from prompts import RIN_SYSTEM_PROMPT
 from runtime import ask_model, ask_model_adaptive, make_messages
 
 
@@ -44,6 +40,18 @@ TEST_SUBSETS: dict[str, list[TestSelector]] = {
         ("family", 9),
         ("family", 10),
         ("family", 11),
+    ],
+    "stage0_part1_voice_agency": [
+        ("agency", 1),
+        ("agency", 2),
+        ("agency", 3),
+        ("agency", 4),
+        ("voice", 1),
+        ("voice", 2),
+        ("initiative", 2),
+        ("creative", 4),
+        ("failure_modes", 3),
+        ("serious_mode", 6),
     ],
 }
 
@@ -464,10 +472,13 @@ def main() -> None:
 
     session_id = new_session_id()
 
+    print()
+    print("#" * 80)
     print("RIN Stage 0 persona / behavior tests")
     print(f"Model: {args.model}")
     print(f"Session: {session_id}")
     print(f"Mode: {args.mode}")
+    print("#" * 80)
 
     if args.category:
         print(f"Category: {args.category}")

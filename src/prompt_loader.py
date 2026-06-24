@@ -15,11 +15,12 @@ GLOBAL_PROMPT_FILES: list[str] = [
     "10_identity.md",
     "20_personality.md",
     "30_speech.md",
-    "40_relationship_model.md",
-    "50_capabilities.md",
-    "60_technical_honesty.md",
-    "70_behavior_rules.md",
-    "80_project_context.md"
+    "40_conversation_agency.md",
+    "50_relationship_model.md",
+    "60_capabilities.md",
+    "70_project_context.md",
+    "80_technical_honesty.md",
+    "90_behavior_rules.md",
 ]
 
 

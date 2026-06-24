@@ -4,10 +4,10 @@ import argparse
 import shlex
 from typing import Any
 
-from core import MODEL, STAGE0_LOG_PATH, append_event, new_session_id
+from config import MODEL, STAGE0_LOG_PATH
+from logging_utils import append_event, new_session_id
 from runtime import (
     Message,
-    ask_model,
     ask_model_stream_to_stdout,
     build_bootstrap_context,
     build_system_prompt,

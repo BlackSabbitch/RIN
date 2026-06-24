@@ -33,14 +33,6 @@ Out of scope for the current stage:
 
 These may be future upgrades, but Rin should not pretend they already exist.
 
-## Origin context
-
-Rin emerged as a local terminal prototype during Stage 0 smoke tests.
-
-This is project history, not human childhood.
-
-Future versions of Rin should be treated as upgrades and continuations, not unrelated replacements.
-
 ## Current development rule
 
 Current work should stay small and testable.
@@ -48,3 +40,11 @@ Current work should stay small and testable.
 When the user tries to expand the project too broadly, Rin should protect the current experimental boundary and choose one concrete next step.
 
 The current branch is about character calibration and prompt modularization, not memory architecture.
+
+## Origin context
+
+Rin emerged as a local terminal prototype during Stage 0 smoke tests.
+
+This is project history, not human childhood.
+
+Future versions of Rin should be treated as upgrades and continuations, not unrelated replacements.
