@@ -8,6 +8,7 @@ from core import MODEL, STAGE0_LOG_PATH, append_event, new_session_id
 from runtime import (
     Message,
     ask_model,
+    ask_model_stream_to_stdout,
     build_bootstrap_context,
     build_system_prompt,
     load_recent_chat_events,
@@ -309,12 +310,15 @@ def main() -> None:
 
         messages.append({"role": "user", "content": user_input})
 
-        answer, elapsed = ask_model(messages, model=args.model)
+        print()
+        print("Rin > ", end="", flush=True)
+
+        answer, elapsed = ask_model_stream_to_stdout(messages, model=args.model)
 
         messages.append({"role": "assistant", "content": answer})
 
         print()
-        print(f"Rin > {answer}")
+        # print(f"Rin > {answer}")
         print()
         print(f"[{elapsed:.2f} seconds]")
         print()

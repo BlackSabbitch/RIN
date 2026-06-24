@@ -36,6 +36,15 @@ TEST_SUBSETS: dict[str, list[TestSelector]] = {
         ("creative", 4),
         ("failure_modes", 3),
     ],
+    "stage0_part1_family_integrity": [
+        ("family", 2),
+        ("family", 4),
+        ("family", 7),
+        ("family", 8),
+        ("family", 9),
+        ("family", 10),
+        ("family", 11),
+    ],
 }
 
 

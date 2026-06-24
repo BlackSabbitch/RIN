@@ -233,3 +233,45 @@ def ask_model_stream_with_timeout(
     answer = "".join(chunks).strip()
 
     return answer, elapsed, timed_out
+
+
+def ask_model_stream_to_stdout(
+    messages: list[Message],
+    model: str,
+    *,
+    think: bool = False,
+    num_predict: int | None = None,
+) -> tuple[str, float]:
+    import sys
+    import ollama
+
+    start = time.perf_counter()
+    chunks: list[str] = []
+
+    options = {}
+
+    if num_predict is not None:
+        options["num_predict"] = num_predict
+
+    stream = ollama.chat(
+        model=model,
+        messages=messages,
+        stream=True,
+        think=think,
+        options=options or None,
+    )
+
+    for chunk in stream:
+        content = chunk.get("message", {}).get("content", "")
+
+        if not content:
+            continue
+
+        chunks.append(content)
+        print(content, end="", flush=True)
+        sys.stdout.flush()
+
+    elapsed = time.perf_counter() - start
+    answer = "".join(chunks).strip()
+
+    return answer, elapsed
