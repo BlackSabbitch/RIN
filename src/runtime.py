@@ -12,6 +12,13 @@ from prompts import RIN_CHAT_SYSTEM_PROMPT, RIN_SYSTEM_PROMPT
 Message = dict[str, str]
 
 
+class StreamInterrupted(Exception):
+    def __init__(self, partial_answer: str, elapsed: float) -> None:
+        super().__init__("Streaming generation interrupted")
+        self.partial_answer = partial_answer
+        self.elapsed = elapsed
+
+
 def read_jsonl(path: Path = STAGE0_LOG_PATH) -> list[dict[str, Any]]:
     if not path.exists():
         return []
@@ -236,7 +243,7 @@ def ask_model_stream_to_stdout(
     *,
     think: bool = False,
     num_predict: int | None = None,
-) -> tuple[str, float]:
+) -> tuple[str, float, str]:
     import sys
     import ollama
 
@@ -256,17 +263,28 @@ def ask_model_stream_to_stdout(
         options=options or None,
     )
 
-    for chunk in stream:
-        content = chunk.get("message", {}).get("content", "")
+    finish_reason = "unknown"
+    try:
+        for chunk in stream:
+            if chunk.get("done"):
+                finish_reason = chunk.get("done_reason") or "done"
 
-        if not content:
-            continue
+            content = chunk.get("message", {}).get("content", "")
 
-        chunks.append(content)
-        print(content, end="", flush=True)
+            if not content:
+                continue
+
+            chunks.append(content)
+            print(content, end="", flush=True)
+
         sys.stdout.flush()
+        elapsed = time.perf_counter() - start
+        answer = "".join(chunks).strip()
 
-    elapsed = time.perf_counter() - start
-    answer = "".join(chunks).strip()
+        return answer, elapsed, finish_reason
 
-    return answer, elapsed
+    except KeyboardInterrupt as error:
+        sys.stdout.flush()
+        elapsed = time.perf_counter() - start
+        partial_answer = "".join(chunks).strip()
+        raise StreamInterrupted(partial_answer, elapsed) from error

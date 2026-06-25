@@ -8,6 +8,7 @@ from config import MODEL, STAGE0_LOG_PATH
 from logging_utils import append_event, new_session_id
 from runtime import (
     Message,
+    StreamInterrupted,
     ask_model_stream_to_stdout,
     build_bootstrap_context,
     build_system_prompt,
@@ -204,6 +205,13 @@ def parse_args() -> argparse.Namespace:
         ),
     )
 
+    parser.add_argument(
+        "--num-predict",
+        type=int,
+        default=None,
+        help="Optional maximum number of generated tokens for each chat reply.",
+    )
+
     return parser.parse_args()
 
 
@@ -225,6 +233,7 @@ def main() -> None:
         model=args.model,
         bootstrap_last=args.bootstrap_last,
         bootstrap_events=len(bootstrap_events),
+        num_predict=args.num_predict,
     )
 
     print("RIN local chat prototype")
@@ -249,6 +258,7 @@ def main() -> None:
                 session_id=session_id,
                 model=args.model,
                 reason="keyboard_interrupt_or_eof",
+                num_predict=args.num_predict,
             )
             break
 
@@ -313,7 +323,37 @@ def main() -> None:
         print()
         print("Rin > ", end="", flush=True)
 
-        answer, elapsed = ask_model_stream_to_stdout(messages, model=args.model)
+        try:
+            answer, elapsed, finish_reason = ask_model_stream_to_stdout(
+                messages,
+                model=args.model,
+                num_predict=args.num_predict,
+                )
+        except StreamInterrupted as error:
+            # Do not feed an interrupted / possibly degenerate partial answer
+            # back into the live chat history.
+            if messages and messages[-1]["role"] == "user":
+                messages.pop()
+
+            print()
+            print()
+            print(f"[interrupted after {error.elapsed:.2f} seconds]")
+            print()
+
+            append_event(
+                "chat_interrupted",
+                session_id=session_id,
+                model=args.model,
+                user=user_input,
+                partial_answer=error.partial_answer,
+                elapsed_seconds=round(error.elapsed, 3),
+                session_messages=len(messages),
+                bootstrap_events=len(bootstrap_events),
+                interruption_reason="keyboard_interrupt",
+                finish_reason="interrupted",
+                num_predict=args.num_predict,
+            )
+            continue
 
         messages.append({"role": "assistant", "content": answer})
 
@@ -332,6 +372,8 @@ def main() -> None:
             elapsed_seconds=round(elapsed, 3),
             session_messages=len(messages),
             bootstrap_events=len(bootstrap_events),
+            finish_reason=finish_reason,
+            num_predict=args.num_predict,
         )
 
 
