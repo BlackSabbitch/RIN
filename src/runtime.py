@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import time
+import re
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,168 @@ class StreamInterrupted(Exception):
         super().__init__("Streaming generation interrupted")
         self.partial_answer = partial_answer
         self.elapsed = elapsed
+
+
+def _normalize_repetition_text(text: str) -> str:
+    text = text.lower()
+    text = text.replace("ё", "е")
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
+def _recent_sentences(text: str, *, max_chars: int = 1500) -> list[str]:
+    tail = text[-max_chars:]
+    raw_sentences = re.split(r"(?<=[.!?…])\s+|\n+", tail)
+
+    sentences: list[str] = []
+    for sentence in raw_sentences:
+        normalized = _normalize_repetition_text(sentence)
+        normalized = normalized.strip("—-–,;:()[]{}\"'«» ")
+        if len(normalized) >= 25:
+            sentences.append(normalized)
+
+    return sentences
+
+
+def _normalize_repetition_text(text: str) -> str:
+    text = text.lower()
+    text = text.replace("ё", "е")
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
+
+
+def _normalize_repetition_line(line: str) -> str:
+    line = _normalize_repetition_text(line)
+    line = re.sub(r"[^\wа-яА-ЯёЁ]+", " ", line)
+    line = re.sub(r"\s+", " ", line)
+    return line.strip()
+
+
+def _tail_words(text: str, *, max_chars: int = 2000) -> list[str]:
+    tail = text[-max_chars:].lower().replace("ё", "е")
+    return re.findall(r"[a-zа-я0-9]+", tail)
+
+
+def _recent_lines(text: str, *, max_chars: int = 2000) -> list[str]:
+    tail = text[-max_chars:]
+    lines = []
+
+    for raw_line in tail.splitlines():
+        line = _normalize_repetition_line(raw_line)
+        if len(line) >= 3:
+            lines.append(line)
+
+    return lines
+
+
+def _detect_trailing_line_loop(
+    text: str,
+    *,
+    min_repeats: int = 5,
+) -> tuple[bool, str | None]:
+    lines = _recent_lines(text)
+
+    if not lines:
+        return False, None
+
+    last = lines[-1]
+
+    trailing_count = 0
+    for line in reversed(lines):
+        if line == last:
+            trailing_count += 1
+        else:
+            break
+
+    if trailing_count >= min_repeats:
+        return True, f"line repeated {trailing_count} times: {last!r}"
+
+    return False, None
+
+
+def _detect_token_ngram_loop(
+    text: str,
+    *,
+    min_repeats: int = 6,
+    min_total_tokens: int = 18,
+    max_ngram: int = 14,
+) -> tuple[bool, str | None]:
+    words = _tail_words(text)
+
+    if len(words) < min_total_tokens:
+        return False, None
+
+    max_n = min(max_ngram, len(words) // min_repeats)
+
+    for n in range(1, max_n + 1):
+        pattern = words[-n:]
+
+        repeats = 1
+        pos = len(words) - n
+
+        while pos - n >= 0 and words[pos - n:pos] == pattern:
+            repeats += 1
+            pos -= n
+
+        covered_tokens = repeats * n
+
+        if repeats >= min_repeats and covered_tokens >= min_total_tokens:
+            preview = " ".join(pattern)
+            return True, (
+                f"token {n}-gram repeated {repeats} times "
+                f"({covered_tokens} tokens): {preview!r}"
+            )
+
+    return False, None
+
+
+def _detect_dominant_tail_token(
+    text: str,
+    *,
+    tail_tokens: int = 80,
+    min_count: int = 30,
+    min_ratio: float = 0.65,
+) -> tuple[bool, str | None]:
+    words = _tail_words(text)
+
+    if len(words) < tail_tokens:
+        return False, None
+
+    tail = words[-tail_tokens:]
+
+    counts: dict[str, int] = {}
+    for word in tail:
+        counts[word] = counts.get(word, 0) + 1
+
+    word, count = max(counts.items(), key=lambda item: item[1])
+    ratio = count / len(tail)
+
+    if count >= min_count and ratio >= min_ratio:
+        return True, f"dominant tail token {word!r}: {count}/{len(tail)}"
+
+    return False, None
+
+
+def detect_repetition_loop(
+    text: str,
+    *,
+    min_chars: int = 250,
+) -> tuple[bool, str | None]:
+    if len(text) < min_chars:
+        return False, None
+
+    detectors = [
+        _detect_trailing_line_loop,
+        _detect_token_ngram_loop,
+        _detect_dominant_tail_token,
+    ]
+
+    for detector in detectors:
+        repeated, reason = detector(text)
+        if repeated:
+            return True, reason
+
+    return False, None
 
 
 def read_jsonl(path: Path = STAGE0_LOG_PATH) -> list[dict[str, Any]]:
@@ -243,6 +406,8 @@ def ask_model_stream_to_stdout(
     *,
     think: bool = False,
     num_predict: int | None = None,
+    repetition_guard: bool = True,
+    repetition_min_chars: int = 250,
 ) -> tuple[str, float, str]:
     import sys
     import ollama
@@ -276,6 +441,20 @@ def ask_model_stream_to_stdout(
 
             chunks.append(content)
             print(content, end="", flush=True)
+
+            if repetition_guard:
+                current_answer = "".join(chunks)
+                repeated, reason = detect_repetition_loop(
+                    current_answer,
+                    min_chars=repetition_min_chars,
+                )
+                if repeated:
+                    finish_reason = "repetition_guard"
+                    print(
+                        f"\n\n[stopped by repetition guard: {reason}]",
+                        flush=True,
+                    )
+                    break
 
         sys.stdout.flush()
         elapsed = time.perf_counter() - start

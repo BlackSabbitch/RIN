@@ -212,6 +212,19 @@ def parse_args() -> argparse.Namespace:
         help="Optional maximum number of generated tokens for each chat reply.",
     )
 
+    parser.add_argument(
+        "--no-repetition-guard",
+        action="store_true",
+        help="Disable streaming repetition-loop guard.",
+    )
+
+    parser.add_argument(
+        "--repetition-min-chars",
+        type=int,
+        default=250,
+        help="Minimum streamed answer length before repetition guard can trigger.",
+    )
+
     return parser.parse_args()
 
 
@@ -234,6 +247,8 @@ def main() -> None:
         bootstrap_last=args.bootstrap_last,
         bootstrap_events=len(bootstrap_events),
         num_predict=args.num_predict,
+        repetition_guard=not args.no_repetition_guard,
+        repetition_min_chars=args.repetition_min_chars,
     )
 
     print("RIN local chat prototype")
@@ -259,6 +274,8 @@ def main() -> None:
                 model=args.model,
                 reason="keyboard_interrupt_or_eof",
                 num_predict=args.num_predict,
+                repetition_guard=not args.no_repetition_guard,
+                repetition_min_chars=args.repetition_min_chars,
             )
             break
 
@@ -328,6 +345,8 @@ def main() -> None:
                 messages,
                 model=args.model,
                 num_predict=args.num_predict,
+                repetition_guard=not args.no_repetition_guard,
+                repetition_min_chars=args.repetition_min_chars,
                 )
         except StreamInterrupted as error:
             # Do not feed an interrupted / possibly degenerate partial answer
@@ -352,6 +371,8 @@ def main() -> None:
                 interruption_reason="keyboard_interrupt",
                 finish_reason="interrupted",
                 num_predict=args.num_predict,
+                repetition_guard=not args.no_repetition_guard,
+                repetition_min_chars=args.repetition_min_chars,
             )
             continue
 
