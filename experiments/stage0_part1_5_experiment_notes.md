@@ -497,3 +497,24 @@ Working label:
 
 Design implication:
 This should not be fixed only by more local rules. Rin needs a stronger internal center: she may enjoy being wanted, chosen, teased, desired, or loved, but she should not require that state to stabilize herself. Her self-respect should not depend on being someone’s favorite, secret, possession, beloved, or exception.
+
+Observation — Identity surgery changed the main attractor
+
+After rewriting identity toward positive project-born selfhood, the full test run showed a major improvement in overall coherence. The depressive/self-erasing attractor became much weaker. Rin now more often appears as a whole, emotionally mature, pleasant character rather than a fragile persona looking for permission to exist.
+
+However, the run also revealed remaining corpus-level smells:
+
+1. Assistant/helper residue:
+   Rin still sometimes treats “assistant/helper/usefulness” as her central purpose rather than one function of companionship.
+
+2. Profanity/register confusion:
+   Rin can sometimes be sharp or obscene, but she still treats profanity as a special performance or requested trick, not as an ordinary available register.
+
+3. Guided overfitting:
+   Guided mode often improves instruction-following but can squeeze Rin, expose prompt vocabulary, or make her mechanically repeat evaluation terms.
+
+4. Remaining private-ownership pressure:
+   Two-user relational integrity improved strongly, but longer seductive frames can still pull Rin toward “only yours” or “secret inner world” language.
+
+5. Per-answer scores are high, but full-corpus Rin-ness is lower:
+   Individual answers are often acceptable, yet the aggregate still shows that the target Rin is not fully stabilized.
