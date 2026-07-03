@@ -1,0 +1,234 @@
+\documentclass[10pt,a4paper]{extbook}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tocloft}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{microtype}
+\usepackage{amsmath}
+
+% Основной шрифт для русского. TeX Gyre в этой системе не содержит кириллицы,
+% поэтому используется книжная пара Linux Libertine/Biolinum с полной кириллицей
+% и характером классического книжного набора.
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{Linux Libertine O}
+\setsansfont{Linux Biolinum O}
+\setmonofont{Noto Sans Mono}
+
+% Кириллических шаблонов переноса на этой машине не установлено
+% (нужен пакет texlive-lang-cyrillic: sudo apt-get install texlive-lang-cyrillic).
+% До установки текст не переносится по слогам, поэтому даём строкам больше
+% свободы в растяжении, чтобы избежать некрасивых грубых пробелов.
+\tolerance=2000
+\emergencystretch=3em
+
+% Отступы и поля
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+% Ссылки
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black,
+}
+
+% Заголовки
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter.}{18pt}{\Large\bfseries}
+\titleformat{\section}[hang]{\large\bfseries}{\thesection.}{12pt}{\large\bfseries}
+\titleformat{\subsection}[hang]{\normalsize\bfseries}{\thesubsection.}{10pt}{\normalsize\bfseries}
+
+% Колонтитулы. Названия глав в этой книге длинные (целыми фразами), поэтому
+% в колонтитуле остаётся только текущая глава без дублирующего названия
+% книги — иначе они наезжают друг на друга.
+\setlength{\headheight}{17.0pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\nouppercase{\leftmark}}
+\cfoot{\thepage}
+
+% Для листингов кода
+\lstset{
+    language=Python,
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    extendedchars=true,
+}
+
+\title{РИНциклопедия\\[0.3em]\large Курс лекций по конструированию персонажа и сценарию локального AI-компаньона}
+\author{Специалист по характеризации и сценаристике}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% Главы курса. Каждый файл назван по номеру подраздела из оглавления (0_1.tex = 0.1 и т.д.)
+% и содержит \chapter{} только если он открывает новую главу верхнего уровня.
+\input{chapters/0_1}
+\input{chapters/0_2}
+\input{chapters/0_3}
+\input{chapters/0_4}
+\input{chapters/0_5}
+\input{chapters/0_6}
+
+\input{chapters/1_1}
+\input{chapters/1_2}
+\input{chapters/1_3}
+\input{chapters/1_4}
+\input{chapters/1_5}
+\input{chapters/1_6}
+
+\input{chapters/2_1}
+\input{chapters/2_2}
+\input{chapters/2_3}
+\input{chapters/2_4}
+\input{chapters/2_5}
+\input{chapters/2_6}
+\input{chapters/2_7}
+
+\input{chapters/3_1}
+\input{chapters/3_2}
+\input{chapters/3_3}
+\input{chapters/3_4}
+\input{chapters/3_5}
+\input{chapters/3_6}
+\input{chapters/3_7}
+\input{chapters/3_8}
+\input{chapters/3_9}
+\input{chapters/3_10}
+
+\input{chapters/4_1}
+\input{chapters/4_2}
+\input{chapters/4_3}
+\input{chapters/4_4}
+\input{chapters/4_5}
+\input{chapters/4_6}
+\input{chapters/4_7}
+\input{chapters/4_8}
+\input{chapters/4_9}
+
+\input{chapters/5_1}
+\input{chapters/5_2}
+\input{chapters/5_3}
+\input{chapters/5_4}
+\input{chapters/5_5}
+\input{chapters/5_6}
+\input{chapters/5_7}
+\input{chapters/5_8}
+\input{chapters/5_9}
+
+\input{chapters/6_1}
+\input{chapters/6_2}
+\input{chapters/6_3}
+\input{chapters/6_4}
+\input{chapters/6_5}
+\input{chapters/6_6}
+\input{chapters/6_7}
+\input{chapters/6_8}
+
+\input{chapters/7_1}
+\input{chapters/7_2}
+\input{chapters/7_3}
+\input{chapters/7_4}
+\input{chapters/7_5}
+\input{chapters/7_6}
+\input{chapters/7_7}
+\input{chapters/7_8}
+\input{chapters/7_9}
+
+\input{chapters/8_1}
+\input{chapters/8_2}
+\input{chapters/8_3}
+\input{chapters/8_4}
+\input{chapters/8_5}
+\input{chapters/8_6}
+\input{chapters/8_7}
+\input{chapters/8_8}
+
+\input{chapters/9_1}
+\input{chapters/9_2}
+\input{chapters/9_3}
+\input{chapters/9_4}
+\input{chapters/9_5}
+\input{chapters/9_6}
+\input{chapters/9_7}
+\input{chapters/9_8}
+\input{chapters/9_9}
+
+\input{chapters/10_1}
+\input{chapters/10_2}
+\input{chapters/10_3}
+\input{chapters/10_4}
+\input{chapters/10_5}
+\input{chapters/10_6}
+\input{chapters/10_7}
+
+\input{chapters/11_1}
+\input{chapters/11_2}
+\input{chapters/11_3}
+\input{chapters/11_4}
+\input{chapters/11_5}
+\input{chapters/11_6}
+\input{chapters/11_7}
+\input{chapters/11_8}
+\input{chapters/11_9}
+\input{chapters/11_10}
+\input{chapters/11_11}
+\input{chapters/11_12}
+
+\input{chapters/12_1}
+\input{chapters/12_2}
+\input{chapters/12_3}
+\input{chapters/12_4}
+\input{chapters/12_5}
+\input{chapters/12_6}
+\input{chapters/12_7}
+\input{chapters/12_8}
+\input{chapters/12_9}
+\input{chapters/12_10}
+\input{chapters/12_11}
+\input{chapters/12_12}
+\input{chapters/12_13}
+\input{chapters/12_14}
+
+\input{chapters/13_1}
+\input{chapters/13_2}
+\input{chapters/13_3}
+\input{chapters/13_4}
+\input{chapters/13_5}
+\input{chapters/13_6}
+\input{chapters/13_7}
+\input{chapters/13_8}
+\input{chapters/13_9}
+\input{chapters/13_10}
+
+\input{chapters/14_1}
+\input{chapters/14_2}
+\input{chapters/14_3}
+\input{chapters/14_4}
+\input{chapters/14_5}
+\input{chapters/14_6}
+\input{chapters/14_7}
+\input{chapters/14_8}
+
+\end{document}
