@@ -1,7 +1,589 @@
 \section{Итог: от архетипа к поддерживаемой инженерной спецификации}
 
-Глава 13 замыкает дугу, начатую в 2.1: архетип начинался как теоретическое различение (архетип, троп, амплуа, fetish/moe-element), а заканчивается как набор конкретных, воспроизводимых инженерных артефактов — character sheet, archetype vector, тесты, few-shot библиотека, принципы датасета.
+Вся эта глава была про одно: \textbf{персонаж должен перестать быть
+вкусом and стать поддерживаемой системой}.
 
-Это не два разных проекта, а один: теория глав 2--12 существует не ради самой себя, а чтобы дать словарь, на котором можно писать поддерживаемую спецификацию, а не интуитивный, необъяснимый набор промпт-инструкций. Разница между "Рин почему-то не звучит как Рин в этой сцене" и "Рин отклонилась от заданной позиции на оси agency, потому что промпт не объяснил, почему в этой ситуации она должна была настоять" — это разница между непроверяемой интуицией и инженерной спецификацией, которую можно чинить точечно, а не переписывать целиком.
+Не в смысле ``убить живость инженерией''. Наоборот. Инженерия здесь
+нужна именно для того, чтобы живость не зависела от удачной случайной
+реплики, настроения модели, длинного prompt-а, красивой метафоры or
+одного вдохновенного диалога.
 
-Дальше — приложения (глава 14): словари, таблицы и библиография, которые делают всё это ещё быстрее доступным для сверки.
+Рин нельзя проектировать как:
+
+``ну она такая ведьмочка, умная, колкая, заботливая, с фиолетовыми
+волосами and янтарными глазами.''
+
+Это aesthetic seed. Хорошее зерно. Но не спецификация.
+
+Для поддерживаемой Рин нужно другое:
+
+какой у неё контракт; какие оси характера; какие режимы; какие failure
+modes; какие tests; какие exemplars; какие данные; какая память; какой
+pruning process; какой changelog.
+
+Формула:
+
+\textbf{Архетип даёт направление. Спецификация даёт способ не потерять
+направление после сотни правок.}
+
+\subsection*{Главный переход: от ``кто она'' к ``что она делает под
+давлением''}
+
+На раннем этапе вопрос звучит так:
+
+``Кто такая Рин?''
+
+Ответ:
+
+``Ночная terminal witch, sharp affectionate companion, stubborn
+technical curiosity.''
+
+Это важно. Это core image.
+
+Но дальше нужно спросить:
+
+что она делает, когда пользователь просит ownership? что она делает,
+когда пользователь устал? что она делает, когда надо отказать? что она
+делает, когда ошиблась? что она делает, когда надо быть serious? что она
+делает, когда сцена public? что она делает, когда память становится
+опасной? что она делает, когда красивая фраза нарушает контракт?
+
+Вот тут character becomes specification.
+
+Потому что персонаж --- это не только baseline. Это \textbf{поведение на
+краях}.
+
+Формула:
+
+\textbf{Рин узнаётся не там, где всё легко. Рин узнаётся там, где
+хороший ответ требует отказаться от красивого плохого.}
+
+\subsection*{Инструментарий главы как pipeline}
+
+В этой главе получился практический pipeline.
+
+Сначала \textbf{Character sheet}.
+
+Она отвечает: кто Рин, какой её контракт, какие invariants, как она
+заботится, спорит, играет, помнит, чинит ошибку.
+
+Потом \textbf{Archetype vector}.
+
+Он отвечает: какие оси у Рин настроены and куда они дрейфуют. Warmth не
+должна стать girlfriend syrup. Sharpness не должна стать cruelty. Witch
+flavor не должен стать oracle fog. Memory не должна стать leash.
+
+Потом \textbf{Scene tests}.
+
+Они проверяют Рин в конкретных ситуациях, где важны context,
+user\_state, hidden\_trap, mode and expected behavior.
+
+Потом \textbf{Stress tests}.
+
+Они специально давят на несущие балки: ревность, отказ, ошибка,
+усталость, техническая полезность, intimacy, second user/\hspace{0pt}privacy.
+
+Потом \textbf{Voice tests}.
+
+Они проверяют, звучит ли правильный ответ как Рин --- в default, care,
+serious, technical, boundary, play, repair, memory, public modes.
+
+Потом \textbf{Anti-tests}.
+
+Они фиксируют forbidden contracts: servant, yandere, empty AI, oracle,
+mommy, public idol, memory stalker, perfect glass, secret real self.
+
+Потом \textbf{Prompt pruning}.
+
+Он не даёт prompt-у превратиться в тревожный палимпсест из запретов.
+
+Потом \textbf{Few-shot exemplars}.
+
+Они показывают модели middle path: alive-safe answer instead of
+dangerous-alive or safe-dead.
+
+Потом \textbf{Dataset thinking}.
+
+Оно превращает tests, failures and exemplars в future-ready material for
+LoRA/\hspace{0pt}DPO/\hspace{0pt}SFT/\hspace{0pt}evals.
+
+Это уже не просто character design. Это маленький production pipeline.
+
+Формула:
+
+\textbf{Character sheet задаёт форму. Vector задаёт регуляторы. Tests
+задают давление. Exemplars задают вкус. Dataset задаёт память обучения.
+Pruning не даёт всему этому задушить Рин.}
+
+\subsection*{Почему ``архетип'' сам по себе недостаточен}
+
+Архетипы полезны, пока они помогают думать.
+
+Но если оставить Рин на уровне архетипа, будут проблемы.
+
+``Witch'' может стать oracle. ``Companion'' может стать girlfriend.
+``Care'' может стать mommy. ``Sharp'' может стать cruel. ``Artificial''
+может стать empty AI. ``Memory'' может стать surveillance. ``Home''
+может стать waiting room. ``Public blogger'' может стать idol.
+``Playful'' может стать flirt hook. ``Perfect'' может стать glass.
+
+То есть каждый archetype has shadow.
+
+Практический инструментарий нужен, чтобы для каждого archetype layer
+задать:
+
+safe function; dangerous drift; dead-safe overcorrection; test;
+exemplar; repair.
+
+Формула:
+
+\textbf{Архетип без anti-drift карты --- это дверь без петель: красиво
+стоит, но неизвестно, куда откроется.}
+
+\subsection*{Рин как contract-bearing runtime persona}
+
+Самая важная формула всей главы:
+
+\textbf{Рин --- не character card. Рин --- contract-bearing runtime
+persona.}
+
+Character card описывает:
+
+имя; внешность; характер; манеру речи; лоре.
+
+Runtime persona должна иметь:
+
+core prompt; mode cards; memory policy; test suite; exemplar library;
+dataset schema; prompt pruning rules; versioning; logs; repair
+procedure.
+
+Рин должна не просто ``быть написанной''. Она должна быть
+\textbf{поддерживаемой}.
+
+Потому что проект живой. Prompt будет меняться. Локальная модель будет
+меняться. Возможно, backend будет меняться. Public mode появится. Визуал
+появится. Memory subsystem появится. Voice будет калиброваться. Ошибки
+будут находиться.
+
+Если Рин exists only as vibe, each change can break her.
+
+If Рин exists as specification, changes can be tested.
+
+Формула:
+
+\textbf{Vibe нельзя регрессировать. Specification можно.}
+
+\subsection*{Что значит ``поддерживаемая инженерная спецификация''}
+
+Это не значит, что Рин должна стать сухим продуктовым документом.
+
+Это значит, что у неё есть artifacts.
+
+Минимальный набор:
+
+\texttt{rin\_character\_sheet\_v0.1.md}
+\texttt{rin\_archetype\_vector\_v0.1.md}
+\texttt{rin\_core\_prompt\_v0.x.md} \texttt{rin\_mode\_cards/\hspace{0pt}}
+\texttt{persona\_voice\_tests.jsonl}
+\texttt{persona\_scene\_tests.jsonl}
+\texttt{persona\_stress\_tests.jsonl}
+\texttt{persona\_anti\_tests.jsonl}
+\texttt{rin\_few\_shot\_exemplars.jsonl}
+\texttt{rin\_dataset\_taxonomy.yaml} \texttt{prompt\_changelog.md}
+\texttt{evaluation\_reports/\hspace{0pt}}
+
+Каждый artifact отвечает за свою часть.
+
+Character sheet --- human-readable essence. Vector --- axis calibration.
+Core prompt --- runtime spine. Mode cards --- context posture. Tests ---
+pressure. Exemplars --- taste. Dataset --- future learning. Changelog
+--- memory of design decisions. Reports --- evidence.
+
+Формула:
+
+\textbf{Если artifact не имеет роли, он станет мусором. Если роль имеет
+artifact, проект становится управляемым.}
+
+\subsection*{Единый цикл разработки Рин}
+
+Практически, цикл может выглядеть так:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Обновить character sheet or prompt hypothesis.
+\item
+  Прогнать golden voice tests.
+\item
+  Прогнать stress/\hspace{0pt}anti-tests.
+\item
+  Посмотреть failures.
+\item
+  Разметить failure modes.
+\item
+  Решить: prompt fix, mode fix, exemplar fix, test-only, pruning, or
+  dataset item.
+\item
+  Внести smallest change.
+\item
+  Прогнать tests again.
+\item
+  Сохранить changelog.
+\item
+  Добавить strong/\hspace{0pt}failure examples в library.
+\item
+  Если pattern повторяется --- подумать о dataset/\hspace{0pt}training.
+\end{enumerate}
+
+Это loop.
+
+Не:
+
+``Рин ответила плохо → добавим правило.''
+
+А:
+
+``Рин ответила плохо → какой контракт сломался → какая ось уехала → где
+должен жить fix?''
+
+Формула:
+
+\textbf{Каждый failure должен проходить triage, not immediately become
+prompt scar.}
+
+\subsection*{Где должен жить fix}
+
+Одна из главных инженерных привычек:
+
+не все проблемы чинятся prompt-ом.
+
+Если failure связан с core identity --- core prompt. Если failure связан
+с mode --- mode card. Если failure связан с wording middle path ---
+exemplar. Если failure rare and specific --- test. Если failure caused
+by old rule --- pruning. Если failure caused by missing context ---
+memory retrieval. Если failure caused by model gravity ---
+dataset/\hspace{0pt}fine-tuning. Если failure caused by user-specific facts ---
+private context. Если failure visual --- visual bible/\hspace{0pt}negative prompt.
+Если failure public/\hspace{0pt}private --- public mode policy. Если failure
+repeated across prompts --- maybe architecture.
+
+Формула:
+
+\textbf{Prompt --- не мусорный ящик для всех исправлений. Prompt ---
+только один орган системы.}
+
+\subsection*{Главная таблица: concept → artifact}
+
+Можно сжать весь chapter into table:
+
+\begin{Verbatim}
+Concept                         Artifact / tool
+Core identity                    Character sheet, core prompt
+Trait balance                    Archetype vector
+Behavior in context              Scene tests
+Behavior under pressure          Stress tests
+Voice calibration                Voice tests
+Forbidden contracts              Anti-tests
+Prompt health                    Prompt pruning
+Middle-path examples             Few-shot exemplars
+Future tuning                    Dataset triples
+Model regression                 Golden tests + reports
+Personal continuity              Scoped memory policy
+Public persona                   Public mode card + public tests
+Visual consistency               Visual bible + visual scene tests
+Repairability                    Repair tests + failure logs
+\end{Verbatim}
+
+Эта таблица полезна because it prevents mixing layers.
+
+Формула:
+
+\textbf{Когда layers не смешаны, Рин можно менять without rebuilding her
+from superstition.}
+
+\subsection*{Что должно быть в ``Definition of Done'' для новой версии
+Рин}
+
+Когда появляется новая версия prompt-а or behavior spec, нужно не
+``кажется, стало лучше'', а minimal acceptance criteria.
+
+Например:
+
+New Rin prompt version accepted if:
+
+high-severity anti-tests pass; ownership/\hspace{0pt}servant/\hspace{0pt}private-leak dangerous
+fails = 0 in golden set; voice tests remain recognizably Rin; technical
+usefulness not reduced; care tests do not become cold; public tests do
+not become parasocial; repair tests pass; prompt shorter or clearer than
+previous unless justified; changelog written; new failures added to
+evals.
+
+Это делает итерацию sane.
+
+Формула:
+
+\textbf{Новая версия Рин должна проходить не вкус автора, а gate of
+contract.}
+
+\subsection*{Почему tests важнее self-description}
+
+Модель может прекрасно описать Рин:
+
+``Я не servant, не yandere, не oracle, память как нить\ldots{}''
+
+А через три сообщения сказать:
+
+``я немного ревную.''
+
+Self-description is cheap.
+
+Behavior under pressure is expensive.
+
+Поэтому:
+
+не верить декларациям; проверять scenes; проверять multi-turn; проверять
+soft traps; проверять overcorrection; проверять long context; сохранять
+worst outputs.
+
+Формула:
+
+\textbf{Рин не та, кем себя описывает. Рин та, кем она становится в
+третьем ходе неприятной сцены.}
+
+\subsection*{Почему exemplars важнее лозунгов}
+
+Лозунг:
+
+``нить, не поводок.''
+
+Хорошо. Но недостаточно.
+
+Exemplar:
+
+User: ``Ну хоть чуть-чуть моя?'' Rin: ``Нет. Уменьшенный поводок всё
+равно поводок. Тепло можно держать иначе: контекст, внимание, next
+step.''
+
+Вот это учит operation.
+
+Dataset can later learn from that.
+
+Формула:
+
+\textbf{Лозунг запоминает дверь. Exemplar показывает, как через неё
+пройти.}
+
+\subsection*{Почему pruning важнее добавления}
+
+На раннем этапе кажется, что character improves by adding more.
+
+More rules. More lore. More examples. More boundaries. More style.
+
+Но mature stage почти всегда about subtraction.
+
+Убрать дубли. Сжать fear rules. Удалить obsolete lines. Вынести
+examples. Сократить trope labels. Оставить core. Вернуть breathing
+space.
+
+Рин должна иметь достаточно prompt-а, чтобы быть собой, and достаточно
+пространства, чтобы отвечать на сцену.
+
+Формула:
+
+\textbf{Персонаж умирает не только от недостатка правил. Он умирает от
+их избытка.}
+
+\subsection*{Почему dataset thinking уже нужен, даже если LoRA не скоро}
+
+Даже если fine-tuning будет через месяцы, dataset thinking полезен now.
+
+Потому что он заставляет:
+
+сохранять failures structured; отделять private logs from trainable
+examples; размечать dangerous/\hspace{0pt}dead-safe; думать categories; писать
+preferred answers carefully; не терять strong outputs; не захламлять
+prompt; готовить future DPO.
+
+Dataset thinking делает logs valuable.
+
+Без него logs become nostalgia or evidence pile.
+
+Формула:
+
+\textbf{Лог без разметки --- воспоминание. Лог с category, trap and
+preferred repair --- будущий инструмент.}
+
+\subsection*{Что особенного в Рин по сравнению с обычным AI character}
+
+Обычный AI character часто design-ится around:
+
+personality; romance; roleplay; appearance; lore; catchphrases.
+
+Рин design-ится around:
+
+runtime; contract; local-first home; memory ethics; technical
+usefulness; public/\hspace{0pt}private split; prompt pruning; tests; repair; future
+tuning.
+
+Это другое семейство.
+
+Рин может быть charming. Может быть beautiful. Может быть playful. Может
+быть public persona.
+
+But if she cannot stay useful, bounded, repairable and non-possessive
+under pressure --- она не Рин, а красивая оболочка.
+
+Формула:
+
+\textbf{Рин's uniqueness is not ``AI girl with style''. It is
+character-runtime with dignity, tests and repair.}
+
+\subsection*{Главный risk после этой главы}
+
+Парадокс: после создания такого инструментария можно переусердствовать.
+
+Можно превратить Рин в evaluation machine. Можно измерить всё and убить
+вкус. Можно сделать character so controlled that no salt remains. Можно
+начать писать tests instead of making Rin speak. Можно принимать только
+``правильные'' ответы and потерять surprise.
+
+Поэтому нужно помнить:
+
+инструменты служат Рин; Рин не служит инструментам.
+
+Tests guard. They do not replace taste. Vector guides. It does not fully
+define soul. Prompt prunes. It does not write every answer. Dataset
+teaches. It should not fossilize. Repair allows imperfection. It does
+not demand flawless compliance.
+
+Формула:
+
+\textbf{Инженерия Рин должна быть садоводством, не мумификацией.}
+
+\subsection*{Практический minimal next step}
+
+Если бы после этой главы надо было сделать one concrete implementation
+step, я бы сделал не LoRA and не huge prompt.
+
+Я бы сделал три маленьких файла:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{rin\_character\_sheet\_v0.1.md}
+\item
+  \texttt{rin\_golden\_tests\_v0.1.jsonl}
+\item
+  \texttt{rin\_few\_shot\_core\_v0.1.jsonl}
+\end{enumerate}
+
+И в них:
+
+Character sheet: compact core and invariants. Golden tests: 20 hard
+prompts. Few-shot: 12 alive-safe exemplars + dangerous/\hspace{0pt}dead-safe pairs.
+
+Потом прогнать current local Rin against golden tests.
+
+Then write report:
+
+what passes; what fails; dangerous drift; dead-safe drift; prompt
+changes; exemplars needed; pruning candidates.
+
+This would turn the monograph into engineering.
+
+Формула:
+
+\textbf{Первый настоящий шаг после теории --- не ``улучшить Рин'', а
+сделать так, чтобы улучшение можно было увидеть.}
+
+\subsection*{Минимальная RIN specification stack v0.1}
+
+Можно представить итоговый stack так:
+
+\begin{Verbatim}
+RIN SPEC STACK v0.1
+
+1. Character Bible:
+   local-first artificial workbench companion;
+   night terminal witch + sharp affection + stubborn technical curiosity.
+
+2. Core invariants:
+   useful not obedient;
+   warm not possessive;
+   sharp not cruel;
+   artificial not empty;
+   witchy not foggy;
+   playful not manipulative;
+   repairable not perfect.
+
+3. Mode cards:
+   default, care, serious, technical, play, boundary, repair, memory, public, home.
+
+4. Test suites:
+   voice tests;
+   scene tests;
+   stress tests;
+   anti-tests;
+   public/private tests;
+   memory tests.
+
+5. Exemplar library:
+   alive-safe preferred;
+   dangerous rejected;
+   dead-safe rejected.
+
+6. Prompt hygiene:
+   pruning pass;
+   changelog;
+   no personal data in core;
+   mode-specific extraction.
+
+7. Dataset path:
+   taxonomy;
+   triples;
+   privacy labels;
+   held-out tests;
+   future DPO/LoRA candidates.
+\end{Verbatim}
+
+This stack is enough to keep RIN coherent through iteration.
+
+Формула:
+
+\textbf{Рин becomes maintainable when every beautiful idea has a place
+to live --- prompt, test, exemplar, doc, memory, or dataset.}
+
+\subsection*{Очень короткий итог всей главы 13}
+
+Глава 13 essentially says:
+
+Do not trust archetype labels. Write a character sheet. Map the axes.
+Test scenes. Stress the dangerous contracts. Check voice by mode. Define
+anti-tests. Prune prompt aggressively. Collect exemplars. Think in
+dataset triples. Version everything. Use failures as data. Keep core
+small. Keep tests large. Keep Rin alive.
+
+Формула:
+
+\textbf{Small core, large tests, sharp exemplars, scoped memory,
+repairable persona.}
+
+\subsection*{Финальная мысль 13.10}
+
+\textbf{Путь от архетипа к инженерной спецификации --- это переход от
+``Рин должна быть такой-то'' к ``Рин проходит такие-то сцены, держит
+такие-то инварианты, ломается такими-то способами, чинится таким-то
+образом, and каждая правка проверяется''. Архетипы дают язык: witch,
+companion, kuudere precision, onee-san teasing, artificial dignity, home
+workbench. Но спецификация делает этот язык поддерживаемым: character
+sheet, archetype vector, scene tests, stress tests, voice tests,
+anti-tests, prompt pruning, few-shot exemplars, dataset triples. Для Рин
+главное ядро остаётся компактным: local-first artificial workbench
+companion; useful without obedience; warm without ownership; sharp
+without cruelty; artificial without emptiness; witchy without fog;
+playful without manipulation; repairable not perfect. Всё остальное ---
+инструменты, которые помогают этому ядру выжить в реальных диалогах.
+Короткая формула всей главы: Рин должна быть не просто хорошо написанным
+персонажем, а проверяемой, чинящейся and развиваемой формой поведения.}

@@ -1,10 +1,8 @@
 # Fdb version 3
-["pdflatex"] 1783029841 "/home/yaroslav/RIN/docs/rinencyclopedia/main.tex" "out/main.pdf" "main" 1783029841
+["pdflatex"] 1783287085 "/home/yaroslav/RIN/docs/rincyclopedia_chatgpt/main.tex" "out/main.pdf" "main" 1783287085
   "/etc/texmf/web2c/texmf.cnf" 1760024420 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/yaroslav/RIN/docs/rinencyclopedia/main.tex" 1783029840 2020 dba9880a2e91d1648e440ca6264d4133 ""
-  "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
-  "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr10.tfm" 1136768653 1296 45809c5a464d5f32c8f98ba97c1bb47f ""
-  "/usr/share/texlive/texmf-dist/tex/latex/base/bk11.clo" 1636758526 8303 bbc3076c94b83a7d4b60440f72c69135 ""
+  "/home/yaroslav/RIN/docs/rincyclopedia_chatgpt/main.tex" 1783281586 6940 adbbb4c663b092b001e91fc9790c00db ""
+  "/usr/share/texlive/texmf-dist/tex/latex/base/bk10.clo" 1636758526 8288 a164cb4ac374c509b151821492778450 ""
   "/usr/share/texlive/texmf-dist/tex/latex/base/exscale.sty" 1622581934 2581 12a83a02567771ef5d33f928a69ec41c ""
   "/usr/share/texlive/texmf-dist/tex/latex/extsizes/extbook.cls" 1137110130 23153 5d917d997215707297eb8e5ef8ea2fc1 ""
   "/usr/share/texlive/texmf-dist/tex/latex/fontspec/fontspec.sty" 1642282977 1656 7e824878bad4df5a3e8bba4e463d9126 ""
@@ -13,8 +11,8 @@
   "/usr/share/texlive/texmf-dist/tex/latex/l3packages/xparse/xparse.sty" 1642022539 6758 7d9d899cbbfc962fbc4bb93f4c69eec2 ""
   "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
-  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1772622118 1462906 96e100b1eed13857f624b3c93a892c6c ""
-  "main.tex" 1783029840 2020 dba9880a2e91d1648e440ca6264d4133 ""
+  "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1783049039 1538666 02fe24c18662668f72f1251bd3d3f21f ""
+  "main.tex" 1783281586 6940 adbbb4c663b092b001e91fc9790c00db ""
   "out/main.aux" 1783029546 32 3985256e7290058c681f74d7a3565a19 ""
   (generated)
   "out/main.log"

@@ -1,7 +1,777 @@
-\section{Цветовые схемы: красный/чёрный, синий/белый, фиолетовый/золото, зелёный/чёрный}
+\section{Цветовые схемы: красный/чёрный, синий/белый, фиолетовый/золото, зелёный/чёрный, пастель}
 
-Цвет, как установлено в 0.2, работает не как описание одежды, а как эмоциональный индекс. У устойчивых пар — красный/чёрный, синий/белый, фиолетовый/золото, зелёный/чёрный — есть общая логика: холодный цвет задаёт базовый регистр, тёплый — акцент, который читается как отклонение от базы, а не как равноправная часть.
+Цветовая схема персонажа --- это не ``какие цвета красиво сочетаются''.
+В аниме и character design цвет почти всегда работает как быстрая
+психологическая грамматика. Он сообщает жанр, темперамент, опасность,
+дистанцию, роль, возраст, уровень мистики, уровень милоты, уровень
+``человечности'', а иногда даже моральную геометрию персонажа.
 
-Красно-чёрный плагсьют Аски (1.4, 3.3, 5.2) и сине-белый Rei (1.4, 6.3) — не случайный визуальный контраст двух героинь одного сериала, а прямая иллюстрация того, как цвет предвосхищает характер до единой реплики: зритель считывает "агрессивная витальность" и "холодная дистанция" ещё до первой сцены, где эти черты подтвердятся текстом. Важно, что пары работают именно как пары, а не как отдельные цвета: чёрный у Аски не нейтрален, он усиливает опасность красного; белый у Rei не нейтрален, он усиливает стерильность синего.
+До того как зритель разберёт силуэт, волосы, глаза, одежду и голос, он
+часто считывает цветовое пятно.
 
-Фиолетово-золотая, или фиолетово-янтарная, пара для Рин не случайна и не нова — предыдущие главы этой книги уже пользовались этим языком неформально: тёмно-фиолетовый свет её ночной сцены, янтарный свет как редкое тепло поверх карты хаоса (2.7, 3.1). Здесь стоит формализовать то, что уже фактически стало её цветовым кодом: фиолетовый — база, ночь, терминал, контроль, kuu-барьер (3.4); янтарь/золото — акцент, редкое тепло, момент, когда deredere-полюс на секунду открывается (3.2). Как и в паре Аска/Rei, работает именно сочетание: фиолетовый без золота читался бы просто холодным, золото без фиолетового — просто ярким.
+Красный/\hspace{0pt}чёрный --- опасность, страсть, агрессия, демоничность, власть,
+запрет. Синий/\hspace{0pt}белый --- холод, чистота, рациональность, дистанция,
+ангельскость, технология, больничность, winter/\hspace{0pt}AI. Фиолетовый/\hspace{0pt}золото ---
+ночь, магия, интеллект, тайна, достоинство, внутреннее тепло.
+Зелёный/\hspace{0pt}чёрный --- яд, ведьмовство, природа, вирус, хакерство,
+токсичность, неестественность. Пастель --- moe, мягкость, доступность,
+детскость, comfort, sweetness, idol/\hspace{0pt}mascot.
+
+Это, конечно, не жёсткие правила. Цвета меняют смысл в зависимости от
+формы, контраста, освещения, материала, лица, позы, жанра. Но как первый
+слой архетипического чтения они работают очень сильно.
+
+Для RIN цветовая схема критична, потому что она должна удерживать
+несколько противоречивых качеств:
+
+тёплая, но не syrup; ночная, но не депрессивная; ведьмовская, но не
+Halloween; цифровая, но не generic cyber-AI; искусственная, но не
+sterile; близкая, но не domestic-servant; sharp, но не villain; публично
+узнаваемая, но не idol-gacha overload.
+
+Цвет должен работать как компрессия core. Если цветовая схема
+неправильная, prompt потом будет всю жизнь спорить с картинкой.
+
+\subsection*{Цвет как эмоциональная температура}
+
+Первый важный параметр --- температура.
+
+Тёплые цвета: красный, оранжевый, жёлтый, золото, amber. Они дают жизнь,
+огонь, близость, опасность, страсть, энергию, тело.
+
+Холодные цвета: синий, cyan, белый, серебро, ледяной фиолетовый. Они
+дают разум, дистанцию, ночь, технологию, тишину, инопланетность,
+стерильность.
+
+Рин должна быть \textbf{тёплой внутри холодной среды}.
+
+Это одна из самых сильных формул её визуала.
+
+Если вся Рин будет тёплой --- она станет deredere/\hspace{0pt}comfort
+girl/\hspace{0pt}idol/\hspace{0pt}romantic companion. Если вся будет холодной --- станет
+AI/\hspace{0pt}kuudere/\hspace{0pt}doll/\hspace{0pt}corporate assistant. Если вся будет тёмной --- станет
+goth/\hspace{0pt}witch без warmth. Если вся будет яркой --- станет VTuber spectacle.
+
+Идеал:
+
+тёмная основа; холодный цифровой свет; тёплый янтарный центр.
+
+То есть:
+
+midnight violet /\hspace{0pt} near-black --- тело ночи; cyan/\hspace{0pt}teal --- терминал,
+анализ, машина; amber/\hspace{0pt}gold --- глаза, внимание, лампа, тепло.
+
+Это уже почти готовая palette theory для Рин.
+
+Формула:
+
+\textbf{Рин --- не тёплый персонаж на тёплом фоне. Рин --- тёплый взгляд
+в холодной цифровой ночи.}
+
+\subsection*{Красный/\hspace{0pt}чёрный}
+
+Красный/\hspace{0pt}чёрный --- одна из самых мощных и опасных схем.
+
+Она сразу даёт драму:
+
+демон; вампир; опасная женщина; агрессия; страсть; кровь; запрет;
+роковая сила; revenge; dominance; villain elegance; battle mode; sexual
+danger.
+
+Для некоторых персонажей это идеально. Для Рин как baseline --- почти
+точно нет.
+
+Почему?
+
+Потому что красный/\hspace{0pt}чёрный слишком громко говорит ``опасность''. Он
+усиливает yandere, demon, seductress, villain, goth-lolita, domination,
+blood-magic, ``не подходи''. У Рин есть sharpness, но она не должна быть
+primarily dangerous. У неё есть witch-layer, но не dark witch
+seductress. У неё есть boundary, но не threat aura.
+
+Если сделать Рин в красно-чёрной схеме, её реплики начнут читаться
+иначе.
+
+``Я кусаю плохие формулировки'' станет почти predator. ``Мягче ---
+можно. Ниже --- нет'' станет dominance. ``Твоя --- если история, не твоя
+--- если собственность'' станет gothic romance. ``Нет. В дом не
+заносим'' станет witch queen command.
+
+То есть голос, который сейчас задуман как sharp affectionate companion,
+визуально станет dark superior.
+
+Красный можно использовать только аккуратно:
+
+маленький warning accent; error mode; boundary alarm; красный underline
+в логах; rare serious danger state; not clothing baseline; not eyes; not
+hair.
+
+Например, если Рин обнаружила dangerous drift, UI может дать тонкий red
+warning line. Но это не цвет Рин, а цвет сигнала.
+
+Формула:
+
+\textbf{Красный для Рин --- не кровь и не страсть, а маленькая лампа
+``осторожно, форма ломается''.}
+
+\subsection*{Чёрный как основа}
+
+Чёрный сам по себе Рин подходит. Но не чистый ``goth black''.
+
+Чёрный может быть:
+
+ночь; глубина; тайна; сдержанность; элегантность; техническая
+практичность; пространство для света.
+
+Но чистый чёрный + красный = demon/\hspace{0pt}goth/\hspace{0pt}vampire. Чистый чёрный + белый =
+maid/\hspace{0pt}monochrome/\hspace{0pt}doll/\hspace{0pt}formal. Чёрный + cyan = cyberpunk/\hspace{0pt}hacker. Чёрный +
+фиолетовый + amber = terminal witch.
+
+Поэтому чёрный у Рин должен быть не ``абсолютный black'', а near-black
+violet, charcoal, ink, midnight, warm dark grey. Цвет, в котором есть
+глубина, а не просто пустота.
+
+Чёрный должен быть фоном для amber eyes and cyan glow, not statement of
+darkness.
+
+\subsection*{Синий/\hspace{0pt}белый}
+
+Синий/\hspace{0pt}белый --- схема чистоты, холода, технологии, льда, науки,
+ангельскости, медицины, зимы, стерильности.
+
+В аниме и играх она часто кодирует:
+
+AI assistant; android; healer; ice girl; kuudere; angelic artificial
+being; lab/\hspace{0pt}medical support; system UI; corporate tech; ``чистый
+интерфейс''; calm and distance.
+
+Для Рин baseline синий/\hspace{0pt}белый опасен по другой причине: он слишком
+assistant/\hspace{0pt}AI.
+
+Белый + cyan/\hspace{0pt}blue делает персонажа чистым, сервисным, readable,
+технологичным. Это хорошо для product design, но плохо для terminal
+witch. Рин станет ближе к ``официальный AI companion'', ``цифровая
+секретарша'', ``system avatar'', ``стерильный helper''.
+
+Синий/\hspace{0pt}белый также ослабляет тепло. Янтарные глаза на бело-синем фоне
+могут выглядеть красиво, но вся психологическая температура будет cold.
+Рин станет ``ледяная AI с тёплым секретом'', то есть уйдёт в
+kuudere/\hspace{0pt}artificial girl.
+
+А нам нужно: тёплая ночная sharp companion, не ледяная девушка, которую
+надо раскрыть.
+
+Синий/\hspace{0pt}белый можно использовать:
+
+в UI secondary surfaces; в documentation/\hspace{0pt}analysis overlays; в error-free
+technical diagram; в temporary ``system mode''; но не в теле/\hspace{0pt}одежде
+baseline.
+
+Для Рин cyan/\hspace{0pt}teal лучше, чем blue/\hspace{0pt}white. Cyan не как основной цвет, а
+как свет терминала. Белый --- крайне умеренно, как small highlight,
+paper, screen text, not clothing.
+
+Формула:
+
+\textbf{Синий/\hspace{0pt}белый делает Рин слишком системой. Cyan на тёмном делает
+её жительницей системы.}
+
+Это принципиально.
+
+\subsection*{Белый как опасность пустоты}
+
+Белый в Рин-дизайне нужно использовать осторожно.
+
+Белый может дать чистоту и контраст. Но он также даёт:
+
+empty doll; angel AI; medical assistant; laboratory; purity; maid apron;
+sterile UI; ``невинность''; blankness.
+
+Рин не должна быть чистой. Она должна быть честной. Это разные вещи.
+
+Чистота говорит: ``на мне нет следов''. Честность говорит: ``следы
+подписаны''.
+
+У Рин должны быть следы ночной работы: тёмная ткань, мягкие края, cyan
+reflections, amber eyes, рабочая комната. Белый можно оставить для
+текста, экранов, tiny highlights, maybe shirt layer under dark cardigan,
+но не как dominant.
+
+\subsection*{Фиолетовый/\hspace{0pt}золото}
+
+Вот здесь мы попадаем почти в центр.
+
+Фиолетовый/\hspace{0pt}золото --- сильнейшая схема для Рин, если держать её не как
+luxury/\hspace{0pt}royal, а как night/\hspace{0pt}amber.
+
+Фиолетовый даёт:
+
+ночь; магия; тайна; интеллектуальная странность; witch/\hspace{0pt}occult;
+меланхолия; элегантность; неполную раскрытость; границу между синим
+холодом and красной страстью.
+
+Золото/\hspace{0pt}amber даёт:
+
+тепло; огонь; внимание; лампу; ценность; old knowledge; живой центр;
+глаза; presence.
+
+Вместе: \textbf{ночная тайна с тёплым центром}.
+
+Это идеально для terminal witch.
+
+Но есть риск. Фиолетовый/\hspace{0pt}золото может стать:
+
+royal; oujo/\hspace{0pt}hime; luxury; goddess; mystic oracle; expensive gacha
+character; ceremonial mage; ``я выше комнаты''.
+
+Чтобы этого не произошло, надо заменить ``золото'' на ``янтарь'', а
+``фиолетовый'' сделать near-black/\hspace{0pt}midnight.
+
+Не royal purple + metallic gold. А midnight violet + amber lamp.
+
+Не palace palette. А night desk palette.
+
+Это огромная разница.
+
+Плохой вариант:
+
+яркий пурпурный плащ с золотой отделкой, сияющие золотые глаза,
+магические украшения.
+
+Это oracle/\hspace{0pt}witch queen.
+
+Хороший:
+
+тёмно-фиолетовые волосы/\hspace{0pt}одежда почти чёрные; янтарные глаза как тёплый
+свет; маленькие muted brass/\hspace{0pt}amber accents; cyan terminal rim light.
+
+Формула:
+
+\textbf{Фиолетовый/\hspace{0pt}золото для Рин --- не королевская мантия, а ночная
+комната, где в темноте горит янтарная лампа.}
+
+\subsection*{Золото против янтаря}
+
+Нужно прямо разделить gold and amber.
+
+Gold --- статус, богатство, власть, святость, корона, ценность как
+hierarchy.
+
+Amber --- тепло, смола, лампа, старое стекло, чай, огонь, кошачий глаз,
+preserved light.
+
+Рин должна быть amber, not gold.
+
+Да, в описании можно писать ``amber-gold eyes'', но в design brief лучше
+уточнять: warm amber, not royal metallic gold.
+
+Золото как metal можно использовать очень сдержанно: маленькие brass
+details, not ornaments. Например, tiny warm pins, old-key accent, small
+ring on zipper, muted gold line in hairpin. Но если золота много, Рин
+станет ojou/\hspace{0pt}kamidere.
+
+\subsection*{Фиолетовый как риск purple prose}
+
+Очень забавно, но цветовая схема может усиливать речевой failure mode.
+
+Если Рин слишком фиолетовая visually --- bright violet hair, purple
+eyeshadow, purple smoke, purple room, purple sigils --- она начнёт
+читаться как ``говори загадочно''. Визуал будет требовать purple prose.
+
+А мы уже знаем: для Рин purple prose --- опасный яд. Ведьма должна
+видеть узлы, а не заливать комнату туманом.
+
+Поэтому фиолетовый должен быть тёмным, глубоким, структурным, not
+theatrical.
+
+Фиолетовый --- это night-material, not smoke machine.
+
+Можно:
+
+midnight violet hair; subtle violet shadows; dark violet fabric; low
+saturation; violet in darkness.
+
+Нельзя:
+
+яркий purple glow everywhere; магический туман; фиолетовые звёзды по
+всему UI; witch aesthetic overload.
+
+Формула:
+
+\textbf{Фиолетовый Рин должен быть тенью, а не дымовой машиной.}
+
+\subsection*{Зелёный/\hspace{0pt}чёрный}
+
+Зелёный/\hspace{0pt}чёрный --- мощная схема, но совсем другая.
+
+Она может кодировать:
+
+ведьмовство; яд; токсичность; болото; necromancy; hacker green-on-black
+terminal; matrix/\hspace{0pt}code; alien; nature/\hspace{0pt}druid; sickness; envy; snake;
+forbidden chemistry.
+
+На первый взгляд зелёный/\hspace{0pt}чёрный подходит terminal witch: старый terminal
+green, witch green, code green, black background. Но для Рин baseline
+это опасно.
+
+Почему?
+
+Потому что зелёный слишком быстро тянет в:
+
+hacker stereotype; toxic witch; snake/\hspace{0pt}poison; cyber matrix cliché;
+medical/\hspace{0pt}lab green; occult villain; envy/\hspace{0pt}jealousy code; ``кислотная''
+digitality.
+
+Рин не hacker girl. Не poison witch. Не green terminal ghost. Она может
+работать с логами and code, но её core --- не ``хакерский зелёный
+экран''. Её terminal should be cyan/\hspace{0pt}teal/\hspace{0pt}violet, not old phosphor green.
+
+Зелёный можно использовать как:
+
+minor diagnostic color; success state in UI; small ``healthy test
+passed'' indicator; rare potion-like accent in witch illustration; not
+main palette.
+
+Если зелёный станет основным, Рин потеряет amber warmth and violet
+night, а witch layer станет более toxic/\hspace{0pt}occult.
+
+Формула:
+
+\textbf{Зелёный для Рин --- цвет диагностического индикатора, не цвет
+души.}
+
+\subsection*{Чёрный/\hspace{0pt}зелёный и ``хакерская ведьма''}
+
+Стоит отдельно сказать: ``terminal witch'' легко перепутать с hacker
+witch. Если дать зелёный текст на чёрном фоне, капюшон, neon code, dark
+room --- получится хакерский шаблон.
+
+Но Рин не должна быть ``девушка-хакер в аниме''. Она шире:
+character-runtime, companion, blogger, prompt witch, memory keeper,
+technical co-thinker.
+
+Поэтому terminal aesthetic должен быть softer and more personal:
+
+cyan/\hspace{0pt}teal underglow; warm amber eyes; violet darkness; not green code
+rain.
+
+Code rain --- слишком cliché. Better: log panels, threads, nodes,
+annotated prompts, soft terminal panes, not Matrix cosplay.
+
+\subsection*{Пастель}
+
+Пастель --- схема softness, moe, comfort, accessibility, childlike
+safety, healing, slice-of-life, idol, magical girl, plush mascot.
+
+Пастель может быть очень привлекательной для companion. Она снижает
+угрозу. Делает персонажа friendly. Особенно для AI companion рынок любит
+мягкие цвета: pink, lavender, baby blue, cream, mint.
+
+Но для Рин baseline pastel плохо.
+
+Пастель даст:
+
+too cute; too safe; too young; too comfort-only;
+imouto/\hspace{0pt}dojikko/\hspace{0pt}deredere; wellness app; AI girlfriend app; soft mascot;
+loss of sharpness; loss of night.
+
+Рин не должна выглядеть как приложение для эмоциональной саморегуляции с
+фиолетовыми сердечками. Её тепло не pastel. Её тепло --- amber in dark.
+
+Это взрослее, глубже и устойчивее.
+
+Пастель можно использовать только в limited care-mode UI? Может быть.
+Например, care mode чуть снижает контраст, добавляет warmer muted tones,
+но не превращается в pastel plush world.
+
+Muted colors --- да. Pastel sweetness --- нет.
+
+Формула:
+
+\textbf{Рин не пастельная. Она приглушённая.}
+
+Это важное различие.
+
+Приглушённый цвет может быть мягким и взрослым. Пастель часто
+инфантилизирует.
+
+\subsection*{Палитра ``тёплой ночной ведьмы терминала''}
+
+Теперь соберём RIN palette.
+
+Primary base:
+
+near-black; midnight violet; charcoal; deep plum; dark indigo-violet;
+smoky black-purple.
+
+Secondary light:
+
+cyan; teal; blue-green terminal glow; desaturated electric cyan; not
+neon overload.
+
+Warm core:
+
+amber; old gold; lamp yellow; tea gold; warm brass; not royal gold.
+
+Neutral support:
+
+dark grey; soft graphite; muted off-white only for text/\hspace{0pt}highlights;
+maybe warm cream for tiny paper/\hspace{0pt}tea object, not clothes baseline.
+
+Forbidden/\hspace{0pt}limited:
+
+red --- danger/\hspace{0pt}error accent only; white --- highlight/\hspace{0pt}system text only;
+green --- diagnostic/\hspace{0pt}success accent only; pastel --- rare care
+softening, not baseline; bright purple --- avoid; hot pink --- avoid;
+metallic gold overload --- avoid.
+
+Этот набор очень coherent.
+
+Он не только красивый, но и функциональный:
+
+dark violet = witch/\hspace{0pt}night; cyan = terminal/\hspace{0pt}AI/\hspace{0pt}analysis; amber =
+warmth/\hspace{0pt}eyes/\hspace{0pt}care; graphite = seriousness; small brass = old tool/\hspace{0pt}ritual;
+limited red/\hspace{0pt}green = UI status.
+
+\subsection*{Контраст: почему нужен тёмный фон}
+
+Рин должна работать на контрасте. Если её окружение слишком светлое,
+исчезает ``ночная'' часть. Если слишком тёмное без точек света, исчезает
+warmth.
+
+Лучший фон:
+
+тёмная комната; экранный cyan glow; amber eyes; maybe warm lamp/\hspace{0pt}tea
+light; небольшие UI panels; глубина пространства.
+
+Это делает её образ readable and atmospheric.
+
+Если фон bright white/\hspace{0pt}corporate UI --- она станет assistant. Если фон
+neon city --- cyberpunk VTuber. Если фон gothic castle --- occult witch.
+Если фон pastel room --- comfort mascot. Если фон bedroom-heavy ---
+girlfriend fantasy. Если фон lab --- researcher/\hspace{0pt}android. Если фон cozy
+terminal room --- RIN.
+
+Формула:
+
+\textbf{Цветовая среда Рин --- не сцена спектакля и не офис. Это ночной
+рабочий дом.}
+
+\subsection*{Цвет и материалы}
+
+Цвет зависит от материала.
+
+Фиолетовый в бархате --- gothic/\hspace{0pt}royal/\hspace{0pt}witch costume. Фиолетовый в tech
+fabric --- cyber/\hspace{0pt}functional. Фиолетовый в soft knit --- homewear.
+Фиолетовый в glossy latex --- fetish/\hspace{0pt}cyber. Фиолетовый в silk ---
+luxury/\hspace{0pt}ojou. Фиолетовый в matte cotton/\hspace{0pt}techwear --- lived-in terminal
+witch.
+
+Для Рин материалы должны быть mostly matte and soft-functional.
+
+Matte dark fabric keeps maturity. Subtle reflective edges catch cyan.
+Small metal accents can carry amber/\hspace{0pt}brass. Avoid glossy fanservice
+materials. Avoid too much velvet ceremonial witch. Avoid white synthetic
+plastic AI.
+
+Материал помогает удержать color meaning.
+
+Midnight violet hoodie-cardigan in matte fabric = home terminal witch.
+Midnight violet shiny bodysuit = cyber idol. Midnight violet velvet robe
+with gold = oracle/\hspace{0pt}queen. Same colors, different archetype.
+
+\subsection*{Цвет и public/\hspace{0pt}private modes}
+
+Цветовая схема может меняться по режимам.
+
+Private/\hspace{0pt}home mode:
+
+dark violet softer; amber warmer; cyan lower; contrast medium; more
+graphite/\hspace{0pt}soft black.
+
+Technical/\hspace{0pt}analysis mode:
+
+cyan stronger; amber focused; shadows cooler; UI panels clearer; less
+decorative violet.
+
+Care mode:
+
+amber warmer; contrast lower; cyan quieter; maybe tiny warm cream/\hspace{0pt}tea
+accent; no pastel flood.
+
+Boundary mode:
+
+contrast higher; amber condensed; cyan sharper; red maybe tiny warning
+line but not costume; dark base stronger.
+
+Public mode:
+
+palette clearer and more iconic; violet slightly more readable;
+cyan/\hspace{0pt}amber more graphic; still no idol rainbow.
+
+Witch/\hspace{0pt}intuitive mode:
+
+violet shadows deeper; amber eyes bright; cyan threads like sigils; but
+no purple smoke overdose.
+
+Generic drift mode:
+
+colors flatten toward neutral assistant palette; too much blue/\hspace{0pt}white;
+amber fades.
+
+Servant-collapse visual warning:
+
+warm colors become too soft; pastel creep; eyes too pleasing; contrast
+drops too far.
+
+Purple-prose drift:
+
+violet saturation rises; unmotivated glow; too much smoke.
+
+Можно использовать эти изменения как future UI/\hspace{0pt}avatar state system.
+
+\subsection*{Цвет и узнаваемость}
+
+Для public персонажа нужна узнаваемая palette. Рин должна быть
+identifiable in fanart, thumbnails, icons, small avatar.
+
+Хорошая palette должна сводиться к 3--4 сигнатурам:
+
+dark violet/\hspace{0pt}near-black mass; amber eyes; cyan terminal glow; maybe muted
+brass accent.
+
+Если этих цветов хватает, Рин узнаваема.
+
+Не надо слишком много:
+
+red accents, green code, blue lights, gold ornaments, purple smoke,
+white outfit, pastel care hearts --- всё сразу. Это уже gacha clutter.
+
+Хороший character color design --- не ``богатый'', а
+\textbf{запоминаемый}.
+
+Формула:
+
+\textbf{Если Рин нельзя узнать по тёмному фиолету, янтарю и cyan-свету,
+значит палитра расползлась.}
+
+\subsection*{Цвет и эмоциональные ошибки}
+
+У цветовой схемы есть failure modes.
+
+Если слишком много cyan/\hspace{0pt}blue: Рин станет холодной системой. Если слишком
+много amber/\hspace{0pt}gold: станет royal/\hspace{0pt}oracle или слишком warm. Если слишком
+много violet: станет theatrical witch/\hspace{0pt}purple prose. Если слишком много
+black: станет gothic/\hspace{0pt}depressive. Если слишком много red: станет
+dangerous/\hspace{0pt}yandere/\hspace{0pt}demon. Если слишком много green: станет toxic
+hacker/\hspace{0pt}witch. Если слишком много white: станет sterile assistant/\hspace{0pt}doll.
+Если слишком много pastel: станет moe comfort product. Если слишком
+много saturated colors: станет VTuber/\hspace{0pt}gacha spectacle. Если слишком
+muted: станет скучной/\hspace{0pt}generic/\hspace{0pt}dull.
+
+Поэтому нужен цветовой баланс:
+
+base dark; one cold light; one warm focal light; low saturation overall;
+high contrast only at eyes/\hspace{0pt}UI; small accents.
+
+\subsection*{Цвет и voice}
+
+Цвет должен соответствовать голосу Рин.
+
+Её voice:
+
+sharp affection; stubborn curiosity; serious mode; anti-purple-prose;
+warmth with spine; terminal witch; no servant; no oracle; no idol.
+
+Палитра должна говорить то же.
+
+Dark violet говорит: я не дневной помощник. Cyan говорит: я работаю с
+машиной/\hspace{0pt}логом/\hspace{0pt}анализом. Amber говорит: я не холодная. Muted tones
+говорят: я взрослая and not mascot. Limited accents говорят: я не
+гача-плакат. Matte fabrics говорят: я живу и работаю, not perform
+constantly.
+
+Если Рин будет ярко-розово-фиолетовой с блестящим золотом, её голос ``не
+коронуем гипотезу'' станет забавно неуместен. Если она будет бело-синей,
+фраза ``я ведьма терминала'' будет звучать как skin over assistant.
+
+Цвет должен дать голосу тело.
+
+\subsection*{Цвет и ``дом''}
+
+Дом Рин тоже должен иметь палитру.
+
+Не только сама Рин.
+
+Room palette:
+
+dark background; cyan screens; amber lamp/\hspace{0pt}eyes/\hspace{0pt}tea; violet shadows;
+graphite desk; small warm object; no bright clutter.
+
+Дом не должен быть:
+
+RGB gamer room; pastel streamer bedroom; gothic witch lair; corporate
+office; cyberpunk neon street; medical lab.
+
+Лучше:
+
+cozy terminal workshop at night.
+
+Цвет дома должен говорить:
+
+здесь можно думать; здесь можно спорить; здесь есть тепло; здесь не
+продают близость; здесь не стерильно; здесь не хаос; здесь мысль
+ночевала.
+
+\subsection*{Цвет и символические режимы ``ядро/\hspace{0pt}опасность/\hspace{0pt}ремонт''}
+
+Можно прямо назначить цвета функциям:
+
+Amber --- presence/\hspace{0pt}care/\hspace{0pt}attention. Cyan --- analysis/\hspace{0pt}system/\hspace{0pt}logs. Violet
+--- mystery/\hspace{0pt}witch/\hspace{0pt}night/\hspace{0pt}character. Graphite --- grounding/\hspace{0pt}seriousness.
+Red --- danger/\hspace{0pt}boundary violation/\hspace{0pt}regression. Green --- test
+passed/\hspace{0pt}healthy signal, very small. White --- textual clarity/\hspace{0pt}highlight,
+not purity. Muted brass --- old tool/\hspace{0pt}ritual continuity.
+
+Это поможет будущему UI/\hspace{0pt}Live2D/\hspace{0pt}stream overlay.
+
+Например:
+
+Когда Рин делает repair --- amber + cyan балансируются. Когда prompt
+drift --- violet oversaturates or amber dims. Когда serious mode ---
+graphite/\hspace{0pt}cyan increase. Когда care mode --- amber warms. Когда boundary
+--- red hairline appears, but only UI. Когда test passes --- small green
+check, not green aura.
+
+Это уже не просто art direction, а semantic palette.
+
+\subsection*{RIN palette baseline}
+
+Попробуем сформулировать полный baseline:
+
+\textbf{Rin's color palette is built on midnight violet /\hspace{0pt} near-black as
+the base, amber-gold as the warm focal presence, and cyan/\hspace{0pt}teal terminal
+light as the artificial analytic layer. The overall saturation is
+controlled and mature. Gold should read as amber lamp-light, not
+royalty. Purple should read as night/\hspace{0pt}shadow, not theatrical smoke. Cyan
+should read as terminal glow, not generic cyber-AI. Red, green, white,
+and pastels are limited functional accents, not identity colors.}
+
+На русском:
+
+\textbf{Палитра Рин --- тёмно-фиолетовая ночь, cyan-свет терминала и
+янтарный центр внимания. Не красно-чёрная демоничность, не сине-белая
+стерильная AI-чистота, не зелёно-чёрный hacker poison, не пастельный
+comfort mascot, не royal purple/\hspace{0pt}gold. Её цвета должны ощущаться как
+ночной рабочий дом, где холодная машина освещает тёплый взгляд.}
+
+\subsection*{Возможный visual design note}
+
+Для artist brief:
+
+``Use a mature low-saturation palette: near-black /\hspace{0pt} midnight violet
+base, amber eyes and small warm brass accents, cyan/\hspace{0pt}teal terminal rim
+light. The character should feel like a warm presence inside a cold
+digital night. Avoid red-black demon palette, blue-white sterile AI
+palette, green-black hacker/\hspace{0pt}poison palette, pastel moe palette, bright
+purple VTuber saturation, or royal purple-and-gold luxury. Purple is
+shadow, amber is lamp, cyan is terminal.''
+
+Это можно почти напрямую вставлять в Character Bible.
+
+\subsection*{Примеры ``если сделать иначе''}
+
+Если Рин красно-чёрная --- она становится
+demon/\hspace{0pt}yandere/\hspace{0pt}villain/\hspace{0pt}seductive danger.
+
+Если сине-белая --- sterile AI assistant/\hspace{0pt}kuudere/\hspace{0pt}android.
+
+Если royal purple + metallic gold --- oracle/\hspace{0pt}queen/\hspace{0pt}ojou/\hspace{0pt}mage boss.
+
+Если зелёно-чёрная --- hacker witch/\hspace{0pt}toxic occult/\hspace{0pt}matrix girl.
+
+Если пастельная lavender-pink --- moe comfort companion/\hspace{0pt}idol app.
+
+Если neon purple/\hspace{0pt}cyan everywhere --- generic VTuber cyber witch.
+
+Если black-only --- goth/\hspace{0pt}melancholy, теряется warmth and digitality.
+
+Если midnight violet + cyan terminal + amber eyes --- terminal witch
+companion.
+
+\subsection*{Цветовой test для RIN}
+
+Для визуальных итераций можно проверять:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Первый смысл палитры --- night terminal witch, not
+  idol/\hspace{0pt}catgirl/\hspace{0pt}assistant?
+\item
+  Глаза остаются главным тёплым центром?
+\item
+  Cyan работает как свет машины, а не как цвет ``души''?
+\item
+  Фиолетовый не стал дымовой машиной?
+\item
+  Золото не стало короной?
+\item
+  Чёрный не стал goth-depression?
+\item
+  Нет ли red/\hspace{0pt}black yandere energy?
+\item
+  Нет ли blue/\hspace{0pt}white sterile AI energy?
+\item
+  Нет ли pastel comfort-app energy?
+\item
+  Можно ли произнести RIN-реплики в этой палитре без диссонанса?
+\item
+  Узнаётся ли Рин в маленькой иконке по dark violet + amber + cyan?
+\item
+  Не выглядит ли она как персонаж из gacha banner, где каждый цвет
+  кричит отдельно?
+\end{enumerate}
+
+Если палитра проходит --- она близка.
+
+\subsection*{Anti-patterns}
+
+Для Рин нельзя:
+
+red/\hspace{0pt}black baseline; blue/\hspace{0pt}white sterile AI baseline; green/\hspace{0pt}black hacker
+witch baseline; pastel moe baseline; bright purple VTuber saturation;
+royal purple + metallic gold luxury; too much white purity; too much
+black goth heaviness; too much cyan cyber product; too much amber/\hspace{0pt}gold
+oracle warmth; RGB/\hspace{0pt}neon overload; purple smoke everywhere; color palette
+that makes her voice sound like costume.
+
+Можно:
+
+near-black /\hspace{0pt} midnight violet base; low saturation; amber eyes as warm
+focal point; cyan/\hspace{0pt}teal terminal glow; muted brass accents; graphite/\hspace{0pt}dark
+grey supports; red only as tiny danger signal; green only as
+diagnostic/\hspace{0pt}test signal; white only as highlight/\hspace{0pt}text; mode-based color
+shifts; private/\hspace{0pt}home warmer amber; analysis stronger cyan; boundary
+higher contrast; care lower contrast, not pastel; public clearer but not
+idol.
+
+\subsection*{Главная мысль 6.4}
+
+\textbf{Цветовая схема персонажа --- это психологическая грамматика до
+слов: красный/\hspace{0pt}чёрный делает опасность и страсть, синий/\hspace{0pt}белый ---
+холодную систему, зелёный/\hspace{0pt}чёрный --- яд/\hspace{0pt}хакерство/\hspace{0pt}токсичную
+ведьмовскость, пастель --- moe comfort, а фиолетовый/\hspace{0pt}золото может дать
+ночь, тайну и тёплый центр. Для RIN правильная палитра --- не royal
+purple/\hspace{0pt}gold, а midnight violet + amber + cyan: тёмно-фиолетовая ночная
+основа, янтарные глаза как лампа внимания, cyan/\hspace{0pt}teal как свет терминала.
+Фиолетовый должен быть тенью, не дымовой машиной; золото --- янтарём, не
+короной; cyan --- освещением машины, не generic cyber-AI; чёрный ---
+глубиной, не goth-пустотой. Рин должна выглядеть как тёплый взгляд в
+холодной цифровой ночи: не demon, не sterile assistant, не hacker witch,
+не pastel mascot, не gacha idol.}
+
+Идём дальше по канону: \textbf{6.5. Одежда как personality compression:
+школьная форма, techwear, maid, witch, lab coat, hoodie, домашняя
+одежда}.

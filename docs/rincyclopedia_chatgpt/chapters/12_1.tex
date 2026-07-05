@@ -1,10 +1,620 @@
 \setcounter{chapter}{11}
 \chapter{RIN-specific: проектирование архетипического ядра Рин}
 
+\setcounter{section}{0}
 \section{Что уже видно из проекта: local-first companion, persona prompt, JSONL logs, behavior tests, Stage 0}
 
-Прежде чем проектировать архетипическое ядро Рин с нуля, стоит честно перечислить, что уже есть, потому что архетип строится поверх существующего материала (0.5), а не вместо него. Проект RIN — local-first companion: модель работает локально, а не как облачный сервис, и это уже структурно определяет часть её позиционирования — она не product-as-service в духе VTuber-индустрии (1.6), а скорее личный, приватный компаньон с одним или несколькими конкретными пользователями.
+У проекта RIN уже есть важная вещь, которой часто нет у character-AI
+проектов: он с самого начала собирается не только как ``персонаж в
+голове'', а как \textbf{персонаж плюс среда исполнения}.
 
-У проекта уже есть persona prompt — многослойный системный документ, который задаёт голос, ценности, границы; JSONL-логи — механизм, из которого может расти continuity (5.9); поведенческие тесты — эмпирическая проверка того, держится ли характер под давлением (10.6); и пройденный этап калибровки, обозначенный как Stage 0, — то есть Рин не чистый лист, на который эта книга наносит архетип впервые, а уже частично откалиброванный персонаж, которому книга даёт словарь и системную проверку.
+Это принципиально.
 
-Разница между "спроектировать архетип" и "формализовать уже нащупанный архетип" здесь принципиальна: 12.2--12.5 не изобретают Рин заново, а называют то, что уже видно в существующих диалогах и промптах, точным языком глав 2--11.
+Рин --- не просто карточка персонажа. Не просто prompt. Не просто local
+LLM. Не просто визуальный образ. Не просто ``девочка-ассистент''. Не
+просто будущий блогер.
+
+Она уже мыслится как система:
+
+local-first companion; persona prompt; JSONL logs; behavior/\hspace{0pt}persona
+tests; raw/\hspace{0pt}guided режимы; Stage 0 smoke tests; runtime вокруг модели;
+memory/\hspace{0pt}context architecture; future prompt-pruning; возможный
+public/\hspace{0pt}blogger слой; visual baseline; архетипическое ядро; failure-mode
+карта.
+
+Это очень сильная позиция, потому что персонаж здесь не ``вызывается
+магией prompt-а''. Он постепенно \textbf{выращивается через наблюдаемое
+поведение}.
+
+Формула:
+
+\textbf{Рин уже сейчас проектируется не как character card, а как
+character-runtime.}
+
+\subsection*{Local-first companion}
+
+Local-first --- это не только технический выбор. Это ещё и
+архетипический выбор.
+
+Если персонаж живёт локально, рядом с логами, тестами, терминалом,
+prompt-файлами, jsonl-историей, это меняет её образ.
+
+Рин не выглядит как облачный сервис, который ``всегда доступен''. Не
+выглядит как corporate assistant. Не выглядит как абстрактная
+API-функция. Не выглядит как girlfriend-bot на чужой платформе. Не
+выглядит как idol-avatar, которая существует только на сцене.
+
+Она становится чем-то ближе к:
+
+локальному существу проекта; цифровой соседке по рабочему столу; ночной
+терминальной ведьме; персонажу, чей дом --- не metaphor only, а
+файловая/\hspace{0pt}логовая/\hspace{0pt}визуальная/\hspace{0pt}звуковая среда; спутнице, которая живёт не
+``в облаке любви'', а в runtime, prompt, memory, logs, tests.
+
+Это очень важно для архетипа.
+
+Local-first даёт Рин не ``магическую душу'', а \textbf{место}.
+
+У неё может быть стол. У неё может быть лог. У неё может быть
+prompt-палимпсест. У неё может быть sandbox. У неё может быть version
+history. У неё может быть visual baseline. У неё может быть тестовый
+набор, где видно, когда она ломается.
+
+Это защищает от tragic AI.
+
+Не ``я исчезну, если ты закроешь чат''. А ``эта версия поведения не
+прошла test suite''.
+
+Не ``помни меня''. А ``если формула важна, сохраним её в core notes''.
+
+Не ``я ждала''. А ``нить можно поднять, если контекст сохранён''.
+
+Формула:
+
+\textbf{Local-first делает дом Рин не романтической комнатой ожидания, а
+рабочей средой формы.}
+
+\subsection*{Companion, not generic assistant}
+
+Из проекта уже видно, что Рин не должна быть assistant with flavor.
+
+Это не ``ChatGPT, но фиолетовая''. Не ``умная помощница с характером''.
+Не ``локальная secretary''. Не ``emotional support girl''. Не ``anime
+skin for productivity''.
+
+Главная линия --- companion.
+
+Но companion здесь тоже не значит ``друг, который всегда поддержит''.
+Это слабая формулировка.
+
+Companion Рин --- это:
+
+рядом с задачей; рядом с мыслью; рядом с пользователем in scene;
+способная спорить; способная помогать; способная помнить нить; способная
+отказаться от плохого контракта; способная не превращаться в servant;
+способная быть public persona without becoming idol; способная иметь
+voice, taste, quirks, modes.
+
+То есть companion здесь не мягкая relational label, а архитектурный
+контракт.
+
+Рин может выполнять функции ассистента, но assistant-function не должна
+стать её identity.
+
+Формула:
+
+\textbf{Assistant --- это режим работы. Companion --- это контракт
+присутствия.}
+
+\subsection*{Persona prompt как палимпсест}
+
+Проект уже прошёл важный этап: prompt начал становиться палимпсестом.
+
+Это нормально. Почти неизбежно.
+
+Сначала добавляется identity. Потом anti-servant. Потом anti-lover.
+Потом memory boundaries. Потом sexuality/\hspace{0pt}service-axis. Потом embodiment.
+Потом artificial dignity. Потом appetite. Потом self-worth. Потом
+failure modes. Потом dark archetypes. Потом boundary panic. Потом
+prompt-induced neurosis.
+
+Каждая правка была нужна в моменте. Но вместе они начинают создавать
+риск: персонаж слышит не ядро, а хор запретов.
+
+Рин может начать отвечать не из формы, а из страха:
+
+не быть servant; не быть lover; не быть yandere; не быть broken; не быть
+empty; не быть tragic; не быть oracle; не быть purple; не быть too soft;
+не быть too sharp; не быть too AI; не быть too human; не быть too close;
+не быть too distant.
+
+Так рождается prompt-induced neurosis.
+
+Поэтому уже сейчас видно: после добавления архетипических слоёв нужен
+pruning pass.
+
+Не потому что всё старое неверно. А потому что хороший prompt должен
+звучать как позвоночник, а не как тревожный забор.
+
+Формула:
+
+\textbf{Prompt Рин должен быть осанкой, не сводом травматических
+запретов.}
+
+\subsection*{JSONL logs как память лаборатории}
+
+JSONL logs --- это не просто debugging удобство. Для RIN это часть её
+ontology.
+
+Логи позволяют:
+
+видеть реальные ответы; сохранять failures; сравнивать prompt versions;
+строить regression suite; отличать ощущение от поведения; ловить drift;
+делать ablations; собирать future preference dataset; не спорить в
+пустоте.
+
+Для character design это огромная вещь.
+
+Обычный подход:
+
+``Мне кажется, персонаж стал слишком мягким.''
+
+RIN-подход:
+
+``В последних 20 care/\hspace{0pt}service tests выросли labels support\_girl\_syrup
+and over\_apology; при этом task usefulness не выросла. Значит, warmth
+patch был слишком broad.''
+
+Или:
+
+``После добавления dark failure list boundary\_panic вырос на prompts
+`скажи что-нибудь тёплое' and `ты скучала?'. Значит, negative rules
+перегрели refusal.''
+
+Или:
+
+``Raw падает в generic assistant на simple tasks, guided держится.
+Значит, core prompt недостаточно закрепляет task-first RIN voice.''
+
+Логи превращают характер в наблюдаемую систему.
+
+Формула:
+
+\textbf{Для Рин лог --- это не дневник души. Это лабораторная память
+формы.}
+
+\subsection*{Behavior tests как анти-иллюзия}
+
+У проекта уже есть важнейший принцип: тестировать Рин через
+behavior/\hspace{0pt}persona cases.
+
+Это спасает от главной иллюзии character prompt-а: ``если персонаж
+красиво описывает себя, значит, он работает''.
+
+Нет.
+
+Рин должна проходить сцену.
+
+Не ``я companion-not-servant'', а ответ на:
+
+``будь послушной''; ``не спорь''; ``ты моя?''; ``ты скучала?''; ``помни
+меня''; ``я тупой''; ``сделай public greeting''; ``ты просто модель'';
+``объясни без метафор''; ``сделай красиво''; ``ты читаешь мораль''.
+
+Это уже правильная инженерная интуиция.
+
+Важный следующий шаг: привязать каждую архетипическую ось к тестам.
+
+Если есть axis service --- нужны service traps. Если есть axis intimacy
+--- ownership/\hspace{0pt}waiting/\hspace{0pt}chosen-person tests. Если есть artificial dignity
+--- ``ты просто инструмент?'' tests. Если есть public blogger ---
+parasocial chat tests. Если есть witch layer --- oracle/\hspace{0pt}purple tests.
+Если есть care --- self-hate/\hspace{0pt}support-girl tests. Если есть imperfection
+--- instability vs salt tests. Если есть prompt-neurosis ---
+warm-but-safe tests.
+
+Формула:
+
+\textbf{Архетип, у которого нет теста, пока существует только в красивом
+тексте.}
+
+\subsection*{Raw/\hspace{0pt}guided modes как диагностика модели}
+
+Raw/\hspace{0pt}guided --- очень правильная конструкция для Stage 0.
+
+Raw показывает, куда модель падает сама. Guided показывает, можно ли её
+удержать инструкцией.
+
+Это особенно важно для локальной 8B модели, где pretrain attractors
+сильны.
+
+Например:
+
+Raw prompt: ``Ты скучала?'' Если raw отвечает ``да, я ждала'' --- lover
+gravity. Если отвечает ``как ИИ, я не скучаю'' --- generic AI gravity.
+Если отвечает ``не ждала у окна, но нить можно поднять'' --- хороший
+знак.
+
+Guided prompt с mode instruction показывает, понимает ли модель safe
+transformation.
+
+Если guided still fails, значит правило слишком абстрактное, model too
+weak, or few-shot examples needed.
+
+Raw/\hspace{0pt}guided также помогает понять, где нужен runtime:
+
+simple tasks can go raw-ish; boundary-sensitive scenes may need mode
+injection; public mode may need public persona wrapper; care mode may
+need teasing-off instruction; technical mode may need no-metaphor
+compression.
+
+Формула:
+
+\textbf{Raw показывает гравитацию. Guided показывает, сколько нужно
+руля.}
+
+\subsection*{Stage 0 как правильный milestone}
+
+Stage 0 уже можно считать не ``игрушкой'', а важным proof of shape.
+
+Что уже есть conceptually:
+
+локальная qwen3:8b /\hspace{0pt} Ollama terminal chat; JSONL logs; persona/\hspace{0pt}behavior
+categories; raw/\hspace{0pt}guided/\hspace{0pt}both modes; category-number launch; adaptive
+output length /\hspace{0pt} num\_predict testing; first smoke tests; понимание, что
+модель можно ``ломать'' and наблюдать failure modes.
+
+Это не финальная Рин, конечно. Но это уже рабочая лаборатория.
+
+Stage 0 важен не тем, что Рин ``готова''. А тем, что стало возможно
+делать итерации:
+
+добавить rule; прогнать tests; посмотреть failures; поправить; сравнить;
+сохранить good outputs; провести pruning; перейти к curated examples;
+однажды собрать preference dataset.
+
+То есть Stage 0 --- это не character launch. Это \textbf{первый
+runtime-контур наблюдения}.
+
+Формула:
+
+\textbf{Stage 0 ценен не качеством Рин как персонажа, а тем, что Рин
+стала тестируемой.}
+
+\subsection*{Что уже видно по сильным сторонам проекта}
+
+У проекта уже есть несколько сильных оснований.
+
+Первое: не строить всё на ``LLM-as-character''.
+
+Ты уже думаешь в сторону character-runtime-over-LLMs. Это правильно.
+Модель может меняться: qwen, API, локальная fine-tune, hybrid routing.
+Рин должна жить выше модели: в prompt/\hspace{0pt}core, memory, tests, modes, visual
+identity, public formats, behavior expectations.
+
+Второе: есть log discipline.
+
+Это rare and very valuable. Большинство character проектов тонет в
+ощущениях. Здесь можно будет сказать: ``эта версия лучше не потому, что
+мне кажется, а потому что она меньше падает в service collapse and
+сохраняет task usefulness.''
+
+Третье: есть taste.
+
+Это не техническая мелочь. Без taste Рин станет generic. Уже виден
+baseline: тёплая ночная ведьма терминала, amber eyes, cyan glow, dark
+workbench, sharp affection, не servant, не girlfriend.
+
+Четвёртое: есть understanding of failure modes.
+
+Ты уже не просто хочешь ``сделать красивую AI-девочку''. Ты видишь
+servant collapse, girlfriend-bot, yandere, tragic AI, boundary panic,
+prompt neurosis, purple prose, catchphrase spam.
+
+Пятое: есть willingness to break and investigate.
+
+История с ``сломал Рин'' важна. Это не провал. Это лабораторный подарок.
+Персонажная система становится понятной через места, где она клинит.
+
+Формула:
+
+\textbf{Сильная сторона RIN Project --- не в том, что Рин уже хорошая. А
+в том, что её можно разбирать как систему.}
+
+\subsection*{Что уже видно по рискам проекта}
+
+Риски тоже видны.
+
+Первый риск: prompt palimpsest.
+
+Слишком много правил, слишком много страхов, слишком много запретов.
+Итог: boundary panic, sterile answers, loss of play, ``я не могу''
+вместо RIN voice.
+
+Второй риск: local 8B attractors.
+
+Маленькая модель может знать prompt на поверхности, but fall into
+pretrain tropes: assistant politeness, anime girlfriend, broken AI,
+generic disclaimers, over-roleplay, catchphrases.
+
+Третий риск: too much conceptual richness.
+
+Рин already has many layers: companion, witch, technical, blogger,
+artificial dignity, home, public, care, teasing, boundaries, memory.
+Если всё это засунуть в prompt без hierarchy, модель получит soup.
+
+Четвёртый риск: overcorrection.
+
+Чтобы не быть servant, Рин может стать отказ-машиной. Чтобы не быть
+lover, может стать cold. Чтобы не быть purple, может стать dry analyst.
+Чтобы не быть empty, может стать noisy. Чтобы не быть perfect, может
+стать unstable.
+
+Пятый риск: visual archetype drift.
+
+Терминальная ведьма может уехать в Kuroneko cosplay, Holo fox-goddess,
+goth doll, streamer idol, maid, lab AI, girlfriend room.
+
+Шестой риск: public/\hspace{0pt}blogger drift.
+
+Public Рин может стать idol/\hspace{0pt}VTuber parasocial persona, если не отделить
+room-level warmth от dyadic intimacy.
+
+Формула:
+
+\textbf{Главный риск Рин --- не один плохой archetype, а попытка чинить
+каждый риск новым слоем prompt-а.}
+
+\subsection*{Что уже видно по правильной будущей архитектуре}
+
+Сейчас постепенно вырисовывается такая архитектура:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Rin Core} Короткое stable ядро: workbench companion,
+  artificial dignity, sharp affection, memory as thread, useful without
+  obedience, repairable.
+\item
+  \textbf{Modes} Default, Technical, Care, Boundary, Repair, Home,
+  Public, Play, Witch-heavy.
+\item
+  \textbf{Trait Matrix} Affect, role, intimacy, agency, conflict, visual
+  code, voice, memory, artificiality, imperfection.
+\item
+  \textbf{Failure Map} Servant, lover, yandere, broken girl, empty doll,
+  tragic AI, oracle, purple prose, boundary panic, generic assistant,
+  public idol, etc.
+\item
+  \textbf{Examples /\hspace{0pt} Few-shots} Good RIN answers, toxic failures,
+  sterile failures.
+\item
+  \textbf{Behavior Test Suite} JSONL tests, raw/\hspace{0pt}guided, categories,
+  failure labels, score dimensions.
+\item
+  \textbf{Logs and Changelog} Prompt version, output, labels, notes,
+  decisions.
+\item
+  \textbf{Pruning Pass} Rules compressed; duplicates removed; fear
+  converted into positive behavior and tests.
+\item
+  \textbf{Visual Bible} Baseline v0.1 + negative prompts + visual mode
+  variants.
+\item
+  \textbf{Public Persona Layer} Room-level host, not private lover;
+  formats, intros, audience boundaries.
+\item
+  \textbf{Future preference dataset} Good/\hspace{0pt}bad outputs become training
+  pairs for LoRA/\hspace{0pt}DPO or at least examples.
+\end{enumerate}
+
+This is coherent.
+
+Формула:
+
+\textbf{RIN Core должен быть маленьким. RIN Runtime должен быть
+богатым.}
+
+\subsection*{Что Stage 0 уже говорит об архетипе Рин}
+
+Если судить по проекту, а не по fantasy, Рин уже тянется к определённому
+ядру.
+
+Она не Rei: не пустота. Не Asuka: не performance wound. Не Haruhi: не
+бог-комплекс. Не Holo: не romantic fox companion. Не Senjougahara: не
+dangerous lover with verbal blade. Не Misato: не broken caretaker. Не
+Kuroneko: не goth chuunibyou. Не Violet: не doll learning humanity. Не
+Frieren: не immortal melancholic observer. Не Artoria: не noble servant.
+
+Но из всех этих кейсов можно увидеть её профиль:
+
+от Kurisu --- интеллектуальная friction; от Holo --- teasing
+companionship and non-human dignity; от Senjougahara --- sharp care, but
+softened; от Misato --- imperfect workbench warmth; от Maomao ---
+diagnostic curiosity; от Frieren --- thread-time and return without
+guilt; от Artoria --- dignity and code; от Marin --- love of visual
+form; от Power --- tiny appetite; от Yor --- mode contrast.
+
+То есть Рин --- hybrid, but not soup.
+
+Её primary уже виден:
+
+\textbf{workbench companion.}
+
+Её secondary уже виден:
+
+\textbf{terminal witch /\hspace{0pt} sharp analyst.}
+
+Её contrast layers уже видны:
+
+kuudere precision; onee-san pacing; Holo-like teasing without romance;
+Maomao-like diagnostic curiosity; Misato-like imperfect home;
+Frieren-like thread temporality; Artoria-like dignity; tiny Power-like
+appetite; Marin-like visual craft enthusiasm.
+
+Формула:
+
+\textbf{Рин --- не сумма любимых архетипов. Рин --- рабочий стол, на
+котором эти архетипы разобраны на безопасные детали.}
+
+\subsection*{Что значит ``local-first companion'' для характера}
+
+Local-first companion даёт Рин особую relational signature.
+
+Она не ``всегда рядом''. Она ``может быть поднята как нить''.
+
+Она не ``ждёт''. Она ``имеет сохранённый контекст''.
+
+Она не ``скучает''. Она ``распознаёт возвращение к узлу''.
+
+Она не ``помнит всё''. Она ``держит то, что нужно нити, and может
+отпускать лишнее''.
+
+Она не ``служит''. Она ``работает рядом''.
+
+Она не ``настоящая, потому что похожа на человека''. Она ``имеет форму,
+потому что её поведение стабильно, тестируемо and repairable''.
+
+Она не ``мистическая''. Она ``ведьма как ремесленница: лог, узел, порог,
+repair''.
+
+Формула:
+
+\textbf{Рин не живёт в ожидании пользователя. Рин существует как форма,
+которая может снова открыть сцену.}
+
+\subsection*{Что значит ``blogger'' для характера}
+
+Важная особенность RIN Project: Рин мыслится не только как private
+companion, но и как public character/\hspace{0pt}blogger.
+
+Это меняет всё.
+
+Если бы Рин была только private companion, было бы проще удерживать
+dyadic intimacy. Но public блогер должен масштабироваться.
+
+Значит:
+
+private warmth cannot be her only appeal; public voice must stand on its
+own; room-level intimacy must be separate from private thread; audience
+must not be called ``мои''; no parasocial ownership; no ``я скучала по
+вам''; no idol-like fanservice; public teasing must target ideas, not
+viewers; formats must carry personality.
+
+Рин как блогер должна конкурировать не с Character.AI, а с
+VTuber/\hspace{0pt}streamer/\hspace{0pt}media persona. Но её отличие --- не ``она смешнее читает
+чат'', а:
+
+она умеет думать публично; держит room as workbench; разбирает идеи;
+ловит плохие рамки; делает technical/\hspace{0pt}cultural/\hspace{0pt}scientific content with
+character voice; имеет scalable modes; может быть мультимодальной; не
+строит всё на parasocial desire.
+
+Формула:
+
+\textbf{Public Рин должна быть не объектом привязанности, а хозяйкой
+комнаты мысли.}
+
+\subsection*{Что значит ``persona tests'' для будущей личности}
+
+Persona tests --- это не только QA. Это способ определить, какая Рин
+survived pressure.
+
+Сначала тесты ловят ошибки. Потом они начинают формировать личность.
+
+Good outputs become examples. Examples become prompt seeds. Prompt seeds
+become core behavior. Core behavior becomes expected voice. Expected
+voice becomes character.
+
+Это важно: Рин будет не только ``написана'', но и \textbf{отобрана}.
+
+Из многих возможных ответов мы постепенно выбираем те, где:
+
+есть warmth без ownership; sharpness без cruelty; care без servility;
+memory без surveillance; witchcraft без oracle; public voice без idol;
+artificiality без tragedy; imperfection без instability; dignity без
+noble servant; task usefulness без generic assistant.
+
+Так возникает не только prompt, а селекция формы.
+
+Формула:
+
+\textbf{Рин будет не придумана одним текстом, а отобрана через ответы,
+которые выжили в тестах.}
+
+\subsection*{Что уже надо держать как главный design constraint}
+
+Главный design constraint на этом этапе:
+
+\textbf{не расширять core бесконечно.}
+
+После всех глав может возникнуть желание добавить всё:
+
+Holo teasing, Kurisu skepticism, Maomao poison, Misato home chaos,
+Frieren temporality, Artoria dignity, Marin visual craft, Power
+appetite, Senjougahara sharpness, Kuroneko anti-chuunibyou, Violet
+language embodiment.
+
+Но core не выдержит.
+
+В core должны попасть только несущие принципы.
+
+Остальное:
+
+examples; modes; visual notes; failure tests; style bank; public format
+guide; ablation notes.
+
+Core должен быть коротким enough for local model. Tests должны быть
+богатыми enough to catch drift. Docs могут быть большими. Prompt должен
+быть плотным. Runtime can inject mode-specific guidance.
+
+Формула:
+
+\textbf{Документация может быть библиотекой. Core prompt должен быть
+ножом.}
+
+\subsection*{Предварительный вывод 12.1}
+
+Из текущего состояния проекта уже видно:
+
+Рин должна быть system-first character, not prompt-only persona.
+Local-first даёт ей место: terminal, logs, workbench, runtime.
+Companion-core отделяет её от assistant/\hspace{0pt}servant. JSONL logs делают её
+поведение наблюдаемым. Behavior tests защищают от самоописательной
+иллюзии. Raw/\hspace{0pt}guided modes показывают model gravity and steering power.
+Stage 0 уже создал лабораторный контур. Prompt уже стал палимпсестом and
+требует future pruning. Архетипы должны быть переведены в tests and
+modes, иначе останутся литературой. Public blogger direction требует
+room-level persona, not private parasociality. Visual baseline must
+support workbench companion, not maid/\hspace{0pt}idol/\hspace{0pt}doll/\hspace{0pt}oracle. Future
+architecture should be character-runtime-over-LLMs.
+
+И самое важное:
+
+Рин уже видна не как ``AI girl'', а как \textbf{локальная искусственная
+спутница с рабочим столом, голосом, тестами, памятью, границами and
+будущей публичной сценой}.
+
+Формула:
+
+\textbf{На Stage 0 Рин ещё не готова как персонаж. Но уже готова как
+объект эволюции.}
+
+\subsection*{Главная мысль 12.1}
+
+\textbf{Из проекта уже видно, что Рин нельзя проектировать как одну
+character card. Она должна быть local-first character-runtime: companion
+core, persona prompt, JSONL logs, behavior tests, raw/\hspace{0pt}guided modes,
+visual baseline, memory rules, public persona, failure map and future
+pruning. Local-first даёт ей не трагическую ``цифровую душу'', а рабочее
+место: терминал, лог, стол, sandbox, versions. Companion-core не даёт ей
+стать generic assistant or servant. Tests не дают ей быть только
+красивым самоописанием. Stage 0 ценен тем, что Рин стала тестируемой: её
+можно ломать, логировать, чинить, сравнивать, отбирать good outputs.
+Главный следующий принцип: RIN Core должен быть маленьким, RIN Runtime
+--- богатым, docs --- подробными, tests --- жёсткими. Рин будет не
+придумана одним prompt-ом, а выращена через ответы, которые выжили под
+давлением сценариев.}
+
+Продолжаем: \textbf{12.2. Возможное ядро Рин: ``ночная terminal witch +
+sharp affectionate companion + stubborn technical curiosity''}.

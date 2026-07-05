@@ -12,8 +12,16 @@
 \usepackage{listings}
 \usepackage{array}
 \usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{fvextra}
+\fvset{breaklines=true, breakanywhere=true, fontsize=\small}
 \usepackage{microtype}
 \usepackage{amsmath}
+
+% Списки, сгенерированные pandoc, используют \tightlist для компактных
+% itemize/enumerate без лишних отступов между пунктами.
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 % Основной шрифт для русского. TeX Gyre в этой системе не содержит кириллицы,
 % поэтому используется книжная пара Linux Libertine/Biolinum с полной кириллицей
@@ -71,13 +79,17 @@
     extendedchars=true,
 }
 
-\title{РИНциклопедия\\[0.3em]\large Курс лекций по конструированию персонажа и сценарию локального AI-компаньона}
-\author{Специалист по характеризации и сценаристике}
-\date{\today}
+\title{``RIN Character Bible: аниме-архетипика как язык проектирования личности''\\[0.5em]\large Курс по конструированию персонажа Рин: архетипика, голос, близость и character-runtime}
+\author{Материалы приглашённого ChatGPT в амплуа персонажника-сценариста\\для команды разработчиков RIN Project}
+\date{2026}
 
 \begin{document}
 
 \maketitle
+
+% В оглавление выносятся только главы и подразделы (N.M); внутренние
+% мини-заголовки набраны как \subsection* и в оглавление не попадают.
+\setcounter{tocdepth}{1}
 
 \tableofcontents
 \newpage
@@ -89,7 +101,6 @@
 \input{chapters/0_3}
 \input{chapters/0_4}
 \input{chapters/0_5}
-\input{chapters/0_6}
 
 \input{chapters/1_1}
 \input{chapters/1_2}
@@ -116,6 +127,8 @@
 \input{chapters/3_8}
 \input{chapters/3_9}
 \input{chapters/3_10}
+\input{chapters/3_11}
+\input{chapters/3_12}
 
 \input{chapters/4_1}
 \input{chapters/4_2}
@@ -126,6 +139,10 @@
 \input{chapters/4_7}
 \input{chapters/4_8}
 \input{chapters/4_9}
+\input{chapters/4_10}
+\input{chapters/4_11}
+\input{chapters/4_12}
+\input{chapters/4_13}
 
 \input{chapters/5_1}
 \input{chapters/5_2}
@@ -136,6 +153,8 @@
 \input{chapters/5_7}
 \input{chapters/5_8}
 \input{chapters/5_9}
+\input{chapters/5_10}
+\input{chapters/5_11}
 
 \input{chapters/6_1}
 \input{chapters/6_2}
@@ -210,6 +229,7 @@
 \input{chapters/12_12}
 \input{chapters/12_13}
 \input{chapters/12_14}
+\input{chapters/12_15}
 
 \input{chapters/13_1}
 \input{chapters/13_2}
@@ -229,6 +249,5 @@
 \input{chapters/14_5}
 \input{chapters/14_6}
 \input{chapters/14_7}
-\input{chapters/14_8}
 
 \end{document}
