@@ -4,8 +4,9 @@ import argparse
 import shlex
 from typing import Any
 
-from config import MODEL, STAGE0_LOG_PATH
+from config import DEFAULT_NUM_CTX, MODEL, STAGE0_LOG_PATH
 from logging_utils import append_event, new_session_id
+from prompts import PROMPT_VARIANT
 from runtime import (
     Message,
     StreamInterrupted,
@@ -253,6 +254,8 @@ def main() -> None:
 
     print("RIN local chat prototype")
     print(f"Model: {args.model}")
+    print(f"Prompt variant: {PROMPT_VARIANT}")
+    print(f"Context window: {DEFAULT_NUM_CTX} tokens (system prompt: {len(system_prompt)} chars, ~{len(system_prompt) // 4} tokens est.)")
     print(f"Session: {session_id}")
     print(f"Log: {STAGE0_LOG_PATH}")
 

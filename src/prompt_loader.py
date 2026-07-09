@@ -6,22 +6,27 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PROMPTS_ROOT = PROJECT_ROOT / "prompts"
 
-GLOBAL_PROMPT_DIR = PROMPTS_ROOT / "global"
+DEFAULT_GLOBAL_VARIANT = "global"
+GLOBAL_PROMPT_DIR = PROMPTS_ROOT / DEFAULT_GLOBAL_VARIANT
 LOCAL_PROMPT_DIR = PROMPTS_ROOT / "local"
 
 
-GLOBAL_PROMPT_FILES: list[str] = [
-    "00_header.md",
-    "10_identity.md",
-    "20_personality.md",
-    "30_speech.md",
-    "40_conversation_agency.md",
-    "50_relationship_model.md",
-    "60_capabilities.md",
-    "70_project_context.md",
-    "80_technical_honesty.md",
-    "90_behavior_rules.md",
-]
+def global_prompt_dir(variant: str = DEFAULT_GLOBAL_VARIANT) -> Path:
+    return PROMPTS_ROOT / variant
+
+
+def global_prompt_files(variant: str = DEFAULT_GLOBAL_VARIANT) -> list[Path]:
+    directory = global_prompt_dir(variant)
+
+    if not directory.exists():
+        raise FileNotFoundError(f"Global prompt variant not found: {directory}")
+
+    files = sorted(directory.glob("*.md"))
+
+    if not files:
+        raise FileNotFoundError(f"No prompt files found in: {directory}")
+
+    return files
 
 
 def read_prompt_file(path: Path) -> str:
@@ -36,13 +41,8 @@ def read_prompt_file(path: Path) -> str:
     return text
 
 
-def load_global_prompt() -> str:
-    parts: list[str] = []
-
-    for filename in GLOBAL_PROMPT_FILES:
-        path = GLOBAL_PROMPT_DIR / filename
-        parts.append(read_prompt_file(path))
-
+def load_global_prompt(variant: str = DEFAULT_GLOBAL_VARIANT) -> str:
+    parts = [read_prompt_file(path) for path in global_prompt_files(variant)]
     return "\n\n---\n\n".join(parts).strip()
 
 
@@ -59,8 +59,12 @@ def load_local_prompt() -> str:
     return "\n\n---\n\n".join(parts).strip()
 
 
-def load_system_prompt(*, include_local: bool = False) -> str:
-    global_prompt = load_global_prompt()
+def load_system_prompt(
+    *,
+    include_local: bool = False,
+    variant: str = DEFAULT_GLOBAL_VARIANT,
+) -> str:
+    global_prompt = load_global_prompt(variant)
 
     if not include_local:
         return global_prompt

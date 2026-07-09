@@ -3,11 +3,11 @@ from __future__ import annotations
 import argparse
 from typing import Literal
 
-from config import MODEL
+from config import DEFAULT_NUM_CTX, MODEL
 from logging_utils import append_event, new_session_id
 from persona_tests.registry import TEST_CATEGORIES
 from persona_tests.schema import TestCase, TestCategory
-from prompts import RIN_SYSTEM_PROMPT
+from prompts import PROMPT_VARIANT, RIN_SYSTEM_PROMPT
 from runtime import ask_model, ask_model_adaptive, make_messages
 
 
@@ -476,6 +476,8 @@ def main() -> None:
     print("#" * 80)
     print("RIN Stage 0 persona / behavior tests")
     print(f"Model: {args.model}")
+    print(f"Prompt variant: {PROMPT_VARIANT}")
+    print(f"Context window: {DEFAULT_NUM_CTX} tokens (system prompt: {len(RIN_SYSTEM_PROMPT)} chars, ~{len(RIN_SYSTEM_PROMPT) // 4} tokens est.)")
     print(f"Session: {session_id}")
     print(f"Mode: {args.mode}")
     print("#" * 80)

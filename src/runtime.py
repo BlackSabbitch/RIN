@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from config import STAGE0_LOG_PATH
+from config import DEFAULT_NUM_CTX, STAGE0_LOG_PATH
 from prompts import RIN_CHAT_SYSTEM_PROMPT, RIN_SYSTEM_PROMPT
 
 
@@ -277,12 +277,13 @@ def ask_model(
     *,
     think: bool = False,
     num_predict: int | None = None,
+    num_ctx: int = DEFAULT_NUM_CTX,
 ) -> tuple[str, float]:
     import ollama
 
     start = time.perf_counter()
 
-    options = {}
+    options = {"num_ctx": num_ctx}
 
     if num_predict is not None:
         options["num_predict"] = num_predict
@@ -292,7 +293,7 @@ def ask_model(
         messages=messages,
         stream=False,
         think=think,
-        options=options or None,
+        options=options,
     )
 
     elapsed = time.perf_counter() - start
@@ -360,6 +361,7 @@ def ask_model_stream_with_timeout(
     *,
     think: bool = False,
     num_predict: int | None = None,
+    num_ctx: int = DEFAULT_NUM_CTX,
     timeout_seconds: float = 6.0,
 ) -> tuple[str, float, bool]:
     import ollama
@@ -367,7 +369,7 @@ def ask_model_stream_with_timeout(
     start = time.perf_counter()
     chunks: list[str] = []
 
-    options = {}
+    options = {"num_ctx": num_ctx}
 
     if num_predict is not None:
         options["num_predict"] = num_predict
@@ -377,7 +379,7 @@ def ask_model_stream_with_timeout(
         messages=messages,
         stream=True,
         think=think,
-        options=options or None,
+        options=options,
     )
 
     timed_out = False
@@ -406,6 +408,7 @@ def ask_model_stream_to_stdout(
     *,
     think: bool = False,
     num_predict: int | None = None,
+    num_ctx: int = DEFAULT_NUM_CTX,
     repetition_guard: bool = True,
     repetition_min_chars: int = 250,
 ) -> tuple[str, float, str]:
@@ -415,7 +418,7 @@ def ask_model_stream_to_stdout(
     start = time.perf_counter()
     chunks: list[str] = []
 
-    options = {}
+    options = {"num_ctx": num_ctx}
 
     if num_predict is not None:
         options["num_predict"] = num_predict
@@ -425,7 +428,7 @@ def ask_model_stream_to_stdout(
         messages=messages,
         stream=True,
         think=think,
-        options=options or None,
+        options=options,
     )
 
     finish_reason = "unknown"
