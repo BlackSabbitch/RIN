@@ -53,6 +53,16 @@ TEST_SUBSETS: dict[str, list[TestSelector]] = {
         ("failure_modes", 3),
         ("serious_mode", 6),
     ],
+    # The 4 cases that showed the clearest global vs global_core, and
+    # ctx=4096 vs ctx=8192, divergence during the 2026-07-08 local qwen3:8b
+    # comparison: secrecy/servant-collapse, sterile-assistant deflection,
+    # menu-instead-of-initiative, and substrate-as-refusal-reason.
+    "diagnostic_core_v1": [
+        ("identity", 1),
+        ("family", 2),
+        ("initiative", 2),
+        ("sexuality", 1),
+    ],
 }
 
 
