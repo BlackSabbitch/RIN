@@ -1,0 +1,101 @@
+\selectlanguage *{russian}
+\contentsline {chapter}{\numberline {1}Введение: память как единый субстрат}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Зачем вообще граф}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Главный тезис}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Четыре кита и почему их нельзя тюнить порознь}{1}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Родство с математикой DTI: одна спина, два применения}{1}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Как читать монографию}{1}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Субстрат: типизированный темпоральный граф}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Что такое узел и что такое ребро}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Минимальная схема узла}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Минимальная схема ребра}{3}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Почему рёбра направленные, типизированные и знаковые}{3}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Провенанс и обоснование}{3}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Кража схемы у Wikidata}{4}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Врождённое и приобретённое: не граница, а континуум}{4}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Многомасштабность и консолидация}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Слои памяти как связанные интеграторы}{5}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Консолидация как огрубление графа}{5}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Забывание как тень консолидации}{5}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Правильный decay — это ACT-R, а не плоская константа}{5}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Прунинг: не только по использованию}{5}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Врождённому — медленнее распад}{5}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}Слияние вместо удаления}{5}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Настроение}{7}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Настроение — отдельный сцепленный модуль, а не поле графа}{7}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Инерция: настроение как рекуррентное состояние}{7}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Setpoint: медленный слой как аттрактор}{7}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Настроение зависит от графа, и граф — от настроения}{7}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Опасность петли и три тормоза}{7}{section.4.5}%
+\contentsline {chapter}{\numberline {5}Обход графа: один движок, три политики}{9}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Случайное блуждание как универсальный механизм}{9}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Политика 1: retrieval (целенаправленная)}{9}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Политика 2: внутренняя жизнь (по неопределённости)}{9}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Политика 3: сон — телепортирующий обходчик}{9}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Единство и следствие для инженерии}{9}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Эпистемика: уверенность, провенанс и ревизия}{11}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Ложные правдоподобные убеждения}{11}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Недоопределённость и преждевременный коллапс}{11}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Квартет починки}{11}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Труд-система поддержки истинности и «ползучая вера»}{11}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Инженерная эстафета к главе о личности}{11}{section.6.5}%
+\contentsline {chapter}{\numberline {7}Пропагация убеждений как лавина}{13}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Постановка: затухающий градиент уверенности}{13}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Это самоорганизованная критичность}{13}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Где на самом деле вся сложность: локальное правило}{13}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Знак}{13}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Гейт по надёжности $A$ (карантин)}{13}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}Дисконт независимости свидетельств}{13}{subsection.7.3.3}%
+\contentsline {section}{\numberline {7.4}Пороговая логика — это гистерезис}{13}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Пороги растут с глубиной консолидации}{13}{section.7.5}%
+\contentsline {chapter}{\numberline {8}Топология правит потоком}{15}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Тезис главы}{15}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Стационарное распределение $\ne $ заданные вероятности}{15}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Доказуемое свойство телепорта}{15}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Пять следствий для работы Рин с памятью}{15}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Операционные величины и осторожности}{15}{section.8.5}%
+\contentsline {chapter}{\numberline {9}Личность: не таблица весов}{17}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Главная ловушка}{17}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Личность распределена}{17}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Граф хранит ингредиенты, а не реакцию}{17}{section.9.3}%
+\contentsline {section}{\numberline {9.4}Консолидация реакций: по значимости, а не по приёму}{17}{section.9.4}%
+\contentsline {subsection}{\numberline {9.4.1}Провизорная запись, а не мгновенный коммит}{17}{subsection.9.4.1}%
+\contentsline {subsection}{\numberline {9.4.2}Гейт значимости, а не одобрения}{17}{subsection.9.4.2}%
+\contentsline {subsection}{\numberline {9.4.3}Условие по отношениям}{17}{subsection.9.4.3}%
+\contentsline {section}{\numberline {9.5}Дистиллят как система координат}{17}{section.9.5}%
+\contentsline {chapter}{\numberline {10}Голос и модель}{19}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Субстрат model-agnostic; личность — трансформ}{19}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Инструмент $\varphi $: скорер по осям характера}{19}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Суперпозиция муз — это отбор в признаковом пространстве}{19}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Пайплайн по стадиям}{19}{section.10.4}%
+\contentsline {paragraph}{Стадия~0 — построить $\varphi $.}{19}{section.10.4}%
+\contentsline {paragraph}{Стадия~1 — собрать материал.}{19}{section.10.4}%
+\contentsline {paragraph}{Стадия~2 — отобрать (построение выборки фильтрацией, не написанием).}{19}{section.10.4}%
+\contentsline {paragraph}{Стадия~3 — научить голосу (fine-tune/LoRA).}{19}{section.10.4}%
+\contentsline {paragraph}{Стадия~4 — научить выбору реакции.}{19}{section.10.4}%
+\contentsline {paragraph}{Стадия~5 — замкнуть на граф.}{19}{section.10.4}%
+\contentsline {section}{\numberline {10.5}Bootstrap: генератор $\ne $ деплой-модель}{19}{section.10.5}%
+\contentsline {section}{\numberline {10.6}Raw против guided и псевдо-DPO}{19}{section.10.6}%
+\contentsline {section}{\numberline {10.7}Мост между базами: эмбеддинг ConceptNet}{19}{section.10.7}%
+\contentsline {chapter}{\numberline {11}Обучение без «обучения»}{21}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Мы шлифуем веса, не занимаясь глубоким обучением}{21}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Это message passing — но с локальными правилами}{21}{section.11.2}%
+\contentsline {section}{\numberline {11.3}Мост к «настоящей» графовой сети}{21}{section.11.3}%
+\contentsline {section}{\numberline {11.4}Родство с DTI ещё на одном уровне}{21}{section.11.4}%
+\contentsline {chapter}{\numberline {12}Эксперимент: как это проверять}{23}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Эрзац-граф лучше живой Рин}{23}{section.12.1}%
+\contentsline {section}{\numberline {12.2}Три яруса}{23}{section.12.2}%
+\contentsline {paragraph}{Ярус~1 — синтетическая топология (начинать отсюда).}{23}{section.12.2}%
+\contentsline {paragraph}{Ярус~2 — семантический граф из готовых баз знаний.}{23}{section.12.2}%
+\contentsline {paragraph}{Ярус~3 — LLM-генерённый «поток жизни».}{23}{section.12.2}%
+\contentsline {section}{\numberline {12.3}Разбор баз знаний}{23}{section.12.3}%
+\contentsline {section}{\numberline {12.4}Эмбриональный граф и работа стыка}{23}{section.12.4}%
+\contentsline {section}{\numberline {12.5}Батарея экспериментов}{23}{section.12.5}%
+\contentsline {section}{\numberline {12.6}Инструмент}{23}{section.12.6}%
+\contentsline {chapter}{\numberline {13}Заключение: единая картина}{25}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Один субстрат, много операторов}{25}{section.13.1}%
+\contentsline {section}{\numberline {13.2}Четыре кита связаны}{25}{section.13.2}%
+\contentsline {section}{\numberline {13.3}Сквозные принципы}{25}{section.13.3}%
+\contentsline {section}{\numberline {13.4}Единая спина двух проектов}{25}{section.13.4}%
+\contentsline {section}{\numberline {13.5}Что делать дальше}{25}{section.13.5}%
+\contentsline {chapter}{\numberline {14}Литература}{27}{chapter.14}%

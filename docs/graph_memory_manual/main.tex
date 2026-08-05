@@ -1,0 +1,163 @@
+\documentclass[11pt,a4paper]{extbook}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setotherlanguage{english}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tocloft}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+% Шрифты с полной кириллицей, доступные практически в любом дистрибутиве
+% (Liberation — метрики Times/Helvetica/Courier). Если на машине есть
+% Linux Libertine (как в проектах Ринциклопедий), можно вернуть его здесь.
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.85]
+
+\tolerance=2000
+\emergencystretch=3em
+
+\geometry{left=2.4cm, right=2.4cm, top=2.5cm, bottom=2.5cm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black,
+    linktoc=all,
+}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter.}{18pt}{\Large\bfseries}
+\titleformat{\section}[hang]{\large\bfseries}{\thesection.}{12pt}{\large\bfseries}
+\titleformat{\subsection}[hang]{\normalsize\bfseries}{\thesubsection.}{10pt}{\normalsize\bfseries}
+
+\setlength{\headheight}{17.0pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\nouppercase{\leftmark}}
+\cfoot{\thepage}
+
+% Листинги: обычный код и псевдокод.
+\lstdefinestyle{code}{
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red!70!black},
+    showstringspaces=false,
+    extendedchars=true,
+    columns=fullflexible,
+    keepspaces=true,
+}
+\lstdefinestyle{pseudo}{
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    frame=leftline,
+    framerule=1pt,
+    rulecolor=\color{gray!50},
+    xleftmargin=1em,
+    mathescape=true,
+    showstringspaces=false,
+    extendedchars=true,
+    columns=fullflexible,
+    keepspaces=true,
+}
+\lstset{style=code}
+
+% Диаграммы.
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc,shapes.geometric}
+
+% Врезки. Заголовки заключены в {} — иначе запятые ломают ключи tcolorbox.
+\usepackage[most]{tcolorbox}
+\newtcolorbox{intuition}[1][Интуиция]{colback=gray!5,colframe=gray!45,title={#1},fonttitle=\bfseries,breakable}
+\newtcolorbox{pitfall}[1][Ловушка]{colback=red!4,colframe=red!35,title={#1},fonttitle=\bfseries,breakable}
+\newtcolorbox{workedbox}[1][Разбор примера]{colback=blue!3,colframe=blue!30,title={#1},fonttitle=\bfseries,breakable}
+
+% Теоремоподобные среды.
+\theoremstyle{definition}
+\newtheorem{definition}{Определение}[chapter]
+\newtheorem{example}{Пример}[chapter]
+\newtheorem{principle}{Принцип}[chapter]
+
+% Сокращения.
+\newcommand{\Neigh}{\mathcal{N}}
+\newcommand{\conf}{\mathrm{conf}}
+\newcommand{\mood}{\mathrm{mood}}
+\newcommand{\Reff}{R_{\mathrm{eff}}}
+
+\title{Конструирование графовой памяти Рин\\[0.4em]
+\large Монография о субстрате, динамике и эксперименте:\\
+как построить, оживить и проверить память локального AI-компаньона}
+\author{Рабочая монография проекта RIN}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\vspace{1.5em}
+\begin{center}
+\begin{minipage}{0.82\textwidth}\itshape\small
+Рабочий документ проекта RIN. Составлен как конспект серии проектных обсуждений и
+приведён в форму монографии. Изложение намеренно избыточно: лучше сохранить лишнюю
+деталь, псевдокод или разобранный пример, чем оставить механизм недосказанным.
+Формулы служат точности, врезки «Интуиция», «Ловушка» и «Разбор примера» — смыслу,
+предупреждению и проверке. Приложения содержат нотацию, глоссарий внешних идей и
+сводку алгоритмов.
+\end{minipage}
+\end{center}
+\vspace{1.5em}
+
+\tableofcontents
+
+\mainmatter
+
+\input{chapters/00_intro}
+\input{chapters/architecture}
+\input{chapters/definitions}
+\input{chapters/01_substrate}
+\input{chapters/embryonic}
+\input{chapters/04_walker}
+\input{chapters/fusion}
+\input{chapters/02_timescales}
+\input{chapters/03_mood}
+\input{chapters/05_epistemics}
+\input{chapters/06_propagation}
+\input{chapters/07_topology}
+\input{chapters/sleep}
+\input{chapters/08_personality}
+\input{chapters/09_voice_model}
+\input{chapters/10_learning}
+\input{chapters/11_experiment}
+\input{chapters/12_conclusion}
+
+\appendix
+\input{chapters/A_notation}
+\input{chapters/B_glossary}
+\input{chapters/C_algorithms}
+\input{chapters/D_hypergraphs}
+\input{chapters/E_cellcomplex}
+
+\backmatter
+\input{chapters/13_references}
+
+\end{document}

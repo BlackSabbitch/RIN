@@ -359,7 +359,10 @@ def main() -> None:
 
             print()
             print()
-            print(f"[interrupted after {error.elapsed:.2f} seconds]")
+            if error.reason == "request_timeout":
+                print(f"[no response from Ollama after {error.elapsed:.2f} seconds -- check whether the model is actually running on GPU]")
+            else:
+                print(f"[interrupted after {error.elapsed:.2f} seconds]")
             print()
 
             append_event(
@@ -371,7 +374,7 @@ def main() -> None:
                 elapsed_seconds=round(error.elapsed, 3),
                 session_messages=len(messages),
                 bootstrap_events=len(bootstrap_events),
-                interruption_reason="keyboard_interrupt",
+                interruption_reason=error.reason,
                 finish_reason="interrupted",
                 num_predict=args.num_predict,
                 repetition_guard=not args.no_repetition_guard,

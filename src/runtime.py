@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from config import DEFAULT_NUM_CTX, STAGE0_LOG_PATH
+from config import DEFAULT_NUM_CTX, REQUEST_TIMEOUT_SECONDS, STAGE0_LOG_PATH
 from prompts import RIN_CHAT_SYSTEM_PROMPT, RIN_SYSTEM_PROMPT
 
 
@@ -14,10 +14,16 @@ Message = dict[str, str]
 
 
 class StreamInterrupted(Exception):
-    def __init__(self, partial_answer: str, elapsed: float) -> None:
+    def __init__(
+        self,
+        partial_answer: str,
+        elapsed: float,
+        reason: str = "keyboard_interrupt",
+    ) -> None:
         super().__init__("Streaming generation interrupted")
         self.partial_answer = partial_answer
         self.elapsed = elapsed
+        self.reason = reason
 
 
 def _normalize_repetition_text(text: str) -> str:
@@ -278,7 +284,9 @@ def ask_model(
     think: bool = False,
     num_predict: int | None = None,
     num_ctx: int = DEFAULT_NUM_CTX,
+    request_timeout: float = REQUEST_TIMEOUT_SECONDS,
 ) -> tuple[str, float]:
+    import httpx
     import ollama
 
     start = time.perf_counter()
@@ -288,13 +296,19 @@ def ask_model(
     if num_predict is not None:
         options["num_predict"] = num_predict
 
-    response = ollama.chat(
-        model=model,
-        messages=messages,
-        stream=False,
-        think=think,
-        options=options,
-    )
+    client = ollama.Client(timeout=request_timeout)
+
+    try:
+        response = client.chat(
+            model=model,
+            messages=messages,
+            stream=False,
+            think=think,
+            options=options,
+        )
+    except httpx.TimeoutException:
+        elapsed = time.perf_counter() - start
+        return f"[ERROR: no response from Ollama within {request_timeout:.0f}s]", elapsed
 
     elapsed = time.perf_counter() - start
     answer = response["message"]["content"].strip()
@@ -363,7 +377,9 @@ def ask_model_stream_with_timeout(
     num_predict: int | None = None,
     num_ctx: int = DEFAULT_NUM_CTX,
     timeout_seconds: float = 6.0,
+    request_timeout: float = REQUEST_TIMEOUT_SECONDS,
 ) -> tuple[str, float, bool]:
+    import httpx
     import ollama
 
     start = time.perf_counter()
@@ -374,27 +390,38 @@ def ask_model_stream_with_timeout(
     if num_predict is not None:
         options["num_predict"] = num_predict
 
-    stream = ollama.chat(
-        model=model,
-        messages=messages,
-        stream=True,
-        think=think,
-        options=options,
-    )
+    client = ollama.Client(timeout=request_timeout)
 
     timed_out = False
 
-    for chunk in stream:
-        elapsed = time.perf_counter() - start
+    try:
+        stream = client.chat(
+            model=model,
+            messages=messages,
+            stream=True,
+            think=think,
+            options=options,
+        )
 
-        if elapsed > timeout_seconds:
-            timed_out = True
-            break
+        for chunk in stream:
+            elapsed = time.perf_counter() - start
 
-        content = chunk.get("message", {}).get("content", "")
+            if elapsed > timeout_seconds:
+                timed_out = True
+                break
 
-        if content:
-            chunks.append(content)
+            content = chunk.get("message", {}).get("content", "")
+
+            if content:
+                chunks.append(content)
+    except httpx.TimeoutException:
+        # No data arrived at all within request_timeout (e.g. a silent CPU
+        # fallback or a stuck server) -- our own timeout_seconds check above
+        # never got a chance to run because it needs a chunk to have already
+        # arrived. Treat this exactly like "timed out", same as a slow but
+        # live generation, so the caller's existing retry/shorten logic
+        # applies unchanged.
+        timed_out = True
 
     elapsed = time.perf_counter() - start
     answer = "".join(chunks).strip()
@@ -411,8 +438,10 @@ def ask_model_stream_to_stdout(
     num_ctx: int = DEFAULT_NUM_CTX,
     repetition_guard: bool = True,
     repetition_min_chars: int = 250,
+    request_timeout: float = REQUEST_TIMEOUT_SECONDS,
 ) -> tuple[str, float, str]:
     import sys
+    import httpx
     import ollama
 
     start = time.perf_counter()
@@ -423,16 +452,18 @@ def ask_model_stream_to_stdout(
     if num_predict is not None:
         options["num_predict"] = num_predict
 
-    stream = ollama.chat(
-        model=model,
-        messages=messages,
-        stream=True,
-        think=think,
-        options=options,
-    )
+    client = ollama.Client(timeout=request_timeout)
 
     finish_reason = "unknown"
     try:
+        stream = client.chat(
+            model=model,
+            messages=messages,
+            stream=True,
+            think=think,
+            options=options,
+        )
+
         for chunk in stream:
             if chunk.get("done"):
                 finish_reason = chunk.get("done_reason") or "done"
@@ -469,4 +500,13 @@ def ask_model_stream_to_stdout(
         sys.stdout.flush()
         elapsed = time.perf_counter() - start
         partial_answer = "".join(chunks).strip()
-        raise StreamInterrupted(partial_answer, elapsed) from error
+        raise StreamInterrupted(partial_answer, elapsed, reason="keyboard_interrupt") from error
+
+    except httpx.TimeoutException as error:
+        # No data arrived at all within request_timeout -- same graceful
+        # partial-answer handling as a manual interrupt, just triggered by
+        # the network instead of Ctrl+C.
+        sys.stdout.flush()
+        elapsed = time.perf_counter() - start
+        partial_answer = "".join(chunks).strip()
+        raise StreamInterrupted(partial_answer, elapsed, reason="request_timeout") from error

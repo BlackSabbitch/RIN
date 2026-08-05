@@ -1,0 +1,144 @@
+\selectlanguage *{russian}
+\contentsline {chapter}{\numberline {1}Введение: память как единый субстрат}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Зачем вообще граф}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Главный тезис}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Четыре кита и почему их нельзя тюнить порознь}{1}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Родство с математикой DTI: одна спина, два применения}{2}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Как читать монографию}{2}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Субстрат: типизированный темпоральный граф}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Что такое узел и что такое ребро}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Минимальная схема узла}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Минимальная схема ребра}{3}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Почему рёбра направленные, типизированные и знаковые}{4}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Провенанс и обоснование}{4}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Кража схемы у Wikidata}{4}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Врождённое и приобретённое: не граница, а континуум}{5}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Многомасштабность и консолидация}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Слои памяти как связанные интеграторы}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Консолидация как огрубление графа}{7}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Забывание как тень консолидации}{7}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Правильный decay — это ACT-R, а не плоская константа}{8}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Прунинг: не только по использованию}{8}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Врождённому — медленнее распад}{8}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}Слияние вместо удаления}{8}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Настроение}{9}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Настроение — отдельный сцепленный модуль, а не поле графа}{9}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Инерция: настроение как рекуррентное состояние}{9}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Setpoint: медленный слой как аттрактор}{9}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Настроение зависит от графа, и граф — от настроения}{9}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Опасность петли и три тормоза}{10}{section.4.5}%
+\contentsline {chapter}{\numberline {5}Обход графа: один движок, три политики}{11}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Случайное блуждание как универсальный механизм}{11}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Политика 1: retrieval (целенаправленная)}{11}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Политика 2: внутренняя жизнь (по неопределённости)}{11}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Политика 3: сон — телепортирующий обходчик}{11}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Единство и следствие для инженерии}{12}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Эпистемика: уверенность, провенанс и ревизия}{13}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Ложные правдоподобные убеждения}{13}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Недоопределённость и преждевременный коллапс}{13}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Квартет починки}{13}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Труд-система поддержки истинности и «ползучая вера»}{14}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Инженерная эстафета к главе о личности}{14}{section.6.5}%
+\contentsline {chapter}{\numberline {7}Пропагация убеждений как лавина}{15}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Постановка: затухающий градиент уверенности}{15}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Это самоорганизованная критичность}{15}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Где на самом деле вся сложность: локальное правило}{15}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Знак}{15}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}Гейт по надёжности $A$ (карантин)}{16}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}Дисконт независимости свидетельств}{16}{subsection.7.3.3}%
+\contentsline {section}{\numberline {7.4}Пороговая логика — это гистерезис}{16}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Пороги растут с глубиной консолидации}{16}{section.7.5}%
+\contentsline {chapter}{\numberline {8}Топология правит потоком}{17}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Тезис главы}{17}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Стационарное распределение $\ne $ заданные вероятности}{17}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Доказуемое свойство телепорта}{17}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Пять следствий для работы Рин с памятью}{18}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Операционные величины и осторожности}{18}{section.8.5}%
+\contentsline {chapter}{\numberline {9}Личность: не таблица весов}{21}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Главная ловушка}{21}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Личность распределена}{21}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Граф хранит ингредиенты, а не реакцию}{21}{section.9.3}%
+\contentsline {section}{\numberline {9.4}Консолидация реакций: по значимости, а не по приёму}{22}{section.9.4}%
+\contentsline {subsection}{\numberline {9.4.1}Провизорная запись, а не мгновенный коммит}{22}{subsection.9.4.1}%
+\contentsline {subsection}{\numberline {9.4.2}Гейт значимости, а не одобрения}{22}{subsection.9.4.2}%
+\contentsline {subsection}{\numberline {9.4.3}Условие по отношениям}{23}{subsection.9.4.3}%
+\contentsline {section}{\numberline {9.5}Дистиллят как система координат}{23}{section.9.5}%
+\contentsline {chapter}{\numberline {10}Голос и модель}{25}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Субстрат model-agnostic; личность — трансформ}{25}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Инструмент $\varphi $: скорер по осям характера}{25}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Суперпозиция муз — это отбор в признаковом пространстве}{25}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Пайплайн по стадиям}{26}{section.10.4}%
+\contentsline {paragraph}{Стадия~0 — построить $\varphi $.}{26}{section.10.4}%
+\contentsline {paragraph}{Стадия~1 — собрать материал.}{26}{section.10.4}%
+\contentsline {paragraph}{Стадия~2 — отобрать (построение выборки фильтрацией, не написанием).}{26}{section.10.4}%
+\contentsline {paragraph}{Стадия~3 — научить голосу (fine-tune/LoRA).}{26}{section.10.4}%
+\contentsline {paragraph}{Стадия~4 — научить выбору реакции.}{26}{section.10.4}%
+\contentsline {paragraph}{Стадия~5 — замкнуть на граф.}{26}{section.10.4}%
+\contentsline {section}{\numberline {10.5}Bootstrap: генератор $\ne $ деплой-модель}{26}{section.10.5}%
+\contentsline {section}{\numberline {10.6}Raw против guided и псевдо-DPO}{27}{section.10.6}%
+\contentsline {section}{\numberline {10.7}Мост между базами: эмбеддинг ConceptNet}{27}{section.10.7}%
+\contentsline {chapter}{\numberline {11}Обучение без «обучения»}{29}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Мы шлифуем веса, не занимаясь глубоким обучением}{29}{section.11.1}%
+\contentsline {section}{\numberline {11.2}Это message passing — но с локальными правилами}{29}{section.11.2}%
+\contentsline {section}{\numberline {11.3}Мост к «настоящей» графовой сети}{29}{section.11.3}%
+\contentsline {section}{\numberline {11.4}Родство с DTI ещё на одном уровне}{30}{section.11.4}%
+\contentsline {chapter}{\numberline {12}Эксперимент: как это проверять}{31}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Эрзац-граф лучше живой Рин}{31}{section.12.1}%
+\contentsline {section}{\numberline {12.2}Три яруса}{31}{section.12.2}%
+\contentsline {paragraph}{Ярус~1 — синтетическая топология (начинать отсюда).}{31}{section.12.2}%
+\contentsline {paragraph}{Ярус~2 — семантический граф из готовых баз знаний.}{31}{section.12.2}%
+\contentsline {paragraph}{Ярус~3 — LLM-генерённый «поток жизни».}{31}{section.12.2}%
+\contentsline {section}{\numberline {12.3}Разбор баз знаний}{31}{section.12.3}%
+\contentsline {section}{\numberline {12.4}Эмбриональный граф и работа стыка}{32}{section.12.4}%
+\contentsline {section}{\numberline {12.5}Батарея экспериментов}{32}{section.12.5}%
+\contentsline {section}{\numberline {12.6}Инструмент}{33}{section.12.6}%
+\contentsline {chapter}{\numberline {13}Заключение: единая картина}{35}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Один субстрат, много операторов}{35}{section.13.1}%
+\contentsline {section}{\numberline {13.2}Четыре кита связаны}{35}{section.13.2}%
+\contentsline {section}{\numberline {13.3}Сквозные принципы}{35}{section.13.3}%
+\contentsline {section}{\numberline {13.4}Единая спина двух проектов}{35}{section.13.4}%
+\contentsline {section}{\numberline {13.5}Что делать дальше}{36}{section.13.5}%
+\contentsline {chapter}{\numberline {A}Нотация}{37}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Глоссарий внешних идей}{39}{appendix.B}%
+\contentsline {paragraph}{Базовая активация ACT-R.}{39}{appendix.B}%
+\contentsline {paragraph}{Spreading activation.}{39}{appendix.B}%
+\contentsline {paragraph}{Сети Хопфилда, обучение Хебба.}{39}{appendix.B}%
+\contentsline {paragraph}{Труд-система поддержки истинности (TMS/ATMS).}{39}{appendix.B}%
+\contentsline {paragraph}{Недоопределённость (underdetermination).}{39}{appendix.B}%
+\contentsline {paragraph}{Belief perseverance.}{39}{appendix.B}%
+\contentsline {paragraph}{Петлевое распространение (loopy belief propagation).}{39}{appendix.B}%
+\contentsline {paragraph}{Самоорганизованная критичность (SOC).}{40}{appendix.B}%
+\contentsline {paragraph}{Ветвящийся коэффициент $\sigma $.}{40}{appendix.B}%
+\contentsline {paragraph}{Гистерезис (триггер Шмитта).}{40}{appendix.B}%
+\contentsline {paragraph}{Стационарное распределение $\pi $.}{40}{appendix.B}%
+\contentsline {paragraph}{Время перемешивания (mixing time).}{40}{appendix.B}%
+\contentsline {paragraph}{PageRank / персонализированный PageRank / RWR.}{40}{appendix.B}%
+\contentsline {paragraph}{Эффективное сопротивление $R_{\mathrm {eff}}$.}{40}{appendix.B}%
+\contentsline {paragraph}{Проводимость / константа Чигера.}{40}{appendix.B}%
+\contentsline {paragraph}{Over-squashing.}{40}{appendix.B}%
+\contentsline {paragraph}{Over-smoothing.}{40}{appendix.B}%
+\contentsline {paragraph}{Кривизна графа (Оливье, Форман).}{40}{appendix.B}%
+\contentsline {paragraph}{Анти-энтропийный скраб.}{40}{appendix.B}%
+\contentsline {paragraph}{Огрубление графа (graph coarsening), coarse-to-local.}{41}{appendix.B}%
+\contentsline {paragraph}{Персистентный лапласиан, TDA.}{41}{appendix.B}%
+\contentsline {paragraph}{WL-тест, GIN.}{41}{appendix.B}%
+\contentsline {paragraph}{Передача сообщений (GNN).}{41}{appendix.B}%
+\contentsline {paragraph}{LoRA.}{41}{appendix.B}%
+\contentsline {paragraph}{DPO (Direct Preference Optimization).}{41}{appendix.B}%
+\contentsline {paragraph}{Теория оценивания (appraisal): OCC, Шерер.}{41}{appendix.B}%
+\contentsline {paragraph}{Предиктивная обработка, ошибка предсказания.}{41}{appendix.B}%
+\contentsline {paragraph}{ConceptNet / Numberbatch.}{41}{appendix.B}%
+\contentsline {paragraph}{ATOMIC / ATOMIC10x.}{41}{appendix.B}%
+\contentsline {paragraph}{Wikidata.}{41}{appendix.B}%
+\contentsline {paragraph}{Generative Agents.}{41}{appendix.B}%
+\contentsline {paragraph}{Распределение Бета, сэмплирование Томпсона.}{41}{appendix.B}%
+\contentsline {chapter}{\numberline {C}Сводка алгоритмов}{43}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Единый блуждающий агент (три политики)}{43}{section.C.1}%
+\contentsline {section}{\numberline {C.2}Локальное правило и лавинная пропагация}{43}{section.C.2}%
+\contentsline {section}{\numberline {C.3}Забывание, прунинг, консолидация}{44}{section.C.3}%
+\contentsline {section}{\numberline {C.4}Телепорт-скраб (анти-энтропия)}{44}{section.C.4}%
+\contentsline {section}{\numberline {C.5}Настроение и монитор руминации}{44}{section.C.5}%
+\contentsline {section}{\numberline {C.6}Оценивание, значимость и консолидация реакции}{44}{section.C.6}%
+\contentsline {section}{\numberline {C.7}Скорер характера и отбор голоса}{45}{section.C.7}%
+\contentsline {section}{\numberline {C.8}Стенд эксперимента}{45}{section.C.8}%
+\contentsline {chapter}{Литература}{47}{appendix*.1}%

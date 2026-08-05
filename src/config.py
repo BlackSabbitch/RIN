@@ -16,4 +16,13 @@ MODEL = os.environ.get("RIN_MODEL", "qwen3:8b")
 # editing this file.
 DEFAULT_NUM_CTX = int(os.environ.get("RIN_NUM_CTX", "8192"))
 
+# The ollama Python client defaults to timeout=None (wait forever) at the
+# HTTP layer. Our own "adaptive" retry logic only checks elapsed time
+# between chunks it has already received, so if the server never sends a
+# first chunk at all (e.g. a silent CPU fallback on an environment with no
+# usable GPU), nothing in this codebase used to stop it — the request just
+# blocked forever. This is a hard backstop underneath that logic, not a
+# replacement for it.
+REQUEST_TIMEOUT_SECONDS = float(os.environ.get("RIN_REQUEST_TIMEOUT", "120"))
+
 STAGE0_LOG_PATH = PROJECT_ROOT / "logs" / "rin_stage0.jsonl"
