@@ -21,6 +21,29 @@
 \emph{операторы}, читающие и пишущие одни и те же поля одного графа.
 \end{principle}
 
+\begin{pitfall}[«Один субстрат» — дисциплина, а не «всё есть граф»]
+Тезис легко выродить в догму, и тогда в граф начнут запихивать всё подряд:
+runtime-очереди, streaming-флаги, транзиентные тики настроения, состояние
+планировщика. Это превратит граф в свалку «всего, что случилось». Граница проходит
+чётко: \textbf{в графе живёт долговременное содержание и его эпистемические
+обоснования} — воспоминания, факты, убеждения, связи, провенанс. Остальное — рядом,
+и это \emph{не} граф:
+\[
+\text{граф} = \text{память};\quad
+\text{event log} = \text{история};\quad
+\text{телеметрия} = \text{самонаблюдение};
+\]
+\[
+\text{scheduler state} = \text{управление};\quad
+\text{prompt context} = \text{временная сборка для LLM}.
+\]
+Они связаны и обмениваются данными, но это разные хранилища с разными законами
+жизни (главы~\ref{ch:runtime},~\ref{ch:mood}). Настроение — сцепленный сбоку модуль;
+самотелеметрия метакогниции — кольцевой буфер; планировщик — конечный автомат.
+Правило простое: если данное \emph{транзиентно} или это \emph{управление/история} —
+ему не место в графе памяти.
+\end{pitfall}
+
 \section{Слои системы}
 
 Система распадается на четыре слоя. Снизу вверх:
@@ -46,24 +69,26 @@
 \end{enumerate}
 
 \begin{center}
-\begin{tikzpicture}[font=\scriptsize,>=Stealth,node distance=5mm,
-  layer/.style={draw,rounded corners,minimum width=0.92\textwidth,minimum height=9mm,align=center,fill=gray!4},
-  comp/.style={draw,rounded corners,fill=white,minimum height=6mm,inner sep=2pt}]
-  \node[layer] (expr) {\textbf{Выражение}\quad
-     \tikz\node[comp]{личность};\ \tikz\node[comp]{Rinness / языковая модель};};
-  \node[layer,below=of expr] (state) {\textbf{Состояния}\quad
-     \tikz\node[comp]{настроение (mood)};\ \tikz\node[comp]{уверенность / статусы};};
-  \node[layer,below=of state] (op) {\textbf{Операторы}\quad
-     \tikz\node[comp]{обход (walker)};\ \tikz\node[comp]{fusion};\
-     \tikz\node[comp]{консолидация};\ \tikz\node[comp]{пропагация};\
-     \tikz\node[comp]{сон/скраб};};
-  \node[layer,below=of op] (sub) {\textbf{Субстрат}\quad
-     \tikz\node[comp]{граф: узлы+знаковые рёбра+метаданные};\
-     \tikz\node[comp]{эмбриональный граф};};
-  \draw[<->] (expr)--(state); \draw[<->] (state)--(op); \draw[<->] (op)--(sub);
-\end{tikzpicture}\\[2pt]
-{\small Рис.~\ref{ch:architecture}.1: четыре слоя. Стрелки двусторонние: настроение
-смещает обход, обход меняет граф, граф питает настроение и так далее.}
+\begin{tikzpicture}[font=\small,>=Stealth,
+  layer/.style={draw,rounded corners,minimum width=82mm,align=center,inner sep=6pt,fill=gray!5},
+  lbl/.style={font=\bfseries}]
+  \node[layer] (expr) {{\bfseries Выражение}\\[1pt]
+     \footnotesize личность \quad$\cdot$\quad Rinness / языковая модель};
+  \node[layer,below=7mm of expr] (state) {{\bfseries Состояния}\\[1pt]
+     \footnotesize настроение (mood) \quad$\cdot$\quad уверенность / статусы};
+  \node[layer,below=7mm of state] (op) {{\bfseries Операторы}\\[1pt]
+     \footnotesize обход (walker) $\cdot$ fusion $\cdot$ консолидация\\
+     \footnotesize пропагация $\cdot$ сон / скраб};
+  \node[layer,below=7mm of op] (sub) {{\bfseries Субстрат}\\[1pt]
+     \footnotesize граф: узлы + знаковые рёбра + метаданные\\
+     \footnotesize эмбриональный граф};
+  \draw[<->,thick] (expr)--(state);
+  \draw[<->,thick] (state)--(op);
+  \draw[<->,thick] (op)--(sub);
+\end{tikzpicture}
+\captionof{figure}{Четыре слоя системы. Стрелки двусторонние: настроение смещает
+обход, обход меняет граф, граф питает настроение, и так далее.}
+\label{fig:layers}
 \end{center}
 
 \section{Что течёт по системе}

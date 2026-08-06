@@ -42,7 +42,7 @@ def propagate(G, A, sigma_target=0.9):
         gain = branching_normalizer(frontier, sigma_target)
         for B in frontier:
             d = delta_conf(G, A, B) * gain    # см. ниже: знак, источник, независимость
-            G.confidence[B] = clip(G.confidence[B] + d, 0, 1)
+            G.confidence[B] = clip(G.confidence[B] + d, -1, 1)  # знаковая уверенность
             th_e = theta_emergent(G, B)       # растёт с глубиной консолидации
             if abs(d) > th_e:                 # крупная переоценка -> в ширину
                 next_frontier += neighbors(G, B)
@@ -91,7 +91,7 @@ def scrub(G, budget):
 
 \begin{lstlisting}[style=pseudo]
 def mood_update(mood_layers, event):
-    # Стек текущих интеграторов с разными tau; актуальное = суперпозиция.
+    # Стек протекающих интеграторов с разными tau; актуальное = суперпозиция.
     for L in mood_layers:                     # session, day, ..., life
         mood_L = (1 - 1/L.tau) * mood_L + (1/L.tau) * appraise(event)
     mood_now = sum(w_L * mood_L for L in mood_layers)

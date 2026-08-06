@@ -108,8 +108,8 @@ fusion.
   \foreach \i in {1,...,4}{\node (r\i) at ({3.0+0.5*rand},{0.5*\i}) {};}
   \foreach \i in {1,...,4}{\foreach \j in {1,...,4}{\ifnum\i<\j \draw[gray!40] (l\i)--(l\j); \draw[gray!40] (r\i)--(r\j);\fi}}
   \draw[red!60!black,very thick] (l2) -- (r3) node[midway,above,draw=none,font=\scriptsize]{мост};
-\end{tikzpicture}\\[2pt]
-{\small Рис.: два сообщества через узкий мост. Через него активация «задыхается»
+\end{tikzpicture}
+\captionof{figure}{Два сообщества через узкий мост. Через него активация «задыхается»
 (over-squashing); телепорт обходит его, прыгая напрямую.}
 \end{center}
 

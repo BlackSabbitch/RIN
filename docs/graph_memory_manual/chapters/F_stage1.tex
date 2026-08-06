@@ -1,0 +1,70 @@
+\chapter{Контракт Stage 1: минимальный срез, который строим первым}
+\label{ch:stage1}
+
+Монография зрелая, и улучшать её можно бесконечно. Но полезнее не ещё одна красивая
+глава, а \emph{зафиксированный маленький вертикальный срез}, который можно собрать за
+неделю-две и начать \emph{ломать} на стенде. Это приложение — контракт такой сборки:
+не весь организм памяти, а сквозная линия от захвата до речи.
+
+\section{Сквозной срез (pipeline v0)}
+
+\begin{lstlisting}[style=pseudo]
+event_log            # неизменяемый лог (гл. 17): append observed/committed/deleted
+  -> typed nodes     # схема узла v0 (ниже), node_kind обязателен
+  -> write/skip gate # epistemic + salience + anti-fusion; skip логируется (гл. 17)
+  -> forensic index  # точный поиск по метаданным/провенансу/времени (гл. 17)
+  -> anchor retrieval# вектор-якоря + ограниченный обход (гл. 6)
+  -> context-packer v0 # с метками observed/hypothesis/low_conf/... (гл. 17)
+  -> inspector CLI   # показать узлы/рёбра/поля/лог, вручную инспектировать
+  -> synthetic tests # маленький граф с ground truth (гл. 18)
+\end{lstlisting}
+
+\section{Схема узла v0 (минимум полей)}
+
+\texttt{id}, \texttt{content}, \texttt{embedding}, \texttt{node\_kind},
+\texttt{confidence}$\in[-1,1]$, \texttt{provenance} (или support-skeleton),
+\texttt{time}, \texttt{layer}. Остальные поля (\texttt{valence},
+\texttt{importance}, \texttt{domains}, \texttt{need\_to\_*}) добавляются по мере
+надобности, но \texttt{node\_kind} обязателен с самого начала — он задаёт смысл
+\texttt{confidence} (гл.~\ref{ch:substrate}).
+
+\section{Первые 6--8 сущностей (что реально кодим)}
+
+\begin{enumerate}\itemsep1pt
+\item \textbf{Event log} (append-only) $+$ пересборка графа-проекции из лога.
+\item \textbf{Typed node store} (KV) $+$ edge store (adjacency).
+\item \textbf{Write/skip gate} с логированием причины skip.
+\item \textbf{Forensic index} (точный поиск/удаление по метаданным) — включая
+работающий delete-cascade (гл.~\ref{ch:runtime}, раздел~\ref{sec:forget}).
+\item \textbf{Anchor retrieval} (вектор-индекс $+$ ограниченный обход).
+\item \textbf{Context-packer v0} (с эпистемическими метками).
+\item \textbf{Inspector CLI} — «memory inspector»: смотреть узлы, рёбра, поля, лог.
+\item \textbf{Synthetic graph tests} (SBM/BA $+$ подсаженные сценарии).
+\end{enumerate}
+
+\section{Что сознательно игнорируем на Stage 1}
+
+Чтобы срез остался тонким: mood-динамика и её слои, личность/Rinness и drive-вектор,
+сон/скраб и разрешение противоречий, тяжёлый fusion (только anti-fusion-скелет и
+провизорные кандидаты), гиперрёбра и клеточные комплексы, governance-слой,
+мета-обучение операторов. Это не отменяется — это \emph{откладывается}; красивые
+главы ждут, пока нижний срез не станет доверенным.
+
+\section{Критерии готовности v0 (как поймём, что работает)}
+
+\begin{itemize}\itemsep1pt
+\item запись и \emph{skip} работают, причина skip видна в логе;
+\item forensic-удаление действительно сносит узел \emph{и его производные следы}
+(taint-cascade), это проверяемо inspector-ом;
+\item anchor-retrieval на синтетическом графе возвращает осмысленную окрестность;
+\item реплей event-log \emph{перестраивает} тот же граф-проекцию (event sourcing);
+\item хотя бы один тест из батареи отказов (гл.~\ref{ch:experiment}) — например,
+$\pi$-концентрация на хабах или точное удаление — зелёный.
+\end{itemize}
+
+\begin{principle}[Дальше — строить и ломать, а не расширять]
+На этом теоретический слой монографии \emph{заморожен}. Следующий лучший ход —
+собрать этот срез, прогнать synthetic tests, и позволить реальности править
+гипотезы. Каждая «красивая глава» включается только тогда, когда нижний срез её
+выдержит.
+\end{principle}
