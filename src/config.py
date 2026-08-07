@@ -25,4 +25,5 @@ DEFAULT_NUM_CTX = int(os.environ.get("RIN_NUM_CTX", "8192"))
 # replacement for it.
 REQUEST_TIMEOUT_SECONDS = float(os.environ.get("RIN_REQUEST_TIMEOUT", "120"))
 
-STAGE0_LOG_PATH = PROJECT_ROOT / "logs" / "rin_stage0.jsonl"
+STAGE0_LOG_PATH = PROJECT_ROOT / "logs" / "stage0_bootstrap_prompt_model" / "rin_stage0.jsonl"
+STAGE0_LOG_PATH = PROJECT_ROOT / "logs" / "stage1_graph_model" / "rin_stage1.jsonl"
