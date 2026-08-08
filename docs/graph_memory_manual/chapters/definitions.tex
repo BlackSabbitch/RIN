@@ -142,9 +142,12 @@ $P(A\to B)\propto w_{AB}\cdot\text{rel}(B)\cdot\text{mc}(B)\cdot\text{unc}(B)^{\
 \end{definition}
 
 \begin{definition}[Консолидация]
-\emph{Консолидация} — укрепление важного и \emph{огрубление} частого: множество
-эпизодов сворачивается в обобщённый узел («зритель — частый гость»). Формально это
-graph coarsening (глава~\ref{ch:timescales}).
+\emph{Консолидация} (в широком смысле) — \emph{процесс} перехода от множества частных
+следов к устойчивым обобщениям, а не единичный оператор. Он отрабатывает несколько
+подоператоров: fusion\,/\,вывод, summary-overlay, dedup\,/\,merge и — как \emph{поздний}
+подоператор — prune (destructive replacement с огрублением, graph coarsening).
+Большинство ранних консолидаций ничего не разрушают; разбор процесса и его
+предохранителей — в главе~\ref{ch:timescales}.
 \end{definition}
 
 \begin{definition}[Забывание (decay)]
