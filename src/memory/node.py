@@ -3,9 +3,30 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Node:
-    """v0 node schema, see docs/graph_memory_manual/chapters/F_stage1.tex
-    and 01_substrate.tex. node_kind defaults to "synthetic" for Tier-1
-    graphs that carry no real content.
+    """A single memory-graph node (v0 schema).
+
+    Fields follow the Stage 1 minimum from F_stage1.tex, plus activation
+    from 01_substrate.tex, which walk() (memory/walk.py) writes to.
+
+    Attributes:
+        id: Unique node identifier.
+        content: Natural-language content; empty for Tier-1 synthetic
+            nodes, which carry no real semantics.
+        embedding: Vector representation for retrieval relevance; None
+            until the node has real content to embed.
+        node_kind: One of the kinds from 01_substrate.tex
+            (observation/claim/hypothesis/preference/...), which
+            determines what confidence means. Defaults to "synthetic"
+            for Tier-1 nodes that don't fit that taxonomy.
+        confidence: Signed belief in [-1, 1] for truth-apt kinds, or
+            reliability of the estimate for non-truth-apt kinds (see
+            01_substrate.tex, section "Виды узлов").
+        provenance: IDs of the parent nodes this node was inferred from,
+            or the source id for an observed fact.
+        time: Encoding timestamp (logical, not wall-clock, for Tier-1).
+        layer: Temporal/consolidation layer (session ... life).
+        activation: Transient visit signal written by walk operators;
+            not otherwise persisted.
     """
 
     id: int

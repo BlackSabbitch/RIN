@@ -11,14 +11,27 @@ def walk(
     alpha: float = 0.0,
     rng: random.Random | None = None,
 ) -> None:
-    """"retrieval" mode from C_algorithms.tex with query=mood=None: the
-    rel(B|query) and moodcong(B|mood) terms drop out, leaving a plain
-    weight-driven random walk (P(A->B) proportional to edge weight). Writes
-    visit counts into node.activation as a side effect so metric(G, truth)
-    can read them back off G, per the run_experiment(...) contract.
-    burn_in steps are walked but not counted, so the visit distribution
-    approximates the stationary distribution pi rather than being skewed by
-    the arbitrary start node.
+    """Run a single random walker over G and record its visit counts.
+
+    This is the "retrieval" policy from C_algorithms.tex and 04_walker.tex
+    with query and mood left unset: the rel(B|query) and mc(B|mood) terms
+    of the transition rule (eq. \\ref{eq:trans}) drop out, leaving a plain
+    weight-driven walk, P(A->B) proportional to edge weight. The
+    "internal life" and "sleep" policies (nonzero alpha/beta_u) are not
+    implemented yet.
+
+    Args:
+        G: Graph to walk. Mutated in place: for step >= burn_in, the
+            visited node's activation field is incremented.
+        start_node: Id of the node the walker starts at.
+        steps: Number of steps to record after burn_in.
+        burn_in: Steps to walk but not record, so the recorded visit
+            distribution approximates the stationary distribution pi
+            instead of being skewed by the arbitrary start node.
+        alpha: Teleport probability per step (0 = pure "retrieval" policy,
+            per the manual's policy parameter table).
+        rng: Optional random.Random instance, for reproducible walks in
+            tests.
     """
     rng = rng or random.Random()
     node_ids = list(G.node_ids())

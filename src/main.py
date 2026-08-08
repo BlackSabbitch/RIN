@@ -1,3 +1,8 @@
+"""Entry point: runs the currently implemented Stage-1 battery test (#1,
+hub concentration) and prints its result. See
+experiments/exp1_hub_concentration.py and experiments/harness.py.
+"""
+
 from experiments import exp1_hub_concentration as exp1
 from experiments.harness import run_experiment
 

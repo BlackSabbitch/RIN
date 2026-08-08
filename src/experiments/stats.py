@@ -1,4 +1,19 @@
 def spearman_correlation(xs: list[float], ys: list[float]) -> float:
+    """Spearman rank correlation between two equal-length samples.
+
+    Hand-rolled (rank, then Pearson correlation on the ranks, average
+    rank for ties) instead of depending on scipy/numpy for one formula;
+    revisit if more statistics end up being needed.
+
+    Args:
+        xs: First sample.
+        ys: Second sample, same length, index-aligned with xs.
+
+    Returns:
+        Correlation in [-1, 1]; 1 means the two samples are perfectly
+        rank-ordered together.
+    """
+
     def rank(values: list[float]) -> list[float]:
         order = sorted(range(len(values)), key=lambda i: values[i])
         ranks = [0.0] * len(values)
