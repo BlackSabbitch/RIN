@@ -10,8 +10,8 @@ def walk(
     burn_in: int = 0,
     alpha: float = 0.0,
     rng: random.Random | None = None,
-) -> None:
-    """Run a single random walker over G and record its visit counts.
+) -> list[int]:
+    """Run a single random walker over G, recording visit counts and order.
 
     This is the "retrieval" policy from C_algorithms.tex and 04_walker.tex
     with query and mood left unset: the rel(B|query) and mc(B|mood) terms
@@ -32,10 +32,18 @@ def walk(
             per the manual's policy parameter table).
         rng: Optional random.Random instance, for reproducible walks in
             tests.
+
+    Returns:
+        The trajectory: node ids in visit order, one per recorded step
+        (excluding burn-in) — the "след" (trail) from the Random Walker
+        definition in definitions.tex. Currently unused by exp1, which
+        only reads the aggregate G.nodes[...].activation; kept for tests
+        that need visit order/timing rather than just totals.
     """
     rng = rng or random.Random()
     node_ids = list(G.node_ids())
     current = start_node
+    trajectory: list[int] = []
     for step in range(burn_in + steps):
         out_edges = G.out_edges(current)
         if not out_edges or rng.random() < alpha:
@@ -45,3 +53,5 @@ def walk(
             current = rng.choices(out_edges, weights=weights, k=1)[0].dst
         if step >= burn_in:
             G.nodes[current].activation += 1.0
+            trajectory.append(current)
+    return trajectory

@@ -1,2 +1,6 @@
 ollama
 igraph
+matplotlib
+networkx
+ipykernel
+notebook
