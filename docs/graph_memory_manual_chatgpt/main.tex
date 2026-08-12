@@ -1,0 +1,171 @@
+﻿\documentclass[11pt,a4paper]{extbook}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setotherlanguage{english}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{tocloft}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.85]
+
+\tolerance=2000
+\emergencystretch=3em
+
+\geometry{left=2.4cm, right=2.4cm, top=2.5cm, bottom=2.5cm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black,
+    linktoc=all,
+}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter.}{18pt}{\Large\bfseries}
+\titleformat{\section}[hang]{\large\bfseries}{\thesection.}{12pt}{\large\bfseries}
+\titleformat{\subsection}[hang]{\normalsize\bfseries}{\thesubsection.}{10pt}{\normalsize\bfseries}
+
+\setlength{\headheight}{24pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\nouppercase{\leftmark}} 
+\cfoot{\thepage}
+
+\lstdefinestyle{code}{
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red!70!black},
+    showstringspaces=false,
+    extendedchars=true,
+    columns=fullflexible,
+    keepspaces=true,
+}
+\lstdefinestyle{pseudo}{
+    basicstyle=\small\ttfamily,
+    breaklines=true,
+    frame=leftline,
+    framerule=1pt,
+    rulecolor=\color{gray!50},
+    xleftmargin=1em,
+    mathescape=true,
+    showstringspaces=false,
+    extendedchars=true,
+    columns=fullflexible,
+    keepspaces=true,
+}
+\lstset{style=code}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc,shapes.geometric}
+
+\usepackage[most]{tcolorbox}
+\newtcolorbox{intuition}[1][Интуиция]{colback=gray!5,colframe=gray!45,title={#1},fonttitle=\bfseries,breakable}
+\newtcolorbox{pitfall}[1][Ловушка]{colback=red!4,colframe=red!35,title={#1},fonttitle=\bfseries,breakable}
+\newtcolorbox{workedbox}[1][Разбор примера]{colback=blue!3,colframe=blue!30,title={#1},fonttitle=\bfseries,breakable}
+\newtcolorbox{openq}[1][Открытый вопрос]{colback=orange!6,colframe=orange!60,title={#1},fonttitle=\bfseries,breakable}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Определение}[chapter]
+\newtheorem{example}{Пример}[chapter]
+\newtheorem{principle}{Принцип}[chapter]
+
+\newcommand{\Neigh}{\mathcal{N}}
+\newcommand{\conf}{\mathrm{conf}}
+\newcommand{\mood}{\mathrm{mood}}
+\newcommand{\Reff}{R_{\mathrm{eff}}}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\E}{\mathbb{E}}
+
+\title{Конструирование графовой памяти Рин\\[0.4em]
+\large Расширенный учебный курс по архитектуре памяти, динамике, эпистемике и инженерии}
+\author{Расширенная учебная версия проектного мануала RIN}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\vspace{1.5em}
+\begin{center}
+\begin{minipage}{0.84\textwidth}\itshape\small
+Эта версия намеренно шире базового учебного дубля. Её задача — не просто перевести
+архитектурный замысел в более мягкую педагогическую форму, а развернуть его в курс,
+где рядом стоят интуиция, определения, формулы, инженерные ограничения, разборы
+сценариев и аппарат проверки. Базовый roadmap сохранён; расширения, которых не было
+в исходном тексте в явном виде, вводятся открыто и используются как развитие, а не
+как тихая замена исходных решений.
+\end{minipage}
+\end{center}
+\vspace{1.5em}
+
+\tableofcontents
+
+\mainmatter
+
+\input{chapters/00_preface}
+\input{../graph_memory_manual_chatgpt/chapters/00_intro}
+\input{../graph_memory_manual_chatgpt/chapters/architecture}
+\input{../graph_memory_manual_chatgpt/chapters/definitions}
+\input{../graph_memory_manual_chatgpt/chapters/01_substrate}
+\input{../graph_memory_manual_chatgpt/chapters/04_walker}
+\input{../graph_memory_manual_chatgpt/chapters/03_mood}
+\input{../graph_memory_manual_chatgpt/chapters/07_topology}
+\input{chapters/14_retrieval_math}
+\input{../graph_memory_manual_chatgpt/chapters/fusion}
+\input{../graph_memory_manual_chatgpt/chapters/02_timescales}
+\input{../graph_memory_manual_chatgpt/chapters/sleep}
+\input{../graph_memory_manual_chatgpt/chapters/05_epistemics}
+\input{../graph_memory_manual_chatgpt/chapters/06_propagation}
+\input{chapters/15_evidence_calculus}
+\input{../graph_memory_manual_chatgpt/chapters/08_personality}
+\input{../graph_memory_manual_chatgpt/chapters/09_voice_model}
+\input{../graph_memory_manual_chatgpt/chapters/runtime}
+\input{../graph_memory_manual_chatgpt/chapters/embryonic}
+\input{../graph_memory_manual_chatgpt/chapters/F_stage1}
+\input{chapters/18_case_studies}
+\input{chapters/11_experiment_extended}
+\input{chapters/16_failure_modes}
+\input{chapters/17_design_tradeoffs}
+\input{../graph_memory_manual_chatgpt/chapters/10_learning}
+\input{../graph_memory_manual_chatgpt/chapters/12_conclusion}
+
+\appendix
+\input{../graph_memory_manual_chatgpt/chapters/A_notation}
+\input{../graph_memory_manual_chatgpt/chapters/B_glossary}
+\input{../graph_memory_manual_chatgpt/chapters/C_algorithms}
+\input{../graph_memory_manual_chatgpt/chapters/D_hypergraphs}
+\input{chapters/E_cellcomplex_extended}
+\input{../graph_memory_manual_chatgpt/chapters/G_dynamical_memory}
+\input{chapters/H_future_branches}
+\input{chapters/I_reservoir_branch}
+
+\backmatter
+\input{../graph_memory_manual_chatgpt/chapters/13_references}
+
+\end{document}
+
