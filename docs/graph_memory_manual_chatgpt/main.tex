@@ -1,4 +1,4 @@
-﻿\documentclass[11pt,a4paper]{extbook}
+\documentclass[11pt,a4paper]{extbook}
 
 \usepackage{fontspec}
 \usepackage{polyglossia}
@@ -17,6 +17,7 @@
 \usepackage{booktabs}
 \usepackage{microtype}
 \usepackage{amsmath}
+\usepackage{mathtools}
 \usepackage{amssymb}
 \usepackage{amsthm}
 
@@ -24,11 +25,14 @@
 \setmainfont{DejaVu Serif}
 \setsansfont{DejaVu Sans}
 \setmonofont{DejaVu Sans Mono}[Scale=0.85]
+\DeclareMathSizes{11}{13}{10}{8}
 
 \tolerance=2000
 \emergencystretch=3em
+\setlength{\jot}{5pt}
+\setlength{\emergencystretch}{2em}
 
-\geometry{left=2.4cm, right=2.4cm, top=2.5cm, bottom=2.5cm}
+\geometry{left=2.2cm, right=2.2cm, top=2.5cm, bottom=2.5cm}
 
 \hypersetup{
     colorlinks=true,
@@ -46,7 +50,7 @@
 \setlength{\headheight}{24pt}
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{\small\nouppercase{\leftmark}} 
+\lhead{\small\nouppercase{\leftmark}}
 \cfoot{\thepage}
 
 \lstdefinestyle{code}{
@@ -103,7 +107,7 @@
 \title{Конструирование графовой памяти Рин\\[0.4em]
 \large Расширенный учебный курс по архитектуре памяти, динамике, эпистемике и инженерии}
 \author{Расширенная учебная версия проектного мануала RIN}
-\date{\today}
+\date{11 августа 2026 г.}
 
 \begin{document}
 
@@ -128,44 +132,43 @@
 \mainmatter
 
 \input{chapters/00_preface}
-\input{../graph_memory_manual_chatgpt/chapters/00_intro}
-\input{../graph_memory_manual_chatgpt/chapters/architecture}
-\input{../graph_memory_manual_chatgpt/chapters/definitions}
-\input{../graph_memory_manual_chatgpt/chapters/01_substrate}
-\input{../graph_memory_manual_chatgpt/chapters/04_walker}
-\input{../graph_memory_manual_chatgpt/chapters/03_mood}
-\input{../graph_memory_manual_chatgpt/chapters/07_topology}
+\input{chapters/00_intro}
+\input{chapters/architecture}
+\input{chapters/definitions}
+\input{chapters/01_substrate}
+\input{chapters/04_walker}
+\input{chapters/03_mood}
+\input{chapters/07_topology}
 \input{chapters/14_retrieval_math}
-\input{../graph_memory_manual_chatgpt/chapters/fusion}
-\input{../graph_memory_manual_chatgpt/chapters/02_timescales}
-\input{../graph_memory_manual_chatgpt/chapters/sleep}
-\input{../graph_memory_manual_chatgpt/chapters/05_epistemics}
-\input{../graph_memory_manual_chatgpt/chapters/06_propagation}
+\input{chapters/fusion}
+\input{chapters/02_timescales}
+\input{chapters/sleep}
+\input{chapters/05_epistemics}
+\input{chapters/06_propagation}
 \input{chapters/15_evidence_calculus}
-\input{../graph_memory_manual_chatgpt/chapters/08_personality}
-\input{../graph_memory_manual_chatgpt/chapters/09_voice_model}
-\input{../graph_memory_manual_chatgpt/chapters/runtime}
-\input{../graph_memory_manual_chatgpt/chapters/embryonic}
-\input{../graph_memory_manual_chatgpt/chapters/F_stage1}
+\input{chapters/08_personality}
+\input{chapters/09_voice_model}
+\input{chapters/runtime}
+\input{chapters/embryonic}
+\input{chapters/F_stage1}
 \input{chapters/18_case_studies}
 \input{chapters/11_experiment_extended}
 \input{chapters/16_failure_modes}
 \input{chapters/17_design_tradeoffs}
-\input{../graph_memory_manual_chatgpt/chapters/10_learning}
-\input{../graph_memory_manual_chatgpt/chapters/12_conclusion}
+\input{chapters/10_learning}
+\input{chapters/12_conclusion}
 
 \appendix
-\input{../graph_memory_manual_chatgpt/chapters/A_notation}
-\input{../graph_memory_manual_chatgpt/chapters/B_glossary}
-\input{../graph_memory_manual_chatgpt/chapters/C_algorithms}
-\input{../graph_memory_manual_chatgpt/chapters/D_hypergraphs}
+\input{chapters/A_notation}
+\input{chapters/B_glossary}
+\input{chapters/C_algorithms}
+\input{chapters/D_hypergraphs}
 \input{chapters/E_cellcomplex_extended}
-\input{../graph_memory_manual_chatgpt/chapters/G_dynamical_memory}
+\input{chapters/G_dynamical_memory}
 \input{chapters/H_future_branches}
 \input{chapters/I_reservoir_branch}
 
 \backmatter
-\input{../graph_memory_manual_chatgpt/chapters/13_references}
+\input{chapters/13_references}
 
 \end{document}
-

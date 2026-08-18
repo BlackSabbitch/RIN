@@ -1,0 +1,143 @@
+\chapter{Сводка алгоритмов}
+\label{ch:algorithms}
+
+Псевдокод ключевых операторов, собранный в одном месте для удобства. Это
+скелеты, а не финальные реализации: они фиксируют логику, обсуждённую в
+главах, но опускают инженерные детали (батчинг мутаций, кэширование $\pi$,
+индексы эмбеддингов).
+
+\section{Единый блуждающий агент (три политики)}
+
+\begin{lstlisting}[style=pseudo]
+def walk(G, start_nodes, mode, steps, mood, query=None):
+    # mode задаёт политику через параметры: bias перехода, alpha (телепорт),
+    # bias_uncertainty. Один движок - три режима (глава про обход).
+    if mode == "retrieval":   alpha, bu = 0.0, 0.0
+    if mode == "curiosity":   alpha, bu = 0.05, 1.0      # тянет к need_to_discover
+    if mode == "sleep":       alpha, bu = 0.30, 0.0      # телепорт-скраб
+
+    active = set(start_nodes); visited = Counter()
+    for _ in range(steps):
+        A = sample(active)
+        if random() < alpha:                 # телепорт (рестарт)
+            B = random_node(G)
+        else:
+            # P(A -> B) \propto w_AB * rel(B|query) * moodcong(B|mood) * unc(B)^bu
+            B = sample_neighbor(G, A, weights=transition_scores(
+                    G, A, query, mood, bias_uncertainty=bu))
+        visited[B] += 1
+        maybe_fire_operations(G, B, mode)    # retrieval / fusion / inspect
+        active = frontier(active, B)
+    return visited
+\end{lstlisting}
+
+\section{Локальное правило и лавинная пропагация}
+
+\begin{lstlisting}[style=pseudo]
+def propagate(G, A, sigma_target=0.9):
+    # Пропагация нового факта A как затухающей лавины с контролем ветвления.
+    frontier = link_initial(G, A)            # A -> N(A), напр. последние top-k
+    while frontier:
+        next_frontier = []
+        # нормировка под целевой ветвящийся коэффициент sigma < 1
+        gain = branching_normalizer(frontier, sigma_target)
+        for B in frontier:
+            d = delta_conf(G, A, B) * gain   # см. ниже: знак, источник, независимость
+            G.confidence[B] = clip(G.confidence[B] + d, -1, 1)  # знаковая уверенность
+            th_e = theta_emergent(G, B)      # растёт с глубиной консолидации
+            if abs(d) > th_e:                # крупная переоценка -> в ширину
+                next_frontier += neighbors(G, B)
+            elif abs(d) > THETA_TEMP:        # промежуточная зона -> пометить
+                mark(G, B, "need_to_revise")
+            # else: глохнет здесь
+        frontier = next_frontier
+
+def delta_conf(G, A, B):
+    sign     = edge_sign(G, A, B)            # supports (+) / contradicts (-)
+    strength = edge_weight(G, A, B)
+    gate     = G.confidence[A] * source_trust(G, A)    # карантин нового факта
+    indep    = independence_discount(G, A, B)          # анти-эхо по провенансу
+    return ETA * sign * strength * gate * indep * G.confidence[A]
+\end{lstlisting}
+
+\section{Забывание, прунинг, консолидация}
+
+\begin{lstlisting}[style=pseudo]
+def nightly_maintenance(G):
+    for v in G.nodes:
+        G.strength[v] = act_r_base_level(G.access_log[v])   # частота + свежесть
+    for v in low_activation(G):
+        if importance(G, v) low and confidence(G, v) low:
+            drop(G, v)                                      # редкое-и-неважное
+    for cluster in redundant_episodic_clusters(G):
+        merge_to_semantic(G, cluster)   # огрубление: эпизоды -> обобщение
+    # эмбриональным узлам - меньшая скорость распада (континуум глубины)
+\end{lstlisting}
+
+\section{Телепорт-скраб (анти-энтропия)}
+
+\begin{lstlisting}[style=pseudo]
+def scrub(G, budget):
+    # Случайная инспекция: гарантия покрытия за счёт эргодичности телепорта.
+    for _ in range(budget):
+        v = random_node(G)                    # рестарт куда угодно
+        for w in local_walk(G, v, depth=k):
+            if contradicts_any(G, w):         # столкновение -> ревизия
+                demote(G, w); mark(G, justificands(G, w), "need_to_revise")
+            if flagged(G, w, "need_to_discover"):
+                maybe_fetch_external(G, w)    # любопытство/внешний вход
+\end{lstlisting}
+
+\section{Настроение и монитор руминации}
+
+\begin{lstlisting}[style=pseudo]
+def mood_update(mood_layers, event):
+    # Стек протекающих интеграторов с разными tau; актуальное = суперпозиция.
+    for L in mood_layers:                     # session, day, ..., life
+        mood_L = (1 - 1/L.tau) * mood_L + (1/L.tau) * appraise(event)
+    mood_now = sum(w_L * mood_L for L in mood_layers)
+    if autocorr(history(mood_now)) > RUMINATION_TH:   # залипла валентность
+        trigger(one_of=["reframe", "attention_shift", "invoke_sleep"])
+    return mood_now
+\end{lstlisting}
+
+\section{Оценивание, значимость и консолидация реакции}
+
+\begin{lstlisting}[style=pseudo]
+def encode_event(G, event, mood_prev, mood_now):
+    ap = appraisal(event)                     # surprise, goal_congruence, valence...
+    salience = ap.surprise * ap.goal_relevance
+    # дешёвый прокси значимости, почти бесплатный:
+    salience_cheap = abs(mood_now - mood_prev)
+    consolidate(G, event, weight=salience)   # гейт значимости, НЕ одобрения
+    if ap.surprise high: mark(G, event, "need_to_discover")
+
+def update_reaction(G, situation, user, reaction, received_ok):
+    e = reaction_edge(G, situation, user, reaction)   # условие по (ситуация, отношение)
+    if received_ok: e.beta.alpha += 1
+    else:           e.beta.beta  += 1                 # угасание, не второй коммит
+    e.confidence = e.beta.alpha / (e.beta.alpha + e.beta.beta)
+    if e.confidence > CONSOLIDATE_TH: promote_to_slow_layer(G, e)
+\end{lstlisting}
+
+\section{Скорер характера и отбор голоса}
+
+\begin{lstlisting}[style=pseudo]
+def phi(text, axes):                          # LLM-судья по рубрикам осей
+    return [judge(text, rubric_a) for rubric_a in axes]   # вектор в R^d
+
+def select_voice_corpus(candidates, target_t, axes):
+    scored = [(c, phi(c, axes)) for c in candidates]
+    # отбор/перевзвешивание, чтобы среднее выборки приблизилось к target_t
+    return greedy_match_mean(scored, target_t)   # не усреднять муз, а фильтровать
+\end{lstlisting}
+
+\section{Стенд эксперимента}
+
+\begin{lstlisting}[style=pseudo]
+def run_experiment(build_graph, plant, operator, metric):
+    G = build_graph()          # ярус 1: SBM/BA/WS + подсаженные сценарии
+    truth = plant(G)           # ground truth: что должно произойти
+    operator(G)                # walker / propagate / scrub / decay ...
+    return metric(G, truth)    # precision/recall починки, сходимость, покрытие
+\end{lstlisting}
