@@ -1,0 +1,350 @@
+\chapter{Серия \texttt{8a--9a}: транспортная стена, similarity и достройка путей}
+
+\section{Почему после \texttt{7x} уже нельзя было просто искать еще один denominator}
+
+К началу \texttt{8a} две надежды уже были достаточно честно проверены:
+
+\begin{enumerate}[leftmargin=2em]
+\item post-accumulation denominators сами по себе не отделяют методы на реальном
+эмбрионе;
+\item overlap cue-fields тоже не создает specificity там, где transport до цели
+не доходит.
+\end{enumerate}
+
+Следовательно, следующий вопрос должен был звучать иначе:
+
+\begin{quote}
+может быть, проблема не в том, как пересчитать уже полученное поле, а в том, что
+сигнал \emph{вообще идет не туда} или не доходит до нужного manifold?
+\end{quote}
+
+\section{\texttt{exp8a}: bypass и repair как две попытки пробить transport wall}
+
+\subsection{Замысел}
+
+\texttt{8a} сознательно отвернулся от еще одной ``кухни знаменателей'' и взялся
+за два других рычага:
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{bypass:} дать similarity прямой доступ в итоговый score, а не
+держать ее только как gate внутри diffusion;
+\item \textbf{repair:} ослабить смазывающие типы ребер, в первую очередь
+\texttt{RelatedTo}, чтобы transport меньше стекал в catch-all zones.
+\end{enumerate}
+
+Появилась и еще одна методологическая новация: вместо проверки одного
+канонического target node вводится \textbf{target manifold}. Это очень важный
+сдвиг. С этого места серия перестает считать провалом любой случай, когда граф
+выдал не exact label, а корректный соседний graph-native ответ.
+
+\subsection{Методы}
+
+Испытывались следующие варианты:
+
+\[
+M0(v)=\frac{transport(v)}{\PR(v)^\eta},
+\]
+\[
+M_{\mathrm{gate}}(v)=transport_{\mathrm{gated}}(v),
+\]
+\[
+M1(v)=\frac{transport(v)+\lambda\,\simf(v\mid q)}{\PR(v)^\eta},
+\]
+\[
+M2(v)=\frac{transport_{\mathrm{routed}}(v)+\lambda\,\simf(v\mid q)}{\PR(v)^\eta},
+\]
+\[
+M3(v)=\frac{M2(v)}{\text{genericness}(v)^\mu}.
+\]
+
+В качестве control сохранялся и overlap-вариант из \texttt{7c}.
+
+\subsection{Почему сравнение было честным}
+
+Особенно важно, что \(M0 \to M1\) меняет только одну вещь: additive similarity.
+Это позволяет отделить старый semantic gate как ``legacy control'' от нового
+вопроса: помогает ли similarity, если дать ей прямой канал в score.
+
+\subsection{Что именно проверялось}
+
+Primary suite была достаточно строгой:
+
+\begin{itemize}[leftmargin=2em]
+\item \texttt{coffee + stimulant} против \texttt{beverage}-family;
+\item \texttt{check in + document} против procedural and generic distractors;
+\item \texttt{laptop + battery} против \texttt{office}/\texttt{power};
+\item \texttt{wake up + tired} против \texttt{morning}/\texttt{bed}.
+\end{itemize}
+
+Параллельно были control queries, где broad topic не должен был быть уничтожен
+over-correction.
+
+\subsection{Главный результат}
+
+В своей окончательной, уже подправленной версии \texttt{8a} дал очень чистую
+картину:
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+Метод & primary manifold & strict & mean rank & control \\
+\midrule
+\texttt{M0} & 2/4 & 1/4 & 232.0 & 2/2 \\
+\texttt{M\_gate} & 2/4 & 1/4 & 217.2 & 2/2 \\
+\texttt{M1} & 2/4 & 1/4 & 63.5 & 2/2 \\
+\texttt{M2} & 2/4 & 1/4 & 63.5 & 2/2 \\
+\texttt{M3} & 2/4 & 1/4 & 135.8 & 2/2 \\
+\texttt{CTRL\_overlap} & 1/4 & 0/4 & 5021.2 & 2/2 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Что из этого следует}
+
+Здесь одновременно есть сильный отрицательный и умеренный положительный
+результат.
+
+\subsubsection*{Сильный отрицательный результат}
+
+Overlap control теперь уже не просто ``не победил'', а стал явно хуже. Значит,
+ветка ``многократное схождение cue-fields само по себе родит правильный
+ответ'' может считаться практически исчерпанной на данном субстрате.
+
+\subsubsection*{Умеренный положительный результат}
+
+Additive similarity действительно улучшает rank structure. Это видно по падению
+mean rank с 232.0 до 63.5 у \(M1\). Но она не увеличивает число дискретных
+побед.
+
+Иными словами, bypass способен подтягивать правильный manifold из глубины хвоста,
+но пока не превращается в механизм надежного переворачивания hardest pairwise
+cases.
+
+\subsubsection*{Еще один отрицательный результат}
+
+Routing через \texttt{RelatedTo} в текущем виде почти ничего не прибавил:
+\(M2\) практически совпал с \(M1\). Genericness penalty в \(M3\) даже ухудшила
+часть показателей.
+
+\subsection{Качественное чтение отдельных запросов}
+
+Именно top-k inspection делает выводы \texttt{8a} убедительными.
+
+\begin{itemize}[leftmargin=2em]
+\item В coffee-case \texttt{caffeine} действительно становится ближе, но над ним
+остаются \texttt{served hot}, \texttt{coffee shop}, \texttt{made from coffee
+beans}.
+\item В passport-case система с additive similarity не находит \texttt{passport},
+а проваливается в морфологические и procedural neighbours вроде
+\texttt{documentor}, \texttt{photodocument}, \texttt{checking in}.
+\item В charger-case signal по-прежнему вязнет в \texttt{power}-family и
+соседнем structural noise.
+\item Morning-case выглядит лучше других: \texttt{drink coffee} действительно
+входит в сильный manifold, но не кристаллизуется как бесспорный победитель.
+\end{itemize}
+
+\begin{takeaway}
+\texttt{8a} не нашел ``победную формулу'', но очень качественно расчистил поле.
+После него уже можно уверенно говорить: проблема не решается ни overlap, ни еще
+одним знаменателем; additive similarity полезна, но работает как мягкий rescue,
+а не как полноценный retrieval engine.
+\end{takeaway}
+
+\section{\texttt{exp8b}: de-coning similarity как проектная развилка}
+
+\subsection{Статус}
+
+На момент этого свода \texttt{8b} существует как тщательно продуманная ветка, но
+не как исполненный ноутбук. Это нужно проговорить прямо.
+
+\subsection{Почему эта ветка возникла}
+
+Как только similarity из \texttt{8a} становится first-class term, встает вопрос:
+а хороша ли вообще сама similarity. Если embedding-space анизотропно и живет в
+узком конусе, то cosine margins изначально сжаты, а generic nodes становятся
+embedding-hubs.
+
+Тогда часть дефекта, который мы приписываем transport, на самом деле может
+оказаться следствием грязной геометрии \texttt{NumberBatch}.
+
+\subsection{Что именно предполагалось проверить}
+
+\texttt{8b} должен был сравнить:
+
+\begin{itemize}[leftmargin=2em]
+\item raw cosine;
+\item mean-centering;
+\item all-but-the-top;
+\item CSLS;
+\item per-query z-score.
+\end{itemize}
+
+Причем сначала на intrinsic критериях (pairwise cosine distribution, hubness,
+margin widening), а затем как plug-in replacement для \(\simf(v\mid q)\) в
+лучшем score из \texttt{8a}.
+
+\subsection{Почему даже неисполненная ветка все равно важна}
+
+Потому что она задает очень важное ограничение для \texttt{9a}: если
+semantic-proximity edges строить на сыром косинусе в узком конусе, можно просто
+переписать embedding-hubness в topology и тем самым ухудшить граф.
+
+\begin{openbox}
+Если бы \texttt{8b} дал сильный положительный результат, это сделало бы
+de-coned similarity стандартным строительным материалом и для additive bypass, и
+для semantic-edge construction. Если бы не дал, это сняло бы важный конфаундер и
+позволило бы еще увереннее винить transport rather than cosine. Именно поэтому
+ветка проектно значима, даже еще не будучи прогнанной.
+\end{openbox}
+
+\section{\texttt{exp9a}: dual-geometry transport и semantic-proximity edges}
+
+\subsection{Большой вопрос}
+
+Если \texttt{8a} показал, что additive similarity лишь подтягивает правильные
+узлы, но не решает проблему содержательно, то возникает более радикальная идея:
+может быть, в графе просто \emph{нет нужных путей}, и их надо аккуратно
+достроить.
+
+Отсюда и dual-geometry picture:
+
+\begin{itemize}[leftmargin=2em]
+\item graph geometry: typed relational edges;
+\item embedding geometry: proximity in vector space.
+\end{itemize}
+
+Новая идея состояла в том, чтобы добавить minority channel semantic edges:
+mutual-kNN на embeddings, но с mutual filter, degree caps и throttled
+conductance.
+
+\subsection{Постановка}
+
+Испытывались семейства:
+
+\begin{itemize}[leftmargin=2em]
+\item \(G0b\): no edges, no bypass;
+\item \(G1,G2,G3\): только semantic edges с растущим \(w_{\mathrm{sem}}\);
+\item \(G0a\): realistic baseline из \texttt{8a} с additive similarity;
+\item \(G1r,G2r,G3r\): edges + bypass.
+\end{itemize}
+
+Параллельно измерялись два danger checks:
+
+\begin{itemize}[leftmargin=2em]
+\item hub reflood: generic distractors не должны снова полезть наверх;
+\item RAG collapse: ranking не должен выродиться в pure embedding-kNN.
+\end{itemize}
+
+\subsection{Главная сводка}
+
+Результат по основным retrieval-запросам оказался таким:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Метод & \((w_{\mathrm{sem}}, \lambda)\) & primary pairwise & median rank \\
+\midrule
+\texttt{G0b} & (0.0, 0.0) & 1/3 & 249 \\
+\texttt{G1} & (0.1, 0.0) & 1/3 & 127 \\
+\texttt{G2} & (0.3, 0.0) & 1/3 & 90 \\
+\texttt{G3} & (1.0, 0.0) & 1/3 & 43 \\
+\texttt{G0a} & (0.0, 1.0) & 1/3 & 111 \\
+\texttt{G1r} & (0.1, 1.0) & 1/3 & 98 \\
+\texttt{G2r} & (0.3, 1.0) & 1/3 & 59 \\
+\texttt{G3r} & (1.0, 1.0) & 0/3 & 42 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Как это читать}
+
+Здесь снова есть важное разделение между rank-improvement и task-solution.
+
+\begin{itemize}[leftmargin=2em]
+\item Да, semantic edges заметно подтягивают target manifolds вверх по рангу.
+\item Нет, они не увеличивают число дискретных побед над strongest distractor.
+\item При слишком сильном semantic-channel combined regime даже портится
+(см. \(G3r\)).
+\end{itemize}
+
+\subsection{Сильная сторона \texttt{9a}}
+
+Особенно интересным оказался bridge probe на alias/synonym pairs:
+
+\begin{itemize}[leftmargin=2em]
+\item \texttt{cat -> kitty}: rank 1161 \(\to\) 285 \(\to\) 278;
+\item \texttt{couch -> sofa}: 1488 \(\to\) 37 \(\to\) 22.
+\end{itemize}
+
+То есть там, где проблема действительно состоит в отсутствии короткого моста
+между очень близкими представлениями, semantic channel делает реальную работу.
+
+\subsection{Почему этого оказалось недостаточно}
+
+В сложных retrieval cases, особенно passport-case, semantic edges начинали
+соединять не ``правильный ответный смысл'', а лексико-морфологическое облако:
+\texttt{checking in}, \texttt{check in counter}, \texttt{documentor},
+\texttt{photodocument}, \texttt{redocument} и т.\,п.
+
+Это очень сильный диагностический результат. Он показывает, что blind
+embedding-proximity repair шьет graph gaps, но шьет их не по той семантике,
+которая нужна ассоциативной памяти.
+
+\subsection{Danger checks}
+
+Здесь ноутбук тоже оказался очень полезен.
+
+\begin{itemize}[leftmargin=2em]
+\item Hub reflood не взорвался на умеренных \(w_{\mathrm{sem}}\): median rank
+generic distractors даже немного рос.
+\item Но RAG-collapse стал заметен: overlap top-20 с pure-sim ranking вырос
+примерно от 0.10 до 0.52--0.53.
+\end{itemize}
+
+Это значит, что сильный semantic channel начинает подменять граф векторным
+retrieval. Память при этом не столько улучшается, сколько тайком становится
+другим механизмом.
+
+\begin{takeaway}
+\texttt{9a} не дал структурного ``спасения'' линии, но очень хорошо локализовал
+предел blind semantic-edge repair. Он показал, что у эмбриона действительно не
+хватает мостов, однако строить их как глобальные mutual-kNN links по сырой
+NumberBatch-геометрии недостаточно: такие мосты тянут не только к смысловым
+соседям, но и к морфологическим и лексическим паразитным облакам.
+\end{takeaway}
+
+\section{Что серия \texttt{8a--9a} установила}
+
+\subsection{Отрицательные результаты}
+
+\begin{enumerate}[leftmargin=2em]
+\item Overlap cue-fields не является недостающим ингредиентом retrieval.
+\item Ни relation-type routing в текущем виде, ни genericness penalty не дали
+решающего эффекта.
+\item Blind semantic-proximity edges не превращают эмбрион в хорошую память.
+\end{enumerate}
+
+\subsection{Положительные и диагностические результаты}
+
+\begin{enumerate}[leftmargin=2em]
+\item Additive similarity полезна как мягкий bypass: она улучшает rank structure
+и поднимает цель из глубокого хвоста.
+\item Semantic edges годятся как средство alias/synonym bridging.
+\item Но в содержательных commonsense retrieval cases главная проблема остается
+глубже: signal либо идет по неправильным typed routes, либо graph-native answer
+organizes itself not as the named target node.
+\end{enumerate}
+
+\subsection{Почти окончательный вывод этой линии}
+
+К концу \texttt{9a} становится правдоподобной уже достаточно смелая мысль:
+
+\begin{quote}
+в текущем виде диффузионная retrieval-парадигма, даже с priors, leak laws,
+overlap and semantic repair, может быть уперлась в свой естественный потолок на
+данном субстрате.
+\end{quote}
+
+Это не означает, что диффузия бесполезна. Это означает, что от нее, возможно,
+требуют того, что ближе к path-selective reasoning или к архитектуре
+консолидации графа, чем к простому spreading process.

@@ -1,0 +1,262 @@
+\chapter{Серия \texttt{7x}: перенос на эмбрион и локализация нового bottleneck}
+
+\section{Почему перенос не был формальностью}
+
+После \texttt{6d} легко было бы вообразить, что осталось просто применить
+победивший гибрид к большому реальному графу. Но именно здесь и начинается самая
+поучительная часть всей серии. Перенос показал, что формула, убедительная на
+золотом мире, еще не гарантирует содержательного прогресса на эмбрионе. Причина
+при этом оказалась не тривиальной.
+
+\section{\texttt{exp7a}: end-to-end transfer check}
+
+\subsection{Замысел}
+
+\texttt{exp7a} спрашивал: сохраняются ли выводы \texttt{6c--6d} при переходе на
+крупный seeded subgraph, где нет ручной capacity и где retrieval должен работать
+на реальной, а не hand-authored топологии.
+
+Сравнивались raw diffusion, in-strength prior, PageRank prior, local leak only и
+hybrid local leak + PageRank.
+
+\subsection{Стенд}
+
+Подграф строился как seeded expansion по понятиям, продолжающим мотивы
+\texttt{6x}: кофе, паспорт, apartment, charger, travel, morning и т.\,д.
+Формально ceiling на concept nodes составлял 10\,000, но включение ATOMIC
+создало гораздо более массивную оболочку episode nodes.
+
+\subsection{Что получилось вместо чистого transfer-benchmark}
+
+Фактический размер графа оказался таким:
+
+\begin{itemize}[leftmargin=2em]
+\item 10\,000 concept nodes;
+\item 455\,481 episode nodes;
+\item 465\,481 узел суммарно.
+\end{itemize}
+
+Уже одно это сильно меняет характер задачи. Но еще важнее был другой эффект:
+automatic anchoring порождал шумные source clouds вроде \texttt{thing},
+\texttt{matter}, \texttt{before}, \texttt{early}, \texttt{imbibement},
+\texttt{morningness}.
+
+\subsection{Результат}
+
+Все tested methods дали одинаковую дискретную картину:
+
+\begin{itemize}[leftmargin=2em]
+\item 4/13 pairwise checks;
+\item 3/7 solved queries.
+\end{itemize}
+
+Численные margins различались сильно, но ordering не менялся.
+
+\subsection{Почему это не был ``нулевой'' опыт}
+
+На первый взгляд такой tie можно было бы счесть провалом. Но на деле
+\texttt{exp7a} дал один из важнейших диагнозов серии:
+
+\begin{quote}
+в реальном end-to-end режиме retrieval law почти не тестируется, потому что
+pipeline уже ломается на этапе query $\to$ source injection.
+\end{quote}
+
+Кроме того, top-k были засорены echo самих source nodes, так что наблюдаемое
+``retrieval'' часто было просто возвратом к уже впрыснутым якорям.
+
+\begin{takeaway}
+\texttt{exp7a} не опроверг local+global hybrid. Он показал, что на реальном
+эмбрионе более ранний слой -- anchoring и source injection -- доминирует над
+всем, что происходит позже. Это и стало основанием для controlled-source опыта
+\texttt{7b}.
+\end{takeaway}
+
+\section{\texttt{exp7b}: controlled-source transfer}
+
+\subsection{Почему это новый эксперимент, а не ``починка 7a''}
+
+\texttt{7b} делает стандартный физический ход: замораживает вход, чтобы
+проверять среду. Manual anchors здесь не подаются как финальная архитектура для
+natural-language retrieval. Они используются как калиброванный впрыск сигнала.
+
+Именно поэтому \texttt{7a} и \texttt{7b} должны читаться вместе:
+
+\begin{itemize}[leftmargin=2em]
+\item \texttt{7a} локализует bottleneck automatic anchoring;
+\item \texttt{7b} временно убирает этот bottleneck из игры.
+\end{itemize}
+
+\subsection{Два варианта графа}
+
+Отдельно сравнивались:
+
+\begin{itemize}[leftmargin=2em]
+\item ConceptNet only;
+\item ConceptNet + ATOMIC.
+\end{itemize}
+
+Это было методически важно: после \texttt{7a} нельзя было молча допустить, что
+гигантская ATOMIC shell никак не меняет topology priors.
+
+\subsection{\texttt{7b.1}: первая controlled-source версия}
+
+В первой версии manual cues были чистыми, но во многом еще scene-like:
+\texttt{check in + airport}, \texttt{home + remember}, \texttt{morning +
+breakfast}.
+
+Результат: снова tie across methods.
+
+\begin{itemize}[leftmargin=2em]
+\item pairwise: 2/12;
+\item solved: 2/7.
+\end{itemize}
+
+Главный урок этого захода: даже ручные anchors бесполезны, если сами cues
+слишком общие и описывают сцену, а не механизм ответа.
+
+\subsection{\texttt{7b.2}: diagnostic-cue version}
+
+Во второй версии cues сделали более механизмо-ориентированными:
+
+\begin{itemize}[leftmargin=2em]
+\item \texttt{coffee + stimulant} вместо \texttt{coffee + energy};
+\item \texttt{check in counter + document} вместо \texttt{check in + airport};
+\item \texttt{wake up + tired} вместо \texttt{morning + breakfast}.
+\end{itemize}
+
+Это улучшило семантическую осмысленность top-k, но discrete separation все равно
+не появилось.
+
+\subsection{Результат \texttt{7b.2}}
+
+На обеих graph variants получились одинаковые агрегаты:
+
+\begin{itemize}[leftmargin=2em]
+\item primary pairwise: 1/8;
+\item primary solved: 1/5;
+\item control pairwise: 2/4;
+\item control solved: 1/2.
+\end{itemize}
+
+То есть controlled-source regime оказался методически правильным, но формулы
+снова не разошлись.
+
+\subsection{Что именно теперь стало ясно}
+
+После \texttt{7b} уже нельзя было объяснять стагнацию одной лишь проблемой
+automatic anchors. Bottleneck сместился глубже:
+
+\begin{enumerate}[leftmargin=2em]
+\item либо signal идет в broad intermediate hubs;
+\item либо он попадает в graph-native adjacent manifold, а не в hand-named
+target node;
+\item либо оба эффекта происходят одновременно.
+\end{enumerate}
+
+Примеры этого были вполне содержательны:
+
+\begin{itemize}[leftmargin=2em]
+\item для morning query граф охотно выдавал \texttt{drink coffee}, а не обязательно
+\texttt{coffee} или \texttt{espresso};
+\item для laptop query граф выдавал \texttt{power}, \texttt{battery},
+\texttt{generator}-family вместо \texttt{charger};
+\item для check-in query граф поднимал procedural nodes вроде
+\texttt{checking in} сильнее, чем \texttt{passport}.
+\end{itemize}
+
+\begin{riskbox}
+Здесь очень легко сделать ложный вывод ``PageRank бесполезен'' или
+``local leak не переносится''. На самом деле \texttt{7b} показал более узкую
+вещь: оба механизма работают слишком поздно в pipeline, если transport already
+lands in the wrong manifold.
+\end{riskbox}
+
+\section{\texttt{exp7c}: conjunctive cue-overlap}
+
+\subsection{Новый вопрос}
+
+После повторяющихся tie в \texttt{7b} естественно возникла новая гипотеза:
+может быть, проблема не в знаменателе вообще, а в том, как складываются cue
+fields. Если broad hub ярко светится от одного сильного cue, а правильный ответ
+получает умеренную поддержку от нескольких независимых cues, то простой сумматор
+может систематически переоценивать первый случай.
+
+Отсюда и возникает overlap idea:
+
+\[
+\mathrm{Overlap}_{\mathrm{geom}}(v)=
+\left(\prod_g (A_g(v)+\varepsilon)\right)^{1/G}.
+\]
+
+\subsection{Что проверялось}
+
+Сравнивались:
+
+\begin{itemize}[leftmargin=2em]
+\item sum aggregation;
+\item sum + PageRank;
+\item geometric overlap;
+\item geometric overlap + PageRank.
+\end{itemize}
+
+То есть это уже не еще один denominator benchmark, а новая попытка изменить
+саму логику совместного учета нескольких cue-conditioned полей.
+
+\subsection{Результат}
+
+Именно здесь серия впервые довольно жестко исчерпала надежду на ``еще одну
+формулу финального score''.
+
+По дискретным метрикам sum-based и overlap-based варианты снова tied. В
+исполненном \texttt{7c} это было зафиксировано как одинаковые primary outcomes
+на обеих graph variants; в дальнейшей постановке \texttt{8a} этот итог
+формулируется как устойчивый tie по уровням порядка \(4/10\) pairwise и \(3/6\)
+solved для главных конкурентов.
+
+\subsection{Почему это содержательно важно}
+
+Overlap failure означает следующее:
+
+\begin{quote}
+нельзя ``перемножить'' путь, которого вообще нет. Если $A_g(v)=0$ для нужного
+cue на нужной цели, то никакая интерференция или coincidence scoring не создаст
+там содержательного сигнала.
+\end{quote}
+
+Это очень сильная отрицательная находка. Она переводит разговор от финального
+скоринга к самой транспортной архитектуре.
+
+\section{Что серия \texttt{7x} установила}
+
+\subsection{Положительные результаты}
+
+\begin{enumerate}[leftmargin=2em]
+\item Automatic anchoring действительно является самостоятельным bottleneck.
+\item Controlled-source regime нужен и методически оправдан.
+\item Эффект source echo в retrieval-списках нужно явно устранять.
+\item ATOMIC shell сильно влияет на размеры и priors, но не обязана менять сами
+ordering outcomes.
+\end{enumerate}
+
+\subsection{Отрицательные результаты}
+
+\begin{enumerate}[leftmargin=2em]
+\item На реальном эмбрионе denominator families не дают такого separation, как на
+золотых мирах.
+\item Простая cue-overlap aggregation тоже не решает проблему.
+\end{enumerate}
+
+\subsection{Главный диагностический вывод}
+
+К концу \texttt{7x} становится правдоподобной новая общая картина:
+
+\begin{quote}
+узкое место находится не столько в пост-фактум нормировке уже пришедшего
+сигнала, сколько в том, что сигнал либо не доходит до правильного manifold,
+либо доходит не теми путями, либо приходит в слишком соседний, а не точный
+ответный узел.
+\end{quote}
+
+Отсюда уже естественным образом рождается серия \texttt{8a--9a}, где вопрос
+смещается с denominators на transport wall.

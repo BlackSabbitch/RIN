@@ -1,0 +1,220 @@
+\chapter{Синтез: что доказала серия \texttt{exp2--exp9a} и куда она вывела}
+
+\section{Четыре слоя выводов}
+
+Чтобы не смешивать разные типы результата, полезно собрать серию по слоям.
+
+\subsection{Слой 1: инфраструктура и эмбрион}
+
+Этот слой строят прежде всего \texttt{exp2} и \texttt{exp5}.
+
+\begin{itemize}[leftmargin=2em]
+\item Реальный эмбриональный граф можно собрать и прогонять через retrieval
+pipeline.
+\item Реальные источники порождают собственный класс ошибок: URI-labeling,
+\texttt{RelatedTo}-hubness, embedding-lookup mismatch, ATOMIC fan-out.
+\item Write-path требует batch-aware commit semantics; наивный single-pass
+ломается даже на малом сценарии.
+\end{itemize}
+
+\subsection{Слой 2: локальная механика retrieval}
+
+Этот слой задается \texttt{exp3}, \texttt{exp4}, \texttt{exp6}, \texttt{exp6b},
+\texttt{exp6c}.
+
+\begin{itemize}[leftmargin=2em]
+\item Простой diffusion ranking действительно может предпочесть широкий хаб
+специфическому ответу.
+\item Semantic gate исправляет это лишь частично.
+\item Причина не сводится к плохой similarity: topology of convergence сама по
+себе умеет задавить более релевантный узел.
+\item Post-accumulation correction имеет физический смысл.
+\item Weighted leakage полезен, но не исчерпывает картину.
+\item Capacity как ``эффективный объем представления'' выполняет реальную
+работу на диагностических стендах.
+\end{itemize}
+
+\subsection{Слой 3: глобальная структурная слава}
+
+Этот слой кристаллизуется в \texttt{exp6d}.
+
+\begin{itemize}[leftmargin=2em]
+\item Local response и global fame -- разные механизмы.
+\item Мягкий PageRank prior действительно помогает, если применяется поверх
+локально осмысленного response.
+\item Полная PMI-подобная сила prior оказывается слишком агрессивной.
+\end{itemize}
+
+\subsection{Слой 4: перенос на реальный эмбрион}
+
+Этот слой строят \texttt{7a--9a}.
+
+\begin{itemize}[leftmargin=2em]
+\item Automatic anchoring -- самостоятельный bottleneck.
+\item Controlled-source regime нужен, но даже он не возвращает separation между
+формулами автоматически.
+\item Graph-native answer manifold на реальном субстрате часто не совпадает с
+ручным canonical target.
+\item Neither denominator tweaking, nor overlap, nor blind semantic-edge repair
+дают решающего breakthrough.
+\end{itemize}
+
+\section{Что именно можно считать уже опровергнутым}
+
+Серия достаточно уверенно отсекла несколько популярных, но ложных надежд.
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{``Надо просто добавить semantic gate''} -- нет, этого мало.
+\item \textbf{``Проблема только в embeddings''} -- нет, topology of convergence
+делает самостоятельную работу.
+\item \textbf{``Достаточно подобрать хороший denominator''} -- на реальном
+эмбрионе это не разделяет методы так, как на золотых мирах.
+\item \textbf{``Нужно просто поощрять overlap cue-fields''} -- нет, overlap не
+создает путь там, где его нет.
+\item \textbf{``Можно достроить все мосты blind kNN edges и получить решение''}
+-- нет, тогда память начинает подтягивать морфологическое облако и опасно
+съезжает к vector-RAG.
+\end{enumerate}
+
+\section{Что можно считать реально поддержанным}
+
+Здесь нужна аккуратность. Поддержанность не означает окончательную истину, но
+означает, что серия дала сильный положительный или диагностически устойчивый
+сигнал в пользу гипотезы.
+
+\begin{enumerate}[leftmargin=2em]
+\item \textbf{Typed graph matters.} Тип ребра меняет физику retrieval;
+\texttt{RelatedTo} нельзя считать нейтральным проводником.
+\item \textbf{Post-accumulation viewpoint is correct.} Если дефект заключается в
+слиянии множества вкладов на broad hub, штрафовать нужно именно merged
+destination response.
+\item \textbf{Local and global corrections are orthogonal.} Local retention и
+PageRank-like prior решают разные задачи.
+\item \textbf{Source injection must be modeled explicitly.} На реальном графе
+anchoring не является технической мелочью; он архитектурно равноправен diffusion
+и scoring.
+\item \textbf{Target manifold is the right late-stage evaluation object.} Когда
+графовая память возвращает соседний, но осмысленный узел, ошибочно считать это
+тем же типом провала, что и победу пустого хаба.
+\end{enumerate}
+
+\section{Где сейчас настоящий bottleneck}
+
+Если собрать все вместе, то bottleneck выглядит уже не как ``плохая формула''.
+Скорее он состоит из трех связанных уровней.
+
+\subsection{(1) Качество графового субстрата}
+
+Эмбрион сейчас слишком смешан:
+
+\begin{itemize}[leftmargin=2em]
+\item lexical artifacts;
+\item morphologically noisy neighborhoods;
+\item неоднородные типы отношений;
+\item неполные мосты между реально близкими представлениями;
+\item слишком рыхлая интеграция episode shell.
+\end{itemize}
+
+\subsection{(2) Качество source injection}
+
+Даже controlled-source regime понадобился не случайно. Это значит, что архитектура
+естественного query-to-anchor mapping еще не дошла до состояния, где последующие
+эксперименты можно интерпретировать без оговорок.
+
+\subsection{(3) Предел самого spreading-подхода}
+
+Есть все больше оснований думать, что для части задач память хочет не просто
+``куда растечется активация'', а что-то ближе к:
+
+\begin{itemize}[leftmargin=2em]
+\item path-sensitive retrieval;
+\item typed route preference;
+\item consolidation shortcuts;
+\item maybe small proof-like or script-like selection поверх поля активации.
+\end{itemize}
+
+\section{Почему серия все же продвинулась далеко}
+
+Иногда длинная череда отрицательных и диагностических результатов производит
+впечатление застоя. Но в этой серии произошло обратное: исследовательский объект
+стал значительно яснее.
+
+В начале речь шла почти обо всем сразу: реальный граф, embeddings, retrieval,
+write-path, gate, priors. К концу серии можно уже сказать заметно точнее:
+
+\begin{itemize}[leftmargin=2em]
+\item проблема не в том, что ``ничего не работает'';
+\item проблема не сводится к одному плохо выбранному коэффициенту;
+\item есть рабочие локальные механизмы;
+\item есть рабочие диагностические стенды;
+\item есть честно исчерпанные ветки;
+\item и есть новая, уже более содержательная развилка для следующего цикла.
+\end{itemize}
+
+\section{Что логично делать дальше}
+
+Из самой серии вытекают по меньшей мере три разумные программы продолжения.
+
+\subsection{Программа A: мета-аудит и смена класса retrieval}
+
+Если принять, что spreading-подход почти уперся в потолок, следующий шаг --
+формализовать это и перейти к path-selective retrieval. Тогда новая серия должна
+прямо спрашивать:
+
+\begin{quote}
+какая причинно-смысловая траектория лучше всего объясняет запрос, а не какой
+узел просто ярче всех после диффузии.
+\end{quote}
+
+\subsection{Программа B: архитектура консолидации эмбриона}
+
+\texttt{9a} очень сильно намекнул, что графу не хватает внутренних мостов, но
+достраивать их blind kNN-способом нельзя. Значит, нужна не просто edge repair, а
+полноценная программа консолидации:
+
+\begin{itemize}[leftmargin=2em]
+\item alias-links;
+\item synonym bridges;
+\item shortcut links по часто используемым путям;
+\item controlled reverse-links;
+\item co-activation based strengthening;
+\item фильтрация морфологического мусора.
+\end{itemize}
+
+\subsection{Программа C: развести слои памяти}
+
+Еще один естественный ход -- перестать ожидать от одного плоского графа, что он
+одновременно будет:
+
+\begin{itemize}[leftmargin=2em]
+\item словарем;
+\item commonsense memory;
+\item episode memory;
+\item ассоциативной сетью синонимов и вариантов;
+\item рабочей средой диффузии.
+\end{itemize}
+
+Тогда следующая архитектура должна быть многослойной, а transport и retrieval --
+межслойными.
+
+\section{Финальная оценка серии}
+
+Если сформулировать общий итог одной фразой, он звучит так:
+
+\begin{quote}
+серия \texttt{exp2--exp9a} не нашла окончательную retrieval law для RIN, но она
+очень качественно расчленила проблему и показала, где заканчивается сила
+нынешнего диффузионного подхода и откуда должен начинаться следующий архитектурный
+шаг.
+\end{quote}
+
+Это уже большой результат. Более того, без него любой следующий шаг рисковал бы
+снова раствориться в хаотическом подборе коэффициентов и частных эвристик.
+
+\begin{takeaway}
+Самое ценное, что дала серия, -- не отдельная формула, а новая ясность. Теперь
+можно продолжать не с надеждой, что ``еще один знаменатель все спасет'', а с
+довольно четким пониманием: где нам нужен другой механизм чтения, где -- другой
+механизм роста графа, а где -- более зрелая организация самой памяти как
+многослойной архитектуры.
+\end{takeaway}

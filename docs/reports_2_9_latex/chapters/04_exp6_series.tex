@@ -1,0 +1,352 @@
+\chapter{Серия \texttt{6x}: от topology correction к гибриду local + global}
+
+\section{Зачем вообще понадобилась серия \texttt{6x}}
+
+После \texttt{exp4} стало ясно, что семантический gate сам по себе не вытягивает
+специфический ответ из-под широкого хаба. Но это еще не говорило, \emph{какой
+именно} механизм отсутствует. Серия \texttt{6x} строится как последовательное
+расщепление вопроса:
+
+\begin{enumerate}[leftmargin=2em]
+\item действительно ли дело в топологии сходимости путей;
+\item если да, можно ли исправить это локальной поправкой на удержание;
+\item если локальная поправка помогает, какой именно класс знаменателей
+осмыслен;
+\item если локального удержания мало, нужен ли еще и глобальный structural
+prior.
+\end{enumerate}
+
+Важно, что здесь впервые появляется уже почти ``физическая'' интерпретация
+узла: не всякий inflow одинаково превращается в salience, потому что разные узлы
+по-разному удерживают и рассеивают приходящий поток.
+
+\section{\texttt{exp6}: topology-aware retrieval correction}
+
+\subsection{Цель опыта}
+
+\texttt{exp6} должен был сделать то, что \texttt{exp4} еще не мог: отделить
+собственно semantic relevance от эффекта многократной сходимости на хабе.
+
+Для этого опыт делился на две части:
+
+\begin{enumerate}[leftmargin=2em]
+\item topology surgery: меняется только структура путей;
+\item correction ablation: исходный граф сохраняется, меняется только формула
+поправки.
+\end{enumerate}
+
+\subsection{Часть A: хирургия топологии}
+
+В первой части проверялась почти причинная гипотеза:
+
+\begin{quote}
+если проблема действительно в количестве и силе сходящихся маршрутов, то
+достаточно удалить пару входов в \texttt{beverage} или добавить пару входов в
+\texttt{caffeine}, и ranking должен перевернуться даже без смены embeddings и
+query.
+\end{quote}
+
+Именно это и произошло.
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Вариант графа & \texttt{caffeine} & \texttt{beverage} & Победа \\
+\midrule
+Исходный & 27.20 & 129.46 & нет \\
+Срезать часть входов в \texttt{beverage} & 37.57 & 27.38 & да \\
+Добавить входы в \texttt{caffeine} & 95.10 & 77.17 & да \\
+Сделать оба изменения & 141.30 & 19.26 & да \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Это один из самых чистых результатов всей серии: при неизменном query и
+неизменном semantic gate ranking переворачивается одной лишь правкой topology.
+
+\subsection{Часть B: пост-аккумуляционные поправки}
+
+После этого можно было уже предметно тестировать корректирующие формулы. На
+исходном графе сравнивались:
+
+\begin{itemize}[leftmargin=2em]
+\item отсутствие поправки;
+\item деление на $\deg(B)^\gamma$;
+\item деление на $\fanin_t(B)^\gamma$.
+\end{itemize}
+
+Ключевым было то, что штраф накладывался \emph{после слияния вкладов} в узле
+назначения. Это принципиально: если наказывать поток локально у источника, то
+узел, у которого есть единственный путь наружу, все равно отправит весь свой
+заряд в этот путь.
+
+\subsection{Результат}
+
+Единственной формулой, действительно перевернувшей ranking, оказалось деление
+на полную степень узла:
+
+\[
+\incoming(B)\mapsto \frac{\incoming(B)}{\deg(B)}.
+\]
+
+Это был грубый, но убедительный proof of concept.
+
+\subsection{Что эксперимент реально доказал}
+
+\texttt{exp6} не доказал, что $1/\deg(B)$ есть закон памяти. Он доказал более
+узкое, но очень важное утверждение:
+
+\begin{quote}
+если узел побеждает за счет чрезмерной сходимости путей, то поправка должна
+действовать на merged accumulation, а не только на локальный выбор ребра у
+источника.
+\end{quote}
+
+\section{\texttt{exp6b}: richer golden world и первое сравнение семейств}
+
+\subsection{Почему одного кофейного fixture уже было мало}
+
+Успех на одной конфигурации \texttt{caffeine} против \texttt{beverage} еще не
+говорит, что найдена хорошая retrieval law. Можно легко подобрать формулу,
+которая работает только на одном сценарии.
+
+Поэтому \texttt{exp6b} строит богатый, но все еще читаемый золотой мир на 33
+узлах. Его смысл не в ``реализме мира'', а в разнообразии структурных ситуаций.
+
+\subsection{Четыре кластера графа}
+
+В графе были выделены:
+
+\begin{itemize}[leftmargin=2em]
+\item домашний кластер (\texttt{apartment}, \texttt{wallet}, \texttt{keys},
+\texttt{cats}, \texttt{feeding alarm}, \texttt{elevator turnaround});
+\item travel cluster (\texttt{trip}, \texttt{airport}, \texttt{passport},
+\texttt{boarding pass}, \texttt{hotel});
+\item work cluster (\texttt{office}, \texttt{meeting}, \texttt{laptop},
+\texttt{charger}, \texttt{dead laptop});
+\item coffee/health cluster (\texttt{coffee}, \texttt{caffeine},
+\texttt{beverage}, \texttt{energy}, \texttt{water}).
+\end{itemize}
+
+Принципиально важно, что запросы включали не только anti-hub cases, но и
+legitimate-hub cases. Иначе любую агрессивную нормировку можно было бы ошибочно
+объявить хорошей.
+
+\subsection{Формулы}
+
+Появляются семейства
+
+\[
+R_0(B)=1,
+\]
+\[
+R_1(B)=1+\beta\, \degout(B)^\gamma,
+\]
+\[
+R_2(B)=1+\beta\, \sout(B)^\gamma,
+\]
+\[
+R_3(B)=\alpha+\beta\, \sout(B)^\gamma,
+\]
+\[
+R_4(B)=\capacity(B)+\beta\, \sout(B)^\gamma,
+\]
+\[
+R_5(B)=\alpha+\capacity(B)+\beta\, \sout(B)^\gamma.
+\]
+
+Здесь впервые появляется capacity $C(B)$ как локальная ширина представления.
+
+\subsection{Что можно было ожидать}
+
+Если ``утечка'' исчерпывает всю проблему, должен был победить leak-only класс
+$R_2$ или $R_3$. Если же разные узлы отличаются не только по суммарной силе
+исходящих каналов, но и по собственной концептуальной ширине, тогда capacity
+должна дать добавочное преимущество.
+
+\subsection{Результат}
+
+В \texttt{exp6b} лучшим in-sample и leave-one-out победителем стало семейство
+
+\[
+R_4(B)=\capacity(B)+0.1\, \sout(B)^{0.5}.
+\]
+
+Оно решило все 7 запросов и дало наибольший общий margin. Базовый raw case
+проваливал только 6/7, а leak-only формулы не смогли стать убедительными
+победителями.
+
+\subsection{Интерпретация}
+
+Это был первый сильный аргумент в пользу следующего тезиса:
+
+\begin{quote}
+узел может быть широким в двух разных смыслах: потому что у него много исходящих
+каналов и потому что он сам по себе представляет более объемное понятие.
+\end{quote}
+
+Именно эта двойственность и пыталась поймать пара ``capacity + leak''.
+
+\begin{riskbox}
+\texttt{exp6b} остается синтетическим опытом. Capacity в нем ручная. Поэтому
+после него нельзя было честно говорить ``мы нашли закон памяти''. Можно было
+говорить только ``семейство без capacity уже не выглядит достаточным''.
+\end{riskbox}
+
+\section{\texttt{exp6c}: mechanism benchmark для знаменателей}
+
+\subsection{Зачем понадобился еще один шаг}
+
+У \texttt{exp6b} оставалось методологическое возражение: возможно, ответ
+приходил не столько из-за хорошего знаменателя, сколько из-за удачной geometry
+anchors и semantic gate. Поэтому \texttt{exp6c} радикально очищает постановку:
+
+\begin{itemize}[leftmargin=2em]
+\item для каждого запроса заранее задан source event;
+\item после этого диффузия идет без query-conditioned gating;
+\item benchmark измеряет именно поведение знаменателя.
+\end{itemize}
+
+\subsection{Диагностические мотивы}
+
+Здесь уже не большой смешанный мир, а набор маленьких мотивов, каждый из которых
+стрессует отдельное различие:
+
+\begin{itemize}[leftmargin=2em]
+\item weather motif -- проверка weighted leakage;
+\item kit motif -- наказание слишком грубого degree counting;
+\item travel motif -- чистый capacity-only case;
+\item health motif -- перенос исходного \texttt{caffeine}/\texttt{beverage}
+конфликта в новый стенд.
+\end{itemize}
+
+\subsection{Результат}
+
+В \texttt{exp6c} baseline и degree-control выступили слабо:
+
+\begin{itemize}[leftmargin=2em]
+\item $R_0$ решил 2/5 задач;
+\item $R_1$ в leave-one-out вообще рухнул до 1/5;
+\item weighted leak alone ($R_2$, $R_3$) улучшил ситуацию, но не дотянул до
+полной стабильности;
+\item capacity-aware families ($R_4$, $R_5$) оказались единственными по-настоящему
+сильными кандидатами.
+\end{itemize}
+
+Лучшим leave-one-out вариантом стал
+
+\[
+R_5(B)=1.0+\capacity(B)+0.05\, \sout(B)^{0.5}.
+\]
+
+\subsection{Что добавил \texttt{exp6c} относительно \texttt{exp6b}}
+
+\texttt{exp6b} говорил: ``capacity выглядит полезной''. \texttt{exp6c} добавил:
+``capacity делает свою работу даже тогда, когда anchor geometry убрана из игры''.
+
+Это уже не просто победа в смешанном benchmark, а настоящий mechanism audit.
+
+\section{\texttt{exp6d}: глобальные priors поверх локального удержания}
+
+\subsection{Почему после \texttt{6c} вопрос еще не был закрыт}
+
+Даже если узел хорошо удерживает локальный приток, он может быть ярким просто
+потому, что глобально структурно знаменит. Поэтому возникает следующий шаг:
+
+\[
+\score(v\mid q)=\frac{\text{LocalResponse}(v\mid q)}{\text{Prior}(v)^\eta}.
+\]
+
+Содержательный вопрос уже не в том, ``заменяет ли PageRank локальную физику'',
+а в том, добавляет ли глобальный prior \emph{нечто не сводимое} к локальному
+удержанию.
+
+\subsection{Методы}
+
+Сравнивались:
+
+\begin{itemize}[leftmargin=2em]
+\item $P0$: raw diffusion;
+\item $P1$: raw / out-strength$^\eta$;
+\item $P2$: raw / in-strength$^\eta$;
+\item $P3$: raw / PageRank$^\eta$;
+\item $P4$: local-only retained diffusion;
+\item $P5$: local retained diffusion / PageRank$^\eta$.
+\end{itemize}
+
+При этом локальная часть в $P4$ и $P5$ фиксировалась на победителе из
+\texttt{6c}.
+
+\subsection{Ключевой мотив: ложная глобальная слава}
+
+Особенно важным был morning motif, где \texttt{water} делали глобально известным
+за счет множества дальних входящих связей, но локальный утренний cue делали почти
+симметричным между \texttt{water} и \texttt{espresso}. Этот мотив проверял,
+может ли prior отличить:
+
+\begin{itemize}[leftmargin=2em]
+\item ``узел яркий, потому что глобально везде встречается'';
+\item ``узел яркий, потому что именно здесь он нужен''.
+\end{itemize}
+
+\subsection{Результат}
+
+Лучшим методом стал гибрид
+
+\[
+P5(v\mid q)=\frac{\text{LocalResponse}(v\mid q)}{\PR(v)^{0.25}},
+\]
+
+где LocalResponse задается capacity-aware local denominator из \texttt{6c}.
+
+Этот гибрид решил все 7 задач и in-sample, и leave-one-out.
+
+\subsection{Что особенно важно в этом результате}
+
+Успех \texttt{P5} означает не ``PageRank победил'', а нечто более тонкое:
+
+\begin{enumerate}[leftmargin=2em]
+\item purely global penalties полезны;
+\item purely local retention полезна;
+\item но наилучшее поведение дает их комбинация;
+\item при этом $\eta$ должен быть мягким: полная PMI-подобная сила оказывается
+слишком агрессивной.
+\end{enumerate}
+
+\begin{takeaway}
+К концу серии \texttt{6x} складывается первая действительно зрелая retrieval
+картина:
+\[
+\score(v\mid q)\approx
+\frac{\incoming(v\mid q)}{R_{\mathrm{local}}(v)\,\PR(v)^\eta}.
+\]
+Локальная часть отвечает за удержание и противодействие smearing, глобальная --
+за снятие structural fame. Это еще не перенос на реальный граф, но это уже
+чистая и достаточно сильная рабочая гипотеза.
+\end{takeaway}
+
+\section{Что серия \texttt{6x} дала и чего не дала}
+
+\subsection{Что она действительно установила}
+
+\begin{enumerate}[leftmargin=2em]
+\item Пост-аккумуляционная topology-aware correction имеет смысл.
+\item Простая степень узла может работать как грубый control, но она слишком
+тупа, чтобы считаться итоговым законом.
+\item Weighted leak полезен, но сам по себе не исчерпывает задачу.
+\item Capacity выполняет не декоративную, а содержательную работу.
+\item Глобальный prior, особенно мягкий PageRank, добавляет нечто реальное поверх
+локальной физики.
+\end{enumerate}
+
+\subsection{Чего серия еще не установила}
+
+\begin{enumerate}[leftmargin=2em]
+\item Что manual capacity переносима на реальный граф.
+\item Что найденная формула не является артефактом hand-authored motifs.
+\item Что hybrid local + global сохранит преимущество на шумном эмбриональном
+подграфе.
+\end{enumerate}
+
+Именно поэтому после \texttt{6d} естественным следующим ходом становится не
+очередной synthetic benchmark, а transfer-check на реальном seeded subgraph.

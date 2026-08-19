@@ -1,0 +1,104 @@
+\documentclass[11pt,a4paper]{extbook}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+\setotherlanguage{english}
+
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage[most]{tcolorbox}
+
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}[Scale=0.88]
+\DeclareMathSizes{11}{13}{10}{8}
+
+\geometry{left=2.4cm,right=2.4cm,top=2.5cm,bottom=2.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\setlength{\jot}{5pt}
+\tolerance=2000
+\emergencystretch=2em
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue,
+  citecolor=black
+}
+
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter.}{16pt}{\Large\bfseries}
+\titleformat{\section}[hang]{\large\bfseries}{\thesection.}{12pt}{\large\bfseries}
+\titleformat{\subsection}[hang]{\normalsize\bfseries}{\thesubsection.}{10pt}{\normalsize\bfseries}
+
+\setlength{\headheight}{22pt}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\nouppercase{\leftmark}}
+\cfoot{\thepage}
+
+\newtcolorbox{takeaway}[1][Вывод]{colback=gray!5,colframe=gray!50,title={#1},fonttitle=\bfseries,breakable}
+\newtcolorbox{methodbox}[1][Методический акцент]{colback=blue!4,colframe=blue!40,title={#1},fonttitle=\bfseries,breakable}
+\newtcolorbox{riskbox}[1][Риск интерпретации]{colback=red!4,colframe=red!35,title={#1},fonttitle=\bfseries,breakable}
+\newtcolorbox{openbox}[1][Открытый вопрос]{colback=orange!8,colframe=orange!60!black,title={#1},fonttitle=\bfseries,breakable}
+
+\newcommand{\score}{\mathrm{Score}}
+\newcommand{\PR}{\mathrm{PR}}
+\newcommand{\simf}{\mathrm{sim}}
+\newcommand{\incoming}{\mathrm{incoming}}
+\newcommand{\retained}{\mathrm{retained}}
+\newcommand{\degout}{k_{\mathrm{out}}}
+\newcommand{\sout}{s_{\mathrm{out}}}
+\newcommand{\fanin}{\mathrm{fanin}}
+\newcommand{\capacity}{C}
+
+\title{Reports 2--9\\[0.4em]\large Развернутый исследовательский разбор серии экспериментов по графовой памяти RIN}
+\author{Рабочая ChatGPT-версия исследовательского свода}
+\date{18 августа 2026 г.}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\begin{center}
+\begin{minipage}{0.88\textwidth}\small
+Этот проект собирает в одном месте исследовательскую линию от \texttt{exp2} до
+\texttt{exp9a}. Жанр текста -- не набор коротких отчетов, а последовательный
+курс-разбор: что именно проверял каждый эксперимент, почему он возник именно в
+этот момент, какую альтернативу он пытался отличить от конкурирующей гипотезы,
+какой стенд был собран, что показали результаты и как они изменили дальнейший
+план работ. Отдельно проговариваются пределы каждого результата: где мы имеем
+дело с полноценным эмпирическим опровержением, где с диагностикой, а где лишь с
+хорошо поставленной развилкой для следующего шага.
+\end{minipage}
+\end{center}
+
+\tableofcontents
+
+\mainmatter
+
+\input{chapters/00_preface}
+\input{chapters/01_program}
+\input{chapters/02_exp2_exp3}
+\input{chapters/03_exp4_exp5}
+\input{chapters/04_exp6_series}
+\input{chapters/05_exp7_series}
+\input{chapters/06_exp8_9_series}
+\input{chapters/07_synthesis}
+
+\end{document}
