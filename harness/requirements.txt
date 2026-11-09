@@ -1,0 +1,2 @@
+# Harness dependencies (HTTP is stdlib urllib, on purpose: nothing to install on Colab either).
+pyyaml>=6

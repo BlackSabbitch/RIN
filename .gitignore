@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Stage 2 harness: captured real requests (contain chat text)
+harness/fixtures/parity/

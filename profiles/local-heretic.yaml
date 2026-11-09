@@ -1,0 +1,35 @@
+# Local dogfood/test profile: heretic (main candidate), GTX 1070.
+# Sampler = Qwen's recommendation for non-thinking mode, all keys explicit.
+name: local-heretic
+host_label: local-1070
+user_name: Яр
+card: prompts/st_card/rin_core.card.json
+
+runner:
+  kind: ollama
+  base_url: http://127.0.0.1:11434/v1
+  timeout_s: 180
+
+model: heretic9b:text
+
+# Sent in every /v1 request body.
+sampler:
+  temperature: 0.7
+  top_p: 0.8
+  presence_penalty: 1.5
+  frequency_penalty: 0
+  max_tokens: 800
+  reasoning_effort: none
+
+# Cannot travel through /v1: must be baked into the Modelfile (PARAMETER lines).
+# Preflight compares these with `ollama show` and refuses to run on mismatch.
+modelfile_expected:
+  num_ctx: 16384
+  top_k: 20
+
+# Prompt builder levers (step 2). Ablations flip these, never edit the card.
+builder:
+  post_processing: semi-strict
+  examples: true
+  lorebook: true
+  post_history: true
